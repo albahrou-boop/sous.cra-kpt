@@ -1138,7 +1138,13 @@
         <!-- Accessible à TOUS -->
         <li class="nav-item" role="presentation">
           <button class="nav-link fw-bold btn-sm" id="tab-co-cotisations" data-bs-toggle="tab" data-bs-target="#c-cotisations" type="button" role="tab" onclick="loadCotisations()">
-            💳 Liste des Cotisations
+            💳 Liste des Cotisations annuelles
+          </button>
+        </li>
+        <!-- NOUVEAU : Accessible à TOUS -->
+        <li class="nav-item" role="presentation">
+          <button class="nav-link fw-bold btn-sm" id="tab-co-autres-cotisations" data-bs-toggle="tab" data-bs-target="#c-autres-cotisations" type="button" role="tab" onclick="loadAutresCotisations()">
+            💰 Liste des autres Cotisations
           </button>
         </li>
       </ul>
@@ -1311,6 +1317,36 @@
     </div>
   </div>
 </div>
+
+<!-- 4. NOUVEAU : Autres Cotisations (Montant != 2500) -->
+        <div class="tab-pane fade" id="c-autres-cotisations" role="tabpanel" aria-labelledby="tab-co-autres-cotisations">
+          <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
+            <h5 class="text-primary mb-3 fw-bold h6">
+              <i class="fa-solid fa-coins me-2"></i>Situation des Autres Cotisations (Montant $\neq$ 2500 FCFA)
+            </h5>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblAutresCotisations">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Date</th>
+                    <th>Membre</th>
+                    <th>Zone</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th id="thActionAutresCotisations" style="display: none;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-autres-cotisations">
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-3">
+                      <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des autres cotisations...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
       </div> <!-- Fin de #subTabCheckoffContent -->
 
@@ -3856,9 +3892,26 @@ function loadCheckOffs() {
     .getCheckOffs();
 }
 
+/**
+ * Charge uniquement les cotisations dont le montant est égal à 2500 FCFA
+ */
 function loadCotisations() {
-  const tbody = document.getElementById('tbody-cotisations');
-  const thAction = document.getElementById('thActionCotisation');
+  chargerTableauCotisationsParFiltre('2500', '#tblCotisations', '#tbody-cotisations', '#thActionCotisation', true);
+}
+
+/**
+ * Charge les cotisations dont le montant est DIFFÉRENT de 2500 FCFA
+ */
+function loadAutresCotisations() {
+  chargerTableauCotisationsParFiltre('2500', '#tblAutresCotisations', '#tbody-autres-cotisations', '#thActionAutresCotisations', false);
+}
+
+/**
+ * Fonction générique pour filtrer et afficher les cotisations selon le montant
+ */
+function chargerTableauCotisationsParFiltre(montantCible, tableId, tbodyId, thActionId, estEgal) {
+  const tbody = document.querySelector(tbodyId);
+  const thAction = document.querySelector(thActionId);
   if (!tbody) return;
 
   let userConnected = "";
@@ -3879,25 +3932,32 @@ function loadCotisations() {
   tbody.innerHTML = `
     <tr>
       <td colspan="${nbColonnes}" class="text-center text-muted py-3">
-        <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des cotisations...
+        <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des données...
       </td>
     </tr>`;
 
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="${nbColonnes}" class="text-center text-muted py-3">
-              Aucune cotisation enregistrée.
-            </td>
-          </tr>`;
+        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucune donnée enregistrée.</td></tr>`;
+        return;
+      }
+
+      // Filtrage selon le montant cible (2500 ou autre)
+      const dataFiltree = data.filter(function(c) {
+        if (!c) return false;
+        const montantNum = Number(c.montant);
+        const cibleNum = Number(montantCible);
+        return estEgal ? (montantNum === cibleNum) : (montantNum !== cibleNum);
+      });
+
+      if (dataFiltree.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucune cotisation correspondante trouvée.</td></tr>`;
         return;
       }
 
       let htmlRows = '';
-      data.forEach(function(c, index) {
-        if (!c) return;
+      dataFiltree.forEach(function(c, index) {
         const id = c.id || 'COT-' + index;
         const date = c.date || '-';
         const auteur = c.auteur || c.membre || '-';
@@ -3949,7 +4009,7 @@ function loadCotisations() {
       tbody.innerHTML = `
         <tr>
           <td colspan="${nbColonnes}" class="text-center text-danger py-3">
-            ❌ Erreur de chargement des cotisations.
+            ❌ Erreur de chargement des données.
           </td>
         </tr>`;
     })
