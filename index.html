@@ -1111,19 +1111,19 @@
         <!-- Rôle autorisant la saisie de désignation -->
         <li class="nav-item role-saisie-desig" role="presentation">
           <button class="nav-link active fw-bold btn-sm" id="tab-co-saisie" data-bs-toggle="tab" data-bs-target="#c-saisie" type="button" role="tab">
-            ✏️ Saisie Versement
+            ✏️ Saisie d'un Versement
           </button>
         </li>
         <!-- Accessible à TOUS -->
         <li class="nav-item" role="presentation">
           <button class="nav-link fw-bold btn-sm" id="tab-co-versements" data-bs-toggle="tab" data-bs-target="#c-affichage" type="button" role="tab" onclick="loadCheckOffs()">
-            📜 Versements (CheckOff)
+            📜 Liste des Check Off
           </button>
         </li>
         <!-- Accessible à TOUS -->
         <li class="nav-item" role="presentation">
           <button class="nav-link fw-bold btn-sm" id="tab-co-cotisations" data-bs-toggle="tab" data-bs-target="#c-cotisations" type="button" role="tab" onclick="loadCotisations()">
-            💳 Cotisations
+            💳 Liste des Cotisations
           </button>
         </li>
       </ul>
@@ -1223,18 +1223,22 @@
                   Valider & Enregistrer
                 </button>
 
-                <!-- Conteneur pour le paiement Wave (commun aux deux) -->
-                <div id="wavePaymentContainer" class="d-none mt-3 p-3 border border-success rounded bg-white text-center">
-                  <p class="text-success fw-bold mb-2">Enregistrement effectué avec succès !</p>
-                  <p class="small mb-3">Cliquez sur le bouton ci-dessous pour effectuer le paiement via Wave.</p>
-                  <a href="https://pay.wave.com/m/M_sn_5YRTcHwYOYZf/c/sn/" id="btnPayerWave" target="_blank" class="btn btn-primary w-100 fw-bold py-2">
-                    <i class="fa-solid fa-money-bill-wave me-2"></i>Payer via Wave
-                  </a>
-                </div>
-
               </div> <!-- Fin de #form-suite-container -->
 
             </form>
+
+            <!-- 🚀 Conteneur pour le paiement Wave (SORTI de la balise <form> pour éviter les conflits d'affichage) -->
+            <div id="wavePaymentContainer" class="d-none mt-3 p-3 border border-success rounded bg-white text-center">
+              <p class="text-success fw-bold mb-2">Enregistrement effectué avec succès !</p>
+              <p class="small mb-3">Cliquez sur le bouton ci-dessous pour effectuer le paiement via Wave.</p>
+              <a href="https://pay.wave.com/m/M_sn_5YRTcHwYOYZf/c/sn/" id="btnPayerWave" target="_blank" class="btn btn-primary w-100 fw-bold py-2 mb-2">
+                <i class="fa-solid fa-money-bill-wave me-2"></i>Payer via Wave
+              </a>
+              <!-- Optionnel : Un bouton pour refaire un autre versement et masquer Wave -->
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetFormulaireVersementComplet()">
+                Effectuer un autre versement
+              </button>
+            </div>
 
           </div>
         </div> <!-- Fin de #c-saisie -->
@@ -1242,7 +1246,7 @@
         <!-- 2. Affichage Versements (Public) -->
         <div class="tab-pane fade" id="c-affichage" role="tabpanel">
           <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
-            <h5 class="text-primary mb-3 fw-bold h6">Historique des Versements (CheckOff)</h5>
+            <h5 class="text-primary mb-3 fw-bold h6">Historique des CheckOff</h5>
             <div class="table-responsive">
               <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCheckOffs">
                 <thead class="table-dark">
@@ -1263,33 +1267,35 @@
         </div>
 
         <!-- 3. Cotisations (Public) -->
-        <div class="tab-pane fade" id="c-cotisations" role="tabpanel" aria-labelledby="tab-co-cotisations">
-          <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
-            <h5 class="text-primary mb-3 fw-bold h6">
-              <i class="fa-solid fa-file-invoice-dollar me-2"></i>Situation des Cotisations
-            </h5>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCotisations">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Date</th>
-                    <th>Membre</th>
-                    <th>Zone</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-cotisations">
-                  <tr>
-                    <td colspan="5" class="text-center text-muted py-3">
-                      <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des cotisations...
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+<div class="tab-pane fade" id="c-cotisations" role="tabpanel" aria-labelledby="tab-co-cotisations">
+  <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
+    <h5 class="text-primary mb-3 fw-bold h6">
+      <i class="fa-solid fa-file-invoice-dollar me-2"></i>Situation des Cotisations
+    </h5>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCotisations">
+        <thead class="table-dark">
+          <tr>
+            <th>Date</th>
+            <th>Membre</th>
+            <th>Zone</th>
+            <th>Montant</th>
+            <th>Statut</th>
+            <!-- Colonne d'action conditionnelle -->
+            <th id="thActionCotisation" style="display: none;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-cotisations">
+          <tr>
+            <td colspan="6" class="text-center text-muted py-3">
+              <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des cotisations...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
       </div> <!-- Fin de #subTabCheckoffContent -->
 
@@ -3546,14 +3552,12 @@ function handleCheckOffSubmit(e) {
   const montantElement = document.getElementById('c_montant');
   const montant = montantElement ? montantElement.value.trim() : '';
 
-  // Validation conditionnelle selon le motif
   if (!auteur || !zone || zone === '-' || !montant || !motif) {
     alert("⚠️ Veuillez remplir tous les champs obligatoires (Auteur, Zone, Montant, Motif).");
     if (!zone && zoneElement) zoneElement.focus();
     return;
   }
 
-  // Si c'est un CheckOff, le nombre de matchs et l'étape deviennent obligatoires
   if (motif === 'CheckOff' && (!nombreMatchs || !etape)) {
     alert("⚠️ Le nombre de matchs et l'étape sont obligatoires pour un Check Off.");
     return;
@@ -3576,20 +3580,49 @@ function handleCheckOffSubmit(e) {
 
   google.script.run
     .withSuccessHandler(function(res) {
-      // 1. Remettre le bouton d'enregistrement à son état normal (mais masqué ou désactivé)
+      // 1. Masquer le bouton "Valider & Enregistrer" via les classes Bootstrap
       if (btnEnregistrer) {
         btnEnregistrer.disabled = false;
-        btnEnregistrer.classList.add('d-none'); // On le masque pour laisser place au bloc Wave
+        btnEnregistrer.style.display = 'none'; // Nettoyage propre
+        btnEnregistrer.classList.add('d-none');
         btnEnregistrer.innerHTML = 'Valider & Enregistrer';
       }
 
-      // 2. Afficher le conteneur Wave (Paiement) au lieu de le masquer
+      // 2. Vider et réinitialiser tous les champs du formulaire
+      const form = document.getElementById('formCheckOff');
+      if (form) form.reset();
+
+      if (motifElement) motifElement.value = '';
+      if (auteurElement) auteurElement.value = '';
+      
+      const labelAuteur = document.getElementById('label_c_auteur');
+      if (labelAuteur) labelAuteur.innerText = '-- Choisir un membre --';
+      
+      if (montantElement) montantElement.value = '';
+      if (nombreMatchsElement) nombreMatchsElement.value = '';
+      if (etapeElement) etapeElement.value = '';
+
+      // 3. Masquer la suite des champs dynamiques
+      const suiteContainer = document.getElementById('form-suite-container');
+      if (suiteContainer) {
+        suiteContainer.style.display = 'none';
+        suiteContainer.classList.add('d-none');
+      }
+
+      // 4. Faire apparaître le bloc et configurer correctement le lien de paiement Wave
       const wavePaymentContainer = document.getElementById('wavePaymentContainer');
       if (wavePaymentContainer) {
         wavePaymentContainer.classList.remove('d-none');
+        wavePaymentContainer.style.display = 'block';
       }
 
-      // Optionnel : Actualiser les tableaux en arrière-plan pour que la ligne enregistrée apparaisse
+      const btnPayerWave = document.getElementById('btnPayerWave');
+      if (btnPayerWave) {
+        // Injection dynamique du montant si le lien Wave le supporte ou sécurisation de l'URL web
+        btnPayerWave.href = "https://pay.wave.com/m/M_sn_5YRTcHwYOYZf/c/sn/";
+      }
+
+      // Actualisation des tableaux en arrière-plan
       if (typeof loadCheckOffs === 'function') loadCheckOffs();
       if (typeof loadCotisations === 'function') loadCotisations();
     })
@@ -3603,65 +3636,109 @@ function handleCheckOffSubmit(e) {
     .addCheckOff(data);
 }
 
+
+// 1. Mise à jour de la fonction de soumission pour déclencher la réinitialisation du formulaire
 /**
  * Gère l'affichage dynamique de la suite du formulaire selon le motif choisi.
  * - Si "Cotisation" : accessible à tous, formulaire simplifié (Auteur, Zone, Montant).
  * - Si "CheckOff" : vérification des droits (par exemple canSaisirTreso, canDesig ou isAdmin).
  */
+// Fonction globale pour réinitialiser l'affichage (formulaire + bloc wave)
+function resetFormulaireVersementComplet() {
+  const form = document.getElementById('formCheckOff');
+  if (form) form.reset();
+
+  const suiteContainer = document.getElementById('form-suite-container');
+  if (suiteContainer) {
+    suiteContainer.style.display = 'none';
+    suiteContainer.classList.add('d-none');
+  }
+
+  const wavePaymentContainer = document.getElementById('wavePaymentContainer');
+  if (wavePaymentContainer) {
+    wavePaymentContainer.style.display = 'none';
+    wavePaymentContainer.classList.add('d-none');
+  }
+
+  const btnEnregistrer = document.getElementById('btnEnregistrer');
+  if (btnEnregistrer) {
+    btnEnregistrer.style.display = 'block';
+    btnEnregistrer.classList.remove('d-none');
+    btnEnregistrer.disabled = false;
+    btnEnregistrer.innerHTML = 'Valider & Enregistrer';
+  }
+
+  const motifElement = document.getElementById('c_motif');
+  if (motifElement) motifElement.value = '';
+}
+
+// Votre fonction existante améliorée pour masquer le bloc wave si on change de motif
 function gererAffichageFormulaireVersement(motif) {
   const suiteContainer = document.getElementById('form-suite-container');
   const alerteBox = document.getElementById('alerteNonAutorise');
+  const btnEnregistrer = document.getElementById('btnEnregistrer');
+  const wavePaymentContainer = document.getElementById('wavePaymentContainer');
   
-  // Récupération des conteneurs de champs spécifiques pour les masquer/afficher
-  const groupNbMatchs = document.getElementById('group_nbMatchs'); // À structurer dans le HTML (ou masquer via conteneur parent)
-  const groupEtape = document.getElementById('group_etape');
-
-  // Réinitialisation par défaut
-  if (suiteContainer) suiteContainer.classList.add('d-none');
-  if (alerteBox) alerteBox.classList.add('d-none');
-
-  if (!motif) return;
-
-  // Récupération sécurisée des permissions de l'utilisateur connecté
-  const perms = window.userPermissions || (typeof userPermissions !== 'undefined' ? userPermissions : {});
-  const isAuthorizedCheckOff = Boolean(perms.canSaisirTreso || perms.canSaisirDesignations || perms.isAdmin || perms.isTresorier);
-
-  if (motif === 'CheckOff') {
-    if (!isAuthorizedCheckOff) {
-      // Bloqué : Afficher le message d'interdiction et masquer la suite
-      if (alerteBox) {
-        alerteBox.innerText = "❌ Vous n'êtes pas autorisé à saisir un Check Off. Seuls les membres habilités y ont accès.";
-        alerteBox.classList.remove('d-none');
-      }
-      return;
-    }
-  }
-
-  // Si on arrive ici, l'accès est accordé (soit Cotisation pour tous, soit CheckOff avec droits)
-  if (suiteContainer) {
-    suiteContainer.classList.remove('d-none');
-  }
-
-  // Gestion du formulaire simplifié si le motif est "Cotisation"
   const colNbMatchs = document.getElementById('col_nbMatchs_container');
   const colEtape = document.getElementById('col_etape_container');
   const inputNbMatchs = document.getElementById('c_nbMatchs');
   const inputEtape = document.getElementById('c_etape');
 
+  // Masquer le bloc wave si l'utilisateur change de motif
+  if (wavePaymentContainer) {
+    wavePaymentContainer.style.display = 'none';
+    wavePaymentContainer.classList.add('d-none');
+  }
+
+  // Réinitialisation par défaut à chaque changement de motif
+  if (suiteContainer) {
+    suiteContainer.style.display = 'none';
+    suiteContainer.classList.add('d-none');
+  }
+  if (alerteBox) alerteBox.classList.add('d-none');
+  
+  if (btnEnregistrer) {
+    btnEnregistrer.style.display = 'block';
+    btnEnregistrer.classList.remove('d-none');
+    btnEnregistrer.disabled = false;
+    btnEnregistrer.innerHTML = 'Valider & Enregistrer';
+  }
+
+  if (!motif) return;
+
+  // Récupération sécurisée des permissions
+  const perms = window.userPermissions || (typeof userPermissions !== 'undefined' ? userPermissions : {});
+  const isAuthorizedCheckOff = Boolean(perms.canSaisirTreso || perms.canSaisirDesignations || perms.isAdmin || perms.isTresorier);
+
+  // Vérification des droits pour le CheckOff
+  if (motif === 'CheckOff' && !isAuthorizedCheckOff) {
+    if (alerteBox) {
+      alerteBox.innerText = "❌ Vous n'êtes pas autorisé à saisir un Check Off. Seuls les membres habilités y ont accès.";
+      alerteBox.classList.remove('d-none');
+    }
+    return;
+  }
+
+  // Affichage du conteneur principal du formulaire
+  if (suiteContainer) {
+    suiteContainer.style.display = 'block';
+    suiteContainer.classList.remove('d-none');
+  }
+
+  // Adaptation des champs selon qu'il s'agit d'une Cotisation ou d'un CheckOff
   if (motif === 'Cotisation') {
-    // Masquer les champs non requis pour la cotisation
     if (colNbMatchs) colNbMatchs.classList.add('d-none');
     if (colEtape) colEtape.classList.add('d-none');
     if (inputNbMatchs) inputNbMatchs.removeAttribute('required');
     if (inputEtape) inputEtape.removeAttribute('required');
   } else {
-    // Afficher les champs pour CheckOff ou Autre
     if (colNbMatchs) colNbMatchs.classList.remove('d-none');
     if (colEtape) colEtape.classList.remove('d-none');
     if (inputNbMatchs) inputNbMatchs.setAttribute('required', 'true');
     if (inputEtape) inputEtape.setAttribute('required', 'true');
   }
 }
+
 
 // ====================================================================
 // 2. AFFICHAGE DES TABLEAUX (CHECK-OFF & COTISATIONS)
@@ -3675,7 +3752,6 @@ function loadCheckOffs() {
   const thAction = document.getElementById('thAction');
   if (!tbody) return;
 
-  // Récupération robuste de l'e-mail connecté
   let userConnected = "";
   if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
   else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
@@ -3694,13 +3770,13 @@ function loadCheckOffs() {
 
   if (thAction) thAction.style.display = isTresorier ? '' : 'none';
 
-  const nbColonnes = isTresorier ? 9 : 8;
+  const nbColonnes = isTresorier ? 8 : 7;
   tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement...</td></tr>`;
 
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucun versement enregistré.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucun check-off enregistré.</td></tr>`;
         return;
       }
 
@@ -3714,7 +3790,7 @@ function loadCheckOffs() {
         const nbMatchs = c.nbMatchs || '0';
         const etape = c.etape || '-';
         const montant = c.montant || 0;
-        const statut = c.statut || 'ATTENTE';
+        const statut = String(c.statut || 'ATTENTE').trim().toUpperCase();
 
         const montantNum = Number(montant);
         const montantFormate = !isNaN(montantNum) && montantNum > 0 ? montantNum.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
@@ -3726,9 +3802,21 @@ function loadCheckOffs() {
 
         let actionTd = '';
         if (isTresorier) {
-          actionTd = isConfirme 
-            ? `<td><button class="btn btn-sm btn-secondary fw-bold" disabled><i class="fa-solid fa-check-double me-1"></i>Validé</button></td>`
-            : `<td><button class="btn btn-sm btn-success fw-bold" onclick="validateCheck('${id}')"><i class="fa-solid fa-check me-1"></i>Valider</button></td>`;
+          actionTd += `<td><div class="btn-group btn-group-sm" role="group">`;
+          
+          if (isConfirme) {
+            actionTd += `<button class="btn btn-secondary" disabled title="Déjà validé"><i class="fa-solid fa-check-double"></i></button>`;
+          } else {
+            actionTd += `<button class="btn btn-outline-success" onclick="validateCheck('${id}')" title="Valider"><i class="fa-solid fa-check"></i></button>`;
+          }
+
+          if (!isConfirme) {
+            actionTd += `<button class="btn btn-outline-danger" onclick="supprimerVersement('${id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>`;
+          } else {
+            actionTd += `<button class="btn btn-outline-secondary" disabled title="Verrouillé (Confirmé)"><i class="fa-solid fa-trash"></i></button>`;
+          }
+
+          actionTd += `</div></td>`;
         }
 
         htmlRows += `
@@ -3753,23 +3841,15 @@ function loadCheckOffs() {
     .getCheckOffs();
 }
 
-// ==========================================
-// 2. CHARGEMENT DES COTISATIONS
-// ==========================================
 function loadCotisations() {
   const tbody = document.getElementById('tbody-cotisations');
   const thAction = document.getElementById('thActionCotisation');
   if (!tbody) return;
 
-  // Récupération robuste de l'e-mail connecté
   let userConnected = "";
   if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
   else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
   else if (window.userPermissions && window.userPermissions.email) userConnected = window.userPermissions.email;
-  else {
-    const inputEl = document.getElementById('email-input');
-    if (inputEl) userConnected = inputEl.value;
-  }
 
   const tresoEmails = (typeof TRESORIER_EMAIL !== 'undefined') 
     ? TRESORIER_EMAIL.map(e => e.toLowerCase()) 
@@ -3779,7 +3859,6 @@ function loadCotisations() {
   const isTresorier = isGlobalTresorier || (userConnected && tresoEmails.includes(userConnected.toLowerCase().trim()));
 
   if (thAction) thAction.style.display = isTresorier ? '' : 'none';
-
   const nbColonnes = isTresorier ? 6 : 5;
 
   tbody.innerHTML = `
@@ -3795,55 +3874,117 @@ function loadCotisations() {
         tbody.innerHTML = `
           <tr>
             <td colspan="${nbColonnes}" class="text-center text-muted py-3">
-              Aucune cotisation trouvée.
+              Aucune cotisation enregistrée.
             </td>
           </tr>`;
         return;
       }
 
-      let html = '';
-      data.forEach(item => {
-        if (!item) return;
+      let htmlRows = '';
+      data.forEach(function(c, index) {
+        if (!c) return;
+        const id = c.id || 'COT-' + index;
+        const date = c.date || '-';
+        const auteur = c.auteur || c.membre || '-';
+        const zone = c.zone || '-';
+        const montant = c.montant || 0;
+        const statut = String(c.statut || 'ATTENTE').trim().toUpperCase();
 
-        const isConfirme = (item.statut === 'VALIDE' || item.statut === 'CONFIRME');
-        let badgeClass = 'bg-secondary';
-        if (isConfirme) badgeClass = 'bg-success';
-        if (item.statut === 'ATTENTE') badgeClass = 'bg-warning text-dark';
-        if (item.statut === 'REFUSE') badgeClass = 'bg-danger';
+        const montantNum = Number(montant);
+        const montantFormate = !isNaN(montantNum) && montantNum > 0 ? montantNum.toLocaleString('fr-FR') + ' FCFA' : montant + ' FCFA';
 
-        let actionTd = '';
+        const isConfirme = (statut === 'VALIDE' || statut === 'CONFIRME');
+        const badgeStatut = isConfirme 
+          ? '<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>CONFIRMÉ</span>'
+          : '<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>ATTENTE</span>';
+
+        let rowHtml = `
+          <tr>
+            <td><small class="text-muted fw-bold">${date}</small></td>
+            <td class="fw-bold">${auteur}</td>
+            <td><span class="badge bg-info text-dark">${zone}</span></td>
+            <td class="fw-bold text-primary">${montantFormate}</td>
+            <td>${badgeStatut}</td>`;
+
         if (isTresorier) {
-          actionTd = isConfirme
-            ? `<td><button class="btn btn-sm btn-secondary fw-bold" disabled><i class="fa-solid fa-check-double me-1"></i>Validé</button></td>`
-            : `<td><button class="btn btn-sm btn-outline-success fw-bold" onclick="validateCheck('${item.id}')"><i class="fa-solid fa-check me-1"></i>Valider</button></td>`;
+          rowHtml += `<td><div class="btn-group btn-group-sm" role="group">`;
+          
+          if (isConfirme) {
+            rowHtml += `<button class="btn btn-secondary" disabled title="Déjà validé"><i class="fa-solid fa-check-double"></i></button>`;
+          } else {
+            rowHtml += `<button class="btn btn-outline-success" onclick="validateCheck('${id}')" title="Valider"><i class="fa-solid fa-check"></i></button>`;
+          }
+
+          if (!isConfirme) {
+            rowHtml += `<button class="btn btn-outline-danger" onclick="supprimerVersement('${id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>`;
+          } else {
+            rowHtml += `<button class="btn btn-outline-secondary" disabled title="Verrouillé (Confirmé)"><i class="fa-solid fa-trash"></i></button>`;
+          }
+
+          rowHtml += `</div></td>`;
         }
 
-        html += `
-          <tr>
-            <td><small class="text-muted fw-bold">${item.date || '-'}</small></td>
-            <td class="fw-bold">${item.membre || item.auteur || '-'}</td>
-            <td><span class="badge bg-info text-dark">${item.zone || '-'}</span></td>
-            <td class="fw-bold text-primary">${Number(item.montant || 0).toLocaleString('fr-FR')} FCFA</td>
-            <td><span class="badge ${badgeClass}">${item.statut || 'ATTENTE'}</span></td>
-            ${actionTd}
-          </tr>`;
+        rowHtml += `</tr>`;
+        htmlRows += rowHtml;
       });
 
-      tbody.innerHTML = html;
+      tbody.innerHTML = htmlRows;
     })
     .withFailureHandler(function(err) {
-      console.error("Erreur serveur cotisations :", err);
-      const msg = (err && err.message) ? err.message : err;
       tbody.innerHTML = `
         <tr>
           <td colspan="${nbColonnes}" class="text-center text-danger py-3">
-            ❌ Erreur de chargement (${msg})
+            ❌ Erreur de chargement des cotisations.
           </td>
         </tr>`;
     })
     .getCotisations();
 }
 
+/**
+ * Fonction front-end globale pour déclencher la suppression au clic sur le bouton poubelle
+ */
+function supprimerVersement(idVersement) {
+  if (!idVersement) {
+    alert("⚠️ Identifiant de versement invalide.");
+    return;
+  }
+
+  if (!confirm("Voulez-vous vraiment supprimer ce versement ?")) return;
+
+  let userConnected = "";
+  if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
+  else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
+  else if (window.userPermissions && window.userPermissions.email) userConnected = window.userPermissions.email;
+  else {
+    const inputEl = document.getElementById('email-input');
+    if (inputEl) userConnected = inputEl.value;
+  }
+
+  const btn = (typeof event !== 'undefined' && event) ? (event.currentTarget || event.target) : null;
+  let originalHtml = '';
+  if (btn && btn.tagName === 'BUTTON') {
+    btn.disabled = true;
+    originalHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+  }
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      alert("✅ " + (res && res.message ? res.message : "Supprimé avec succès !"));
+      if (typeof loadCheckOffs === 'function') loadCheckOffs();
+      if (typeof loadCotisations === 'function') loadCotisations();
+    })
+    .withFailureHandler(function(err) {
+      if (btn && btn.tagName === 'BUTTON') {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+      const msg = (err && err.message) ? err.message : (err || "Erreur inconnue");
+      alert("❌ Erreur : " + msg);
+    })
+    .supprimerVersementParId(idVersement, userConnected);
+}
 
 // ====================================================================
 // 3. ACTIONS TRÉSORIER & VALIDATION
