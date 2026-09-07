@@ -1164,8 +1164,9 @@
                 <label for="c_motif" class="form-label fw-bold small">Motif *</label>
                 <select id="c_motif" class="form-select form-select-sm" required onchange="gererAffichageFormulaireVersement(this.value)">
                   <option value="" disabled selected>-- Sélectionner --</option>
-                  <option value="CheckOff">CheckOff</option>
+                  <option value="CheckOff">Check-Off / Match</option>
                   <option value="Cotisation">Cotisation</option>
+                  <option value="Autre_Cotisation">Autre Cotisation</option>
                 </select>
               </div>
 
@@ -1219,11 +1220,11 @@
                 <!-- Matchs & Étape (Masqués dynamiquement si le motif est "Cotisation") -->
                 <div class="row g-2">
                   <div class="col-12 col-md-6 mb-3" id="col_nbMatchs_container">
-                    <label class="form-label fw-bold small">Nombre de Matchs *</label>
+                    <label for="c_nbMatchs" class="form-label fw-bold small">Nombre de Matchs *</label>
                     <input type="number" id="c_nbMatchs" placeholder="Ex: 3" class="form-control form-control-sm" min="1">
                   </div>
                   <div class="col-12 col-md-6 mb-3" id="col_etape_container">
-                    <label class="form-label fw-bold small">Tour / Étape *</label>
+                    <label for="c_etape" class="form-label fw-bold small">Tour / Étape *</label>
                     <select id="c_etape" class="form-select form-select-sm">
                       <option value="">-- Sélectionner --</option>
                       <option value="Normal">Normal</option>
@@ -1235,7 +1236,7 @@
 
                 <!-- Montant -->
                 <div class="mb-3">
-                  <label class="form-label fw-bold small">Montant (FCFA) *</label>
+                  <label for="c_montant" class="form-label fw-bold small">Montant (FCFA) *</label>
                   <input type="number" id="c_montant" placeholder="Ex: 5000" class="form-control form-control-sm" min="100">
                 </div>
 
@@ -1288,41 +1289,41 @@
         </div>
 
         <!-- 3. Cotisations (Public) -->
-<div class="tab-pane fade" id="c-cotisations" role="tabpanel" aria-labelledby="tab-co-cotisations">
-  <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
-    <h5 class="text-primary mb-3 fw-bold h6">
-      <i class="fa-solid fa-file-invoice-dollar me-2"></i>Situation des Cotisations annuelles
-    </h5>
-    <div class="table-responsive">
-      <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCotisations">
-        <thead class="table-dark">
-          <tr>
-            <th>Date</th>
-            <th>Membre</th>
-            <th>Zone</th>
-            <th>Montant</th>
-            <th>Statut</th>
-            <!-- Colonne d'action conditionnelle -->
-            <th id="thActionCotisation" style="display: none;">Action</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-cotisations">
-          <tr>
-            <td colspan="6" class="text-center text-muted py-3">
-              <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des cotisations...
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+        <div class="tab-pane fade" id="c-cotisations" role="tabpanel" aria-labelledby="tab-co-cotisations">
+          <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
+            <h5 class="text-primary mb-3 fw-bold h6">
+              <i class="fa-solid fa-file-invoice-dollar me-2"></i>Situation des Cotisations annuelles
+            </h5>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCotisations">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Date</th>
+                    <th>Membre</th>
+                    <th>Zone</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <!-- Colonne d'action conditionnelle -->
+                    <th id="thActionCotisation" style="display: none;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-cotisations">
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-3">
+                      <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des cotisations...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
-<!-- 4. NOUVEAU : Autres Cotisations (Montant != 2500) -->
+        <!-- 4. NOUVEAU : Autres Cotisations (Montant != 2500) -->
         <div class="tab-pane fade" id="c-autres-cotisations" role="tabpanel" aria-labelledby="tab-co-autres-cotisations">
           <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
             <h5 class="text-primary mb-3 fw-bold h6">
-              <i class="fa-solid fa-coins me-2"></i>Situation des Autres Cotisations
+              <i class="fa-solid fa-coins me-2"></i>Situation des Autres Cotisations 
             </h5>
             <div class="table-responsive">
               <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblAutresCotisations">
@@ -1521,90 +1522,127 @@
     </div>
 
     <!-- Section Synthèse Check-off -->
-    <div id="secSyntheseCheck" class="analyse-section">
-      <ul class="nav nav-pills mb-3" id="tabCheckNav" role="tablist">
-        <li class="nav-item">
-          <button class="nav-link active btn-sm" data-bs-toggle="tab" data-bs-target="#tabZoneCheck">Zones</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link btn-sm" data-bs-toggle="tab" data-bs-target="#tabToutesCheck" onclick="chargerCheckOffToutes()">Toutes</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link btn-sm" data-bs-toggle="tab" data-bs-target="#tabPaiementsCheck" onclick="chargerCheckOffPaiements()">Paiements</button>
-        </li>
-      </ul>
+<div id="secSyntheseCheck" class="analyse-section">
+  <!-- Boutons principaux du menu Synthèse Check-Off -->
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button class="btn btn-primary btn-sm active" id="btnCheckTabZone" onclick="switchCheckAnalyseTab('zone')">Zones</button>
+    <button class="btn btn-outline-primary btn-sm" id="btnCheckTabToutes" onclick="switchCheckAnalyseTab('toutes')">Toutes</button>
+    <button class="btn btn-outline-primary btn-sm" id="btnCheckTabPaiements" onclick="switchCheckAnalyseTab('paiements')">Paiements</button>
+  </div>
 
-      <div class="tab-content" id="subTabCheckContent">
-        <div class="tab-pane fade show active" id="tabZoneCheck">
-          <div class="row mb-3">
-            <div class="col-12 col-md-6">
-              <select id="syn_zone_select" class="form-select form-select-sm" onchange="chargerCheckOffParZone()">
-                <option value="">-- Sélectionner la Zone --</option>
-                <option value="Koumpentoum">Koumpentoum</option>
-                <option value="Bamba">Bamba</option>
-                <option value="Kahène">Kahène</option>
-                <option value="Méréto">Méréto</option>
-                <option value="Malème Niani">Malème Niani</option>
-                <option value="Patoulane">Patoulane</option>
-                <option value="Ndame">Ndame</option>
-                <option value="Kouthiaba">Kouthiaba</option>
-                <option value="Payar">Payar</option>
-                <option value="Kouthiagaydi">Kouthiagaydi</option>
-              </select>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle shadow-sm text-nowrap w-100">
-              <thead class="table-dark">
-                <tr>
-                  <th>Date et Heure</th>
-                  <th class="text-center">Nombre de Matchs</th>
-                  <th class="text-end">Montant</th>
-                  <th>Tour / Étape</th>
-                </tr>
-              </thead>
-              <tbody id="bodyCheckOffZone">
-                <tr><td colspan="4" class="text-center text-muted">Veuillez sélectionner une zone.</td></tr>
-              </tbody>
-              <tfoot id="footCheckOffZone" class="table-secondary fw-bold"></tfoot>
-            </table>
-          </div>
+  <div class="tab-content" id="subTabCheckContent">
+    
+    <!-- 1. SOUS-ONGLET ZONES -->
+    <div class="tab-pane fade show active" id="tabZoneCheck" style="display: block;">
+      <div class="row g-2 mb-3">
+        <div class="col-12 col-md-5">
+          <label class="form-label small fw-bold">Zone :</label>
+          <select id="syn_zone_select" class="form-select form-select-sm" onchange="chargerCheckOffParZone()">
+            <option value="">-- Sélectionner la Zone --</option>
+            <option value="Koumpentoum">Koumpentoum</option>
+            <option value="Bamba">Bamba</option>
+            <option value="Kahène">Kahène</option>
+            <option value="Méréto">Méréto</option>
+            <option value="Malème Niani">Malème Niani</option>
+            <option value="Patoulane">Patoulane</option>
+            <option value="Ndame">Ndame</option>
+            <option value="Kouthiaba">Kouthiaba</option>
+            <option value="Payar">Payar</option>
+            <option value="Kouthiagaydi">Kouthiagaydi</option>
+          </select>
         </div>
-
-        <div class="tab-pane fade" id="tabToutesCheck">
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle shadow-sm text-nowrap w-100">
-              <thead class="table-dark">
-                <tr>
-                  <th>Zone</th>
-                  <th class="text-center">Total Matchs</th>
-                  <th class="text-center">Tour Normal</th>
-                  <th class="text-center">Demi-Finale</th>
-                  <th class="text-center">Finale</th>
-                  <th class="text-end">Montant Total Payé</th>
-                </tr>
-              </thead>
-              <tbody id="bodyCheckOffToutes"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="tab-pane fade" id="tabPaiementsCheck">
-          <div class="table-responsive">
-            <table class="table table-striped align-middle shadow-sm text-nowrap w-100">
-              <thead class="table-dark">
-                <tr>
-                  <th>Nom Complet</th>
-                  <th class="text-center">Total Matchs</th>
-                  <th class="text-end">Montant Reçu (FCFA)</th>
-                </tr>
-              </thead>
-              <tbody id="bodyCheckOffPaiements"></tbody>
-            </table>
-          </div>
+        <div class="col-12 col-md-5">
+          <label class="form-label small fw-bold">Situation :</label>
+          <select id="syn_situation_zone" class="form-select form-select-sm" onchange="chargerCheckOffParZone()">
+            <option value="Tout" selected>Tout</option>
+            <option value="Payé">Payé</option>
+            <option value="Recouvrer">Recouvrer</option>
+          </select>
         </div>
       </div>
+      
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle shadow-sm text-nowrap w-100">
+          <thead class="table-dark text-center">
+            <tr>
+              <th rowspan="2" class="align-middle">Zone / Entité</th>
+              <th colspan="2">Normal</th>
+              <th colspan="2">Demi-Finale</th>
+              <th colspan="2">Finale</th>
+            </tr>
+            <tr>
+              <th>Match</th>
+              <th>Montant</th>
+              <th>Match</th>
+              <th>Montant</th>
+              <th>Match</th>
+              <th>Montant</th>
+            </tr>
+          </thead>
+          <tbody id="bodyCheckOffZone">
+            <tr><td colspan="7" class="text-center text-muted">Veuillez sélectionner une zone et une situation.</td></tr>
+          </tbody>
+          <tfoot id="footCheckOffZone" class="table-secondary fw-bold"></tfoot>
+        </table>
+      </div>
     </div>
+
+    <!-- 2. SOUS-ONGLET TOUTES -->
+    <div class="tab-pane fade" id="tabToutesCheck" style="display: none;">
+      <div class="row g-2 mb-3">
+        <div class="col-12 col-md-5">
+          <label class="form-label small fw-bold">Situation :</label>
+          <select id="syn_situation_toutes" class="form-select form-select-sm" onchange="chargerCheckOffToutes()">
+            <option value="Tout" selected>Tout</option>
+            <option value="Payé">Payé</option>
+            <option value="Recouvrer">Recouvrer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle shadow-sm text-nowrap w-100">
+          <thead class="table-dark text-center">
+            <tr>
+              <th rowspan="2" class="align-middle">Zone</th>
+              <th colspan="2">Normal</th>
+              <th colspan="2">Demi-Finale</th>
+              <th colspan="2">Finale</th>
+            </tr>
+            <tr>
+              <th>Match</th>
+              <th>Montant</th>
+              <th>Match</th>
+              <th>Montant</th>
+              <th>Match</th>
+              <th>Montant</th>
+            </tr>
+          </thead>
+          <tbody id="bodyCheckOffToutes"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. SOUS-ONGLET PAIEMENTS -->
+    <div class="tab-pane fade" id="tabPaiementsCheck" style="display: none;">
+      <div class="table-responsive">
+        <table class="table table-striped align-middle shadow-sm text-nowrap w-100">
+          <thead class="table-dark text-center">
+            <tr>
+              <th>Nom Complet</th>
+              <th>Tour Normal</th>
+              <th>Demi-Finale</th>
+              <th>Finale</th>
+              <th>Montant Reçu (FCFA)</th>
+            </tr>
+          </thead>
+          <tbody id="bodyCheckOffPaiements"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -1702,19 +1740,63 @@ window.evaluationsDuMatch = window.evaluationsDuMatch || [];
 // ============================================================================
 // INITIALISATION UNIQUE ET GLOBALE DE L'APPLICATION (DOMContentLoaded)
 // ============================================================================
-document.addEventListener('DOMContentLoaded', function() {
+google.script.run
+  .withSuccessHandler(function(res) {
+    const btnEnregistrer = document.getElementById('btnEnregistrer');
+    if (btnEnregistrer) {
+      btnEnregistrer.disabled = false;
+      btnEnregistrer.style.setProperty('display', 'none', 'important');
+      btnEnregistrer.classList.add('d-none');
+      btnEnregistrer.innerHTML = 'Valider & Enregistrer';
+    }
 
-  // 1. Initialisation de la recherche automatique sur les tableaux & MutationObserver
+    const motifElement = document.getElementById('c_motif');
+    if (motifElement) motifElement.value = '';
+
+    const auteurElement = document.getElementById('c_auteur');
+    if (auteurElement) auteurElement.value = '';
+    
+    const labelAuteur = document.getElementById('label_c_auteur');
+    if (labelAuteur) labelAuteur.innerText = '-- Choisir un membre --';
+    
+    const inputMontant = document.getElementById('c_montant');
+    if (inputMontant) inputMontant.value = '';
+    
+    const nombreMatchsElement = document.getElementById('c_nbMatchs');
+    if (nombreMatchsElement) nombreMatchsElement.value = '';
+    
+    const etapeElement = document.getElementById('c_etape');
+    if (etapeElement) etapeElement.value = '';
+
+    const suiteContainer = document.getElementById('form-suite-container');
+    if (suiteContainer) {
+      suiteContainer.style.setProperty('display', 'none', 'important');
+      suiteContainer.classList.add('d-none');
+    }
+
+    const wavePaymentContainer = document.getElementById('wavePaymentContainer');
+    if (wavePaymentContainer) {
+      wavePaymentContainer.classList.remove('d-none');
+      wavePaymentContainer.style.setProperty('display', 'block', 'important');
+    }
+
+    if (typeof loadCheckOffs === 'function') loadCheckOffs();
+    if (typeof loadCotisations === 'function') loadCotisations();
+  })
+
+document.addEventListener('DOMContentLoaded', function() {
   if (typeof installerRechercheAutomatiqueSurTousLesTableaux === 'function') {
     installerRechercheAutomatiqueSurTousLesTableaux();
   }
-  observer.observe(document.body, { childList: true, subtree: true });
+  if (typeof observer !== 'undefined' && observer) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
 
-  // 2. Sécurité par défaut : Réinitialisation stricte des permissions
-  window.userPermissions = getEmptyPermissionsClient();
-  applyPermissions(window.userPermissions);
+  if (typeof getEmptyPermissionsClient === 'function' && typeof applyPermissions === 'function') {
+    window.userPermissions = getEmptyPermissionsClient();
+    applyPermissions(window.userPermissions);
+  }
 
-  // 3. Masquage initial de tous les éléments sensibles / formulaires
   const activeCard = document.getElementById('activeQualityCard');
   if (activeCard) {
     activeCard.style.setProperty('display', 'none', 'important');
@@ -1738,23 +1820,27 @@ document.addEventListener('DOMContentLoaded', function() {
     reinitialiserFormulaireRapportSuperviseur();
   }
 
-  // 4. Gestion du pré-remplissage de l'e-mail de connexion (confort)
   const dernierEmail = sessionStorage.getItem('user_email_souscra');
   const input = document.getElementById('inputLoginEmail');
   if (input && dernierEmail) {
     input.value = dernierEmail;
   }
 
-  // 5. Force l'affichage de la modale de connexion et bloque toute connexion automatique
-  afficherModalConnexion(true);
+  if (typeof afficherModalConnexion === 'function') {
+    afficherModalConnexion(true);
+  }
 
-  // 6. Vérification de l'environnement Apps Script
+  const btnPayerWave = document.getElementById('btnPayerWave');
+  if (btnPayerWave) {
+    btnPayerWave.addEventListener('click', function(e) {
+    });
+  }
+
   if (typeof google === 'undefined' || !google.script || !google.script.run) {
     console.warn("Environnement Apps Script non détecté.");
     return;
   }
 
-  // 🚀 7. LANCEMENT DU CHARGEMENT DES MENUS DÉROULANTS (CORRECTION)
   if (typeof loadMembresDropdowns === 'function') {
     loadMembresDropdowns();
   } else {
@@ -3581,7 +3667,6 @@ function formerDateHeureAffichage(dateStr, heureStr) {
 // ====================================================================
 // 1. SOUMISSION & ENREGISTREMENT CHECK-OFF
 // ====================================================================
-
 function handleCheckOffSubmit(e) {
   if (e && e.preventDefault) e.preventDefault();
 
@@ -3791,13 +3876,6 @@ function gererAffichageFormulaireVersement(motif) {
 }
 
 
-// ====================================================================
-// 2. AFFICHAGE DES TABLEAUX (CHECK-OFF & COTISATIONS)
-// ====================================================================
-
-// ==========================================
-// 1. CHARGEMENT DES CHECK-OFFS
-// ==========================================
 function loadCheckOffs() {
   const tbody = document.querySelector('#tblCheckOffs tbody');
   const thAction = document.getElementById('thAction');
@@ -3893,27 +3971,31 @@ function loadCheckOffs() {
 }
 
 /**
- * Charge uniquement les cotisations dont le montant est égal à 2500 FCFA
+ * Charge les cotisations de la feuille PARTICIPATIONS (généralement 2500 FCFA)
+ */
+/**
+ * Charge les cotisations annuelles (Feuille PARTICIPATIONS)
  */
 function loadCotisations() {
-  chargerTableauCotisationsParFiltre('2500', '#tblCotisations', '#tbody-cotisations', '#thActionCotisation', true);
+  chargerTableauDonnees('PARTICIPATIONS', '#tblCotisations', '#tbody-cotisations', '#thActionCotisation', 'getCotisations');
 }
 
 /**
- * Charge les cotisations dont le montant est DIFFÉRENT de 2500 FCFA
+ * Charge les autres cotisations (Feuille COTISATIONS)
  */
 function loadAutresCotisations() {
-  chargerTableauCotisationsParFiltre('2500', '#tblAutresCotisations', '#tbody-autres-cotisations', '#thActionAutresCotisations', false);
+  chargerTableauDonnees('COTISATIONS', '#tblAutresCotisations', '#tbody-autres-cotisations', '#thActionAutresCotisations', 'getAutresCotisations');
 }
 
 /**
- * Fonction générique pour filtrer et afficher les cotisations selon le montant
+ * Fonction générique mutualisée pour afficher les tableaux de cotisations
  */
-function chargerTableauCotisationsParFiltre(montantCible, tableId, tbodyId, thActionId, estEgal) {
+function chargerTableauDonnees(nomSource, tableId, tbodyId, thActionId, nomFonctionBackend) {
   const tbody = document.querySelector(tbodyId);
   const thAction = document.querySelector(thActionId);
   if (!tbody) return;
 
+  // Gestion des permissions Trésorier / Admin
   let userConnected = "";
   if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
   else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
@@ -3932,32 +4014,20 @@ function chargerTableauCotisationsParFiltre(montantCible, tableId, tbodyId, thAc
   tbody.innerHTML = `
     <tr>
       <td colspan="${nbColonnes}" class="text-center text-muted py-3">
-        <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des données...
+        <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des données (${nomSource})...
       </td>
     </tr>`;
 
+  // Appel dynamique de getCotisations() ou getAutresCotisations()
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucune donnée enregistrée.</td></tr>`;
-        return;
-      }
-
-      // Filtrage selon le montant cible (2500 ou autre)
-      const dataFiltree = data.filter(function(c) {
-        if (!c) return false;
-        const montantNum = Number(c.montant);
-        const cibleNum = Number(montantCible);
-        return estEgal ? (montantNum === cibleNum) : (montantNum !== cibleNum);
-      });
-
-      if (dataFiltree.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucune cotisation correspondante trouvée.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucune donnée trouvée dans ${nomSource}.</td></tr>`;
         return;
       }
 
       let htmlRows = '';
-      dataFiltree.forEach(function(c, index) {
+      data.forEach(function(c, index) {
         const id = c.id || 'COT-' + index;
         const date = c.date || '-';
         const auteur = c.auteur || c.membre || '-';
@@ -3973,6 +4043,7 @@ function chargerTableauCotisationsParFiltre(montantCible, tableId, tbodyId, thAc
           ? '<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>CONFIRMÉ</span>'
           : '<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>ATTENTE</span>';
 
+        // Ordre des colonnes respecté : Date, Membre, Zone, Montant, Statut
         let rowHtml = `
           <tr>
             <td><small class="text-muted fw-bold">${date}</small></td>
@@ -3981,19 +4052,16 @@ function chargerTableauCotisationsParFiltre(montantCible, tableId, tbodyId, thAc
             <td class="fw-bold text-primary">${montantFormate}</td>
             <td>${badgeStatut}</td>`;
 
+        // Colonne d'action pour le Trésorier
         if (isTresorier) {
           rowHtml += `<td><div class="btn-group btn-group-sm" role="group">`;
           
           if (isConfirme) {
             rowHtml += `<button class="btn btn-secondary" disabled title="Déjà validé"><i class="fa-solid fa-check-double"></i></button>`;
+            rowHtml += `<button class="btn btn-outline-secondary" disabled title="Verrouillé (Confirmé)"><i class="fa-solid fa-trash"></i></button>`;
           } else {
             rowHtml += `<button class="btn btn-outline-success" onclick="validateCheck('${id}')" title="Valider"><i class="fa-solid fa-check"></i></button>`;
-          }
-
-          if (!isConfirme) {
             rowHtml += `<button class="btn btn-outline-danger" onclick="supprimerVersement('${id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>`;
-          } else {
-            rowHtml += `<button class="btn btn-outline-secondary" disabled title="Verrouillé (Confirmé)"><i class="fa-solid fa-trash"></i></button>`;
           }
 
           rowHtml += `</div></td>`;
@@ -4009,12 +4077,12 @@ function chargerTableauCotisationsParFiltre(montantCible, tableId, tbodyId, thAc
       tbody.innerHTML = `
         <tr>
           <td colspan="${nbColonnes}" class="text-center text-danger py-3">
-            ❌ Erreur de chargement des données.
+            ❌ Erreur de chargement de la source ${nomSource}.
           </td>
         </tr>`;
-    })
-    .getCotisations();
+    })[nomFonctionBackend]();
 }
+
 
 /**
  * Fonction front-end globale pour déclencher la suppression au clic sur le bouton poubelle
@@ -4038,22 +4106,31 @@ function supprimerVersement(idVersement) {
 
   const btn = (typeof event !== 'undefined' && event) ? (event.currentTarget || event.target) : null;
   let originalHtml = '';
-  if (btn && btn.tagName === 'BUTTON') {
-    btn.disabled = true;
-    originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+  if (btn) {
+    // Si l'élément cliqué est un enfant de l'icône (ex: le i de la poubelle), on remonte au bouton
+    const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
+    if (buttonEl) {
+      buttonEl.disabled = true;
+      originalHtml = buttonEl.innerHTML;
+      buttonEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+    }
   }
 
   google.script.run
     .withSuccessHandler(function(res) {
       alert("✅ " + (res && res.message ? res.message : "Supprimé avec succès !"));
-      if (typeof loadCheckOffs === 'function') loadCheckOffs();
+      // Rafraîchir l'ensemble des tableaux de l'application
       if (typeof loadCotisations === 'function') loadCotisations();
+      if (typeof loadAutresCotisations === 'function') loadAutresCotisations();
+      if (typeof loadCheckOffs === 'function') loadCheckOffs();
     })
     .withFailureHandler(function(err) {
-      if (btn && btn.tagName === 'BUTTON') {
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
+      if (btn) {
+        const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
+        if (buttonEl) {
+          buttonEl.disabled = false;
+          buttonEl.innerHTML = originalHtml;
+        }
       }
       const msg = (err && err.message) ? err.message : (err || "Erreur inconnue");
       alert("❌ Erreur : " + msg);
@@ -4074,21 +4151,31 @@ function validateCheck(idCheckOff) {
   if (!confirm("Voulez-vous vraiment confirmer ce versement ?")) return;
 
   const btn = (typeof event !== 'undefined' && event) ? (event.currentTarget || event.target) : null;
-  if (btn && btn.tagName === 'BUTTON') {
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Validation...';
+  let originalHtml = '';
+  if (btn) {
+    const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
+    if (buttonEl) {
+      buttonEl.disabled = true;
+      originalHtml = buttonEl.innerHTML;
+      buttonEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Validation...';
+    }
   }
 
   google.script.run
-    .withSuccessHandler(function() {
-      alert("✅ Versement confirmé avec succès !");
-      if (typeof loadCheckOffs === 'function') loadCheckOffs();
+    .withSuccessHandler(function(res) {
+      alert("✅ " + (res && res.message ? res.message : "Versement confirmé avec succès !"));
+      // Rafraîchir l'ensemble des tableaux de l'application
       if (typeof loadCotisations === 'function') loadCotisations();
+      if (typeof loadAutresCotisations === 'function') loadAutresCotisations();
+      if (typeof loadCheckOffs === 'function') loadCheckOffs();
     })
     .withFailureHandler(function(err) {
-      if (btn && btn.tagName === 'BUTTON') {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Valider';
+      if (btn) {
+        const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
+        if (buttonEl) {
+          buttonEl.disabled = false;
+          buttonEl.innerHTML = originalHtml;
+        }
       }
       const msg = (err && err.message) ? err.message : (err || "Erreur inconnue");
       alert("❌ Erreur : " + msg);
@@ -4299,63 +4386,7 @@ function initCotisationsTabListener() {
 // 5. ANALYSE : RAPPORTS, DESIGNATIONS, FINANCE 
 // ====================================================================
 
-function switchAnalyseTab(tabKey) {
-  if (!tabKey) tabKey = 'desig';
 
-  const btnPerf  = document.getElementById('btnRapportsPerf');
-  const btnDesig = document.getElementById('btnSyntheseDesig');
-  const btnCheck = document.getElementById('btnSyntheseCheck');
-
-  const secPerf  = document.getElementById('secRapportsPerf');
-  const secDesig = document.getElementById('secSyntheseDesig');
-  const secCheck = document.getElementById('secSyntheseCheck');
-
-  // Récupération globale et calcul rigoureux de 'canVoirRapports' selon la logique applyPermissions
-  const perms = window.userPermissions || (typeof userPermissions !== 'undefined' ? userPermissions : {});
-  const isAdmin = Boolean(perms.isAdmin || perms.canSaisirMembres || perms.isMembreAdmin || perms.isUserAdminMembre);
-  const canVoirRapports = Boolean(perms.canVoirRapports || perms.isRapportsAllowed || perms.canVoirPerformances || isAdmin);
-
-  // 1. Réinitialisation visuelle des boutons
-  [btnPerf, btnDesig, btnCheck].forEach(btn => {
-    if (btn) {
-      btn.classList.remove('active', 'btn-primary');
-      btn.classList.add('btn-outline-primary');
-    }
-  });
-
-  // 2. Masquage de toutes les sections via le helper global
-  [secPerf, secDesig, secCheck].forEach(sec => {
-    if (sec) toggleVisibility(sec, false);
-  });
-
-  // 3. Activation conditionnelle stricte
-  if (tabKey === 'perf') {
-    if (canVoirRapports && secPerf) {
-      toggleVisibility(secPerf, true);
-      if (btnPerf) btnPerf.classList.add('btn-primary', 'active');
-      if (typeof chargerRapportsPerformance === 'function') chargerRapportsPerformance();
-    } else {
-      console.warn("Accès refusé à l'onglet Performance des rapports.");
-      switchAnalyseTab('desig'); // Redirection automatique de sécurité
-    }
-  } 
-  else if (tabKey === 'desig' && secDesig) {
-    toggleVisibility(secDesig, true);
-    if (btnDesig) btnDesig.classList.add('btn-primary', 'active');
-    
-    if (typeof remplirListeMembresAnalyse === 'function') remplirListeMembresAnalyse();
-    if (typeof chargerClassementArbitres === 'function') chargerClassementArbitres();
-    if (typeof chargerClassementSuperviseurs === 'function') chargerClassementSuperviseurs();
-  } 
-  else if (tabKey === 'check' && secCheck) {
-    toggleVisibility(secCheck, true);
-    if (btnCheck) btnCheck.classList.add('btn-primary', 'active');
-    
-    if (typeof chargerCheckOffParZone === 'function') chargerCheckOffParZone();
-    if (typeof chargerCheckOffToutes === 'function') chargerCheckOffToutes();
-    if (typeof chargerCheckOffPaiements === 'function') chargerCheckOffPaiements();
-  }
-}
 
 // Helper de masquage / affichage (prise en charge ID string ou Élément DOM)
 function toggleVisibility(target, show) {
@@ -4372,102 +4403,406 @@ function toggleVisibility(target, show) {
 // ============================================================================
 // MODULE CHECK-OFF & SYNTHÈSE FINANCIÈRE
 // ============================================================================
-function chargerCheckOffParZone() {
-  const selectZone = document.getElementById('syn_zone_select');
-  if (!selectZone || !selectZone.value) return;
-  const zone = selectZone.value;
+// ============================================================================
+// MODULE ANALYSE : SYNTHÈSE CHECK-OFF & PAIEMENTS (REFONTE COMPLÈTE)
+// ============================================================================
 
-  google.script.run.withSuccessHandler(function(data) {
-    const body = document.getElementById('bodyCheckOffZone');
-    const foot = document.getElementById('footCheckOffZone');
-    if (!body || !foot) return;
-    
-    body.innerHTML = ''; foot.innerHTML = '';
+/**
+ * Change de sous-onglet dans la section Synthèse Check-Off (Zones, Toutes, Paiements)
+ */
+function switchCheckAnalyseTab(tabName) {
+  const btnZone = document.getElementById('btnCheckTabZone');
+  const btnToutes = document.getElementById('btnCheckTabToutes');
+  const btnPaiements = document.getElementById('btnCheckTabPaiements');
 
-    let totalMatchs = 0, totalMontant = 0;
-    const filtered = (data || []).filter(c => c.zone && c.zone.toLowerCase() === zone.toLowerCase());
+  const paneZone = document.getElementById('tabZoneCheck');
+  const paneToutes = document.getElementById('tabToutesCheck');
+  const panePaiements = document.getElementById('tabPaiementsCheck');
 
-    const fragment = document.createDocumentFragment();
+  // Reset boutons
+  [btnZone, btnToutes, btnPaiements].forEach(b => {
+    if (b) {
+      b.classList.remove('active', 'btn-primary');
+      b.classList.add('btn-outline-primary', 'nav-link');
+    }
+  });
 
-    filtered.forEach(c => {
-      const nb = Number(c.nbMatchs) || 0;
-      const mt = Number(c.montant) || 0;
-      totalMatchs += nb;
-      totalMontant += mt;
+  // Masquer panneaux
+  [paneZone, paneToutes, panePaiements].forEach(p => {
+    if (p) {
+      p.classList.remove('show', 'active');
+      p.style.display = 'none';
+    }
+  });
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${c.date || '-'}</td>
-        <td class="text-center">${nb}</td>
-        <td class="text-end fw-bold">${mt.toLocaleString('fr-FR')} FCFA</td>
-        <td><span class="badge bg-light text-dark border">${c.etape || '-'}</span></td>`;
-      fragment.appendChild(tr);
-    });
-
-    body.appendChild(fragment);
-
-    foot.innerHTML = `<tr>
-      <td>TOTAL SYNTHÈSE</td>
-      <td class="text-center">${totalMatchs}</td>
-      <td class="text-end text-success">${totalMontant.toLocaleString('fr-FR')} FCFA</td>
-      <td>-</td>
-    </tr>`;
-  }).getCheckOffs();
+  // Activer la bonne vue
+  if (tabName === 'zone') {
+    if (btnZone) { btnZone.classList.add('active', 'btn-primary'); btnZone.classList.remove('btn-outline-primary'); }
+    if (paneZone) { paneZone.classList.add('show', 'active'); paneZone.style.display = 'block'; }
+    chargerCheckOffParZone();
+  } else if (tabName === 'toutes') {
+    if (btnToutes) { btnToutes.classList.add('active', 'btn-primary'); btnToutes.classList.remove('btn-outline-primary'); }
+    if (paneToutes) { paneToutes.classList.add('show', 'active'); paneToutes.style.display = 'block'; }
+    chargerCheckOffToutes();
+  } else if (tabName === 'paiements') {
+    if (btnPaiements) { btnPaiements.classList.add('active', 'btn-primary'); btnPaiements.classList.remove('btn-outline-primary'); }
+    if (panePaiements) { panePaiements.classList.add('show', 'active'); panePaiements.style.display = 'block'; }
+    chargerCheckOffPaiements();
+  }
 }
 
+function switchAnalyseTab(tabName) {
+  const btnPerf = document.getElementById('btnRapportsPerf');
+  const btnDesig = document.getElementById('btnSyntheseDesig');
+  const btnCheck = document.getElementById('btnSyntheseCheck');
+
+  const secPerf = document.getElementById('secRapportsPerf');
+  const secDesig = document.getElementById('secSyntheseDesig');
+  const secCheck = document.getElementById('secSyntheseCheck');
+
+  // 1. Gestion des classes des boutons principaux
+  [btnPerf, btnDesig, btnCheck].forEach(b => {
+    if (b) {
+      b.classList.remove('active', 'btn-primary');
+      b.classList.add('btn-outline-primary');
+    }
+  });
+
+  // 2. Masquage strict de toutes les sections par défaut via d-none
+  [secPerf, secDesig, secCheck].forEach(s => {
+    if (s) {
+      s.classList.add('d-none');
+    }
+  });
+
+  // 3. Activation de la section et du bouton ciblés
+  if (tabName === 'perf') {
+    if (btnPerf) {
+      btnPerf.classList.add('active', 'btn-primary');
+      btnPerf.classList.remove('btn-outline-primary');
+    }
+    if (secPerf) {
+      secPerf.classList.remove('d-none');
+    }
+    if (typeof chargerRapportsPerformance === 'function') {
+      chargerRapportsPerformance();
+    }
+  } else if (tabName === 'desig') {
+    if (btnDesig) {
+      btnDesig.classList.add('active', 'btn-primary');
+      btnDesig.classList.remove('btn-outline-primary');
+    }
+    if (secDesig) {
+      secDesig.classList.remove('d-none');
+    }
+  } else if (tabName === 'check') {
+    if (btnCheck) {
+      btnCheck.classList.add('active', 'btn-primary');
+      btnCheck.classList.remove('btn-outline-primary');
+    }
+    if (secCheck) {
+      secCheck.classList.remove('d-none');
+    }
+  }
+}
+
+/**
+ * Calcul de la situation pour une zone ou pour l'ensemble des zones
+ * Prend en compte les barèmes spécifiques et ignore les matchs futurs (dont la date/heure n'est pas encore atteinte).
+ * @param {string} zoneCible - Nom de la zone ou 'TOUTES'
+ * @param {string} situation - 'Tout', 'Payé', ou 'Recouvrer'
+ */
+/**
+ * Calcul de la situation pour une zone ou pour l'ensemble des zones
+ * Prend en compte les barèmes spécifiques et ignore les matchs futurs (dont la date/heure n'est pas encore atteinte).
+ * @param {string} zoneCible - Nom de la zone ou 'TOUTES'
+ * @param {string} situation - 'Tout', 'Payé', ou 'Recouvrer'
+ */
+function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, situation) {
+  const toursConfig = ['Normal', 'Demi-Finale', 'Finale'];
+  let statsParTour = {
+    'Normal': { matchs: 0, montant: 0 },
+    'Demi-Finale': { matchs: 0, montant: 0 },
+    'Finale': { matchs: 0, montant: 0 }
+  };
+
+  const isToutes = (zoneCible.toLowerCase() === 'toutes');
+  const maintenant = new Date(); // Date et heure actuelles
+
+  // Fonction pour déterminer le tarif unitaire selon la zone et le tour
+  function getTarifUnitaire(zoneNom, tourNom) {
+    const z = (zoneNom || '').toLowerCase();
+    const t = (tourNom || '').toLowerCase();
+    const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
+
+    if (t.includes('normal')) {
+      return estZoneSpeciale ? 1600 : 1900;
+    } else if (t.includes('demi')) {
+      return 3000;
+    } else if (t.includes('final')) {
+      return 4000;
+    }
+    return 1900;
+  }
+
+  // Fonction pour vérifier si un match est passé ou atteint (Date <= Maintenant)
+  function estMatchPasseOuAtteint(dateMatchVal, heureMatchVal) {
+    if (!dateMatchVal) return true; // Par défaut si la date est absente, on l'inclut
+
+    try {
+      let dateObj = new Date(dateMatchVal);
+      if (isNaN(dateObj.getTime())) return true;
+
+      // Si une heure est fournie, on l'intègre dans l'objet Date
+      if (heureMatchVal) {
+        const heureStr = String(heureMatchVal).trim();
+        const parts = heureStr.split(':');
+        if (parts.length >= 2) {
+          dateObj.setHours(parseInt(parts[0], 10) || 0);
+          dateObj.setMinutes(parseInt(parts[1], 10) || 0);
+        }
+      }
+
+      return dateObj <= maintenant;
+    } catch (e) {
+      return true; // En cas de doute, on inclut le match
+    }
+  }
+
+  // 1. Filtrer les désignations de la zone et exclure les matchs futurs
+  const desigsFiltrees = (dataDesignations || []).filter(d => {
+    if (!d.zone) return false;
+    
+    // Vérification de la zone
+    const matchZone = isToutes ? true : (d.zone.toLowerCase() === zoneCible.toLowerCase());
+    if (!matchZone) return false;
+
+    // Exclusion des matchs futurs (date et heure non encore atteintes)
+    // On s'attend à ce que d.dateMatch et d.heureMatch soient présents dans l'objet brut
+    return estMatchPasseOuAtteint(d.dateMatch, d.heureMatch);
+  });
+
+  // 2. Filtrer les check-offs de la zone
+  const checksFiltres = (dataCheckOffs || []).filter(c => {
+    if (!c.zone) return false;
+    if (isToutes) return true;
+    return c.zone.toLowerCase() === zoneCible.toLowerCase();
+  });
+
+  toursConfig.forEach(tour => {
+    const tourKeyLower = tour.toLowerCase();
+
+    // Filtrer les désignations de ce tour précis
+    const desigsTour = desigsFiltrees.filter(d => {
+      const e = (d.etape || '').toLowerCase();
+      if (tourKeyLower.includes('normal')) return e.includes('normal') || (!e.includes('demi') && !e.includes('final'));
+      if (tourKeyLower.includes('demi')) return e.includes('demi');
+      if (tourKeyLower.includes('final')) return e.includes('final');
+      return false;
+    });
+
+    // Filtrer les check-offs de ce tour précis
+    const checksTour = checksFiltres.filter(c => {
+      const e = (c.etape || '').toLowerCase();
+      if (tourKeyLower.includes('normal')) return e.includes('normal') || (!e.includes('demi') && !e.includes('final'));
+      if (tourKeyLower.includes('demi')) return e.includes('demi');
+      if (tourKeyLower.includes('final')) return e.includes('final');
+      return false;
+    });
+
+    // --- A. TOTAL DES MATCHS (Basé sur les désignations passées/atteintes) ---
+    let totalMatchs = desigsTour.length;
+    let totalMontant = 0;
+
+    desigsTour.forEach(d => {
+      totalMontant += getTarifUnitaire(d.zone || zoneCible, tour);
+    });
+
+    if (totalMatchs === 0 && checksTour.length > 0) {
+      checksTour.forEach(c => {
+        totalMatchs += Number(c.nbMatchs) || 0;
+        totalMontant += Number(c.montant) || (Number(c.nbMatchs) * getTarifUnitaire(c.zone || zoneCible, tour));
+      });
+    }
+
+    // --- B. MATCHS PAYÉS (Statut VALIDE ou CONFIRME) ---
+    let matchPayes = 0;
+    let montantPaye = 0;
+
+    checksTour.forEach(c => {
+      const statut = (c.statut || '').toUpperCase();
+      if (statut === 'CONFIRME' || statut === 'VALIDE') {
+        const nb = Number(c.nbMatchs) || 0;
+        matchPayes += nb;
+        montantPaye += Number(c.montant) || (nb * getTarifUnitaire(c.zone || zoneCible, tour));
+      }
+    });
+
+    // --- C. AFFECTATION SELON LA SITUATION CHOISIE ---
+    if (situation === 'Tout') {
+      statsParTour[tour].matchs = totalMatchs;
+      statsParTour[tour].montant = totalMontant;
+
+    } else if (situation === 'Payé') {
+      statsParTour[tour].matchs = matchPayes;
+      statsParTour[tour].montant = montantPaye;
+
+    } else if (situation === 'Recouvrer') {
+      statsParTour[tour].matchs = Math.max(0, totalMatchs - matchPayes);
+      statsParTour[tour].montant = Math.max(0, totalMontant - montantPaye);
+    }
+  });
+
+  return statsParTour;
+}
+
+/**
+ * Charge l'affichage pour la vue ZONES avec les sélecteurs Zone et Situation
+ */
+/**
+ * Charge l'affichage pour la vue TOUTES les zones avec le sélecteur de Situation
+ */
 function chargerCheckOffToutes() {
+  const selectSituation = document.getElementById('syn_situation_toutes');
+  const body = document.getElementById('bodyCheckOffToutes');
+  if (!body) return;
+
+  const situationChoisie = selectSituation ? selectSituation.value : 'Tout';
   const zonesList = ["Koumpentoum", "Bamba", "Kahène", "Méréto", "Malème Niani", "Patoulane", "Ndame", "Kouthiaba", "Payar", "Kouthiagaydi"];
-  
-  google.script.run.withSuccessHandler(function(data) {
-    const body = document.getElementById('bodyCheckOffToutes');
-    if (!body) return;
-    body.innerHTML = '';
 
-    const fragment = document.createDocumentFragment();
+  body.innerHTML = '<tr><td colspan="7" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
 
-    zonesList.forEach(z => {
-      const itemsZone = (data || []).filter(c => c.zone && c.zone.toLowerCase() === z.toLowerCase());
-      if (itemsZone.length > 0) {
-        let totMatchs = 0, nNormal = 0, nDemi = 0, nFinale = 0, totMontant = 0;
+  google.script.run.withSuccessHandler(function(checkOffsData) {
+    // Utilisation correcte des désignations brutes basées sur Lieu_Stade
+    google.script.run.withSuccessHandler(function(desigsData) {
+      body.innerHTML = '';
+      const fragment = document.createDocumentFragment();
 
-        itemsZone.forEach(c => {
-          const nb = Number(c.nbMatchs) || 0;
-          const mt = Number(c.montant) || 0;
-          const tour = c.etape ? c.etape.toLowerCase() : '';
+      let totGenMatchsNormal = 0, totGenMontantNormal = 0;
+      let totGenMatchsDemi = 0, totGenMontantDemi = 0;
+      let totGenMatchsFinale = 0, totGenMontantFinale = 0;
 
-          totMatchs += nb;
-          totMontant += mt;
-          if (tour.includes('normal')) nNormal += nb;
-          else if (tour.includes('demi')) nDemi += nb;
-          else if (tour.includes('final')) nFinale += nb;
-        });
+      zonesList.forEach(z => {
+        const stats = calculerSituationCheckOff(checkOffsData, desigsData, z, situationChoisie);
+
+        totGenMatchsNormal += stats['Normal'].matchs;
+        totGenMontantNormal += stats['Normal'].montant;
+        totGenMatchsDemi += stats['Demi-Finale'].matchs;
+        totGenMontantDemi += stats['Demi-Finale'].montant;
+        totGenMatchsFinale += stats['Finale'].matchs;
+        totGenMontantFinale += stats['Finale'].montant;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${z}</strong></td>
-          <td class="text-center fw-bold">${totMatchs}</td>
-          <td class="text-center">${nNormal}</td>
-          <td class="text-center">${nDemi}</td>
-          <td class="text-center">${nFinale}</td>
-          <td class="text-end fw-bold text-success">${totMontant.toLocaleString('fr-FR')} FCFA</td>`;
+          <td class="text-center">${stats['Normal'].matchs}</td>
+          <td class="text-end">${stats['Normal'].montant.toLocaleString('fr-FR')} FCFA</td>
+          <td class="text-center">${stats['Demi-Finale'].matchs}</td>
+          <td class="text-end">${stats['Demi-Finale'].montant.toLocaleString('fr-FR')} FCFA</td>
+          <td class="text-center">${stats['Finale'].matchs}</td>
+          <td class="text-end">${stats['Finale'].montant.toLocaleString('fr-FR')} FCFA</td>
+        `;
         fragment.appendChild(tr);
-      }
-    });
+      });
 
-    body.appendChild(fragment);
+      // Ligne de total général
+      const trTotal = document.createElement('tr');
+      trTotal.className = 'table-secondary fw-bold';
+      trTotal.innerHTML = `
+        <td>TOTAL GÉNÉRAL</td>
+        <td class="text-center">${totGenMatchsNormal}</td>
+        <td class="text-end text-success">${totGenMontantNormal.toLocaleString('fr-FR')} FCFA</td>
+        <td class="text-center">${totGenMatchsDemi}</td>
+        <td class="text-end text-success">${totGenMontantDemi.toLocaleString('fr-FR')} FCFA</td>
+        <td class="text-center">${totGenMatchsFinale}</td>
+        <td class="text-end text-success">${totGenMontantFinale.toLocaleString('fr-FR')} FCFA</td>
+      `;
+      fragment.appendChild(trTotal);
+
+      body.appendChild(fragment);
+    }).getDesignationsBrutes();
   }).getCheckOffs();
 }
 
+/**
+ * Charge l'affichage pour la vue ZONES avec les sélecteurs Zone et Situation
+ */
+function chargerCheckOffParZone() {
+  const selectZone = document.getElementById('syn_zone_select');
+  const selectSituation = document.getElementById('syn_situation_zone');
+  const body = document.getElementById('bodyCheckOffZone');
+  const foot = document.getElementById('footCheckOffZone');
+
+  if (!body) return;
+
+  const zoneChoisie = selectZone ? selectZone.value : '';
+  const situationChoisie = selectSituation ? selectSituation.value : 'Tout';
+
+  if (!zoneChoisie) {
+    body.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Veuillez sélectionner une zone.</td></tr>';
+    if (foot) foot.innerHTML = '';
+    return;
+  }
+
+  body.innerHTML = '<tr><td colspan="7" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
+
+  // Récupération combinée des Check-Offs et des Désignations brutes
+  google.script.run.withSuccessHandler(function(checkOffsData) {
+    google.script.run.withSuccessHandler(function(desigsData) {
+      const stats = calculerSituationCheckOff(checkOffsData, desigsData, zoneChoisie, situationChoisie);
+
+      body.innerHTML = '';
+      let totalMatchsGlobal = 0;
+      let totalMontantGlobal = 0;
+
+      const tr = document.createElement('tr');
+      let htmlContent = `<td><strong>${zoneChoisie}</strong> <span class="badge bg-secondary ms-1">${situationChoisie}</span></td>`;
+
+      ['Normal', 'Demi-Finale', 'Finale'].forEach(tour => {
+        const m = stats[tour].matchs;
+        const mt = stats[tour].montant;
+        totalMatchsGlobal += m;
+        totalMontantGlobal += mt;
+
+        htmlContent += `
+          <td class="text-center fw-bold">${m}</td>
+          <td class="text-end text-success">${mt.toLocaleString('fr-FR')} FCFA</td>
+        `;
+      });
+
+      tr.innerHTML = htmlContent;
+      body.appendChild(tr);
+
+      if (foot) {
+        foot.innerHTML = `
+          <tr>
+            <td><strong>TOTAL GÉNÉRAL</strong></td>
+            <td class="text-center fw-bold">${stats['Normal'].matchs}</td>
+            <td class="text-end text-success"><strong>${stats['Normal'].montant.toLocaleString('fr-FR')} FCFA</strong></td>
+            <td class="text-center fw-bold">${stats['Demi-Finale'].matchs}</td>
+            <td class="text-end text-success"><strong>${stats['Demi-Finale'].montant.toLocaleString('fr-FR')} FCFA</strong></td>
+            <td class="text-center fw-bold">${stats['Finale'].matchs}</td>
+            <td class="text-end text-success"><strong>${stats['Finale'].montant.toLocaleString('fr-FR')} FCFA</strong></td>
+          </tr>
+        `;
+      }
+    }).getDesignationsBrutes();
+  }).getCheckOffs();
+}
+
+/**
+ * Charge l'affichage pour la vue PAIEMENTS (situation individuelle des matchs par tour et honoraire net)
+ */
 function chargerCheckOffPaiements() {
   const body = document.getElementById('bodyCheckOffPaiements');
   if (!body) return;
 
-  body.innerHTML = '<tr><td colspan="3" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
+  body.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
 
   google.script.run
     .withSuccessHandler(function(liste) {
       if (!liste || liste.length === 0) {
-        body.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Aucun paiement trouvé.</td></tr>';
+        body.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Aucun paiement trouvé.</td></tr>';
         return;
       }
 
@@ -4476,7 +4811,9 @@ function chargerCheckOffPaiements() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${item.nomComplet || '-'}</strong></td>
-          <td class="text-center fw-bold">${item.totalMatchs || 0}</td>
+          <td class="text-center">${item.matchsNormal || item.totalMatchs || 0}</td>
+          <td class="text-center">${item.matchsDemi || 0}</td>
+          <td class="text-center">${item.matchsFinale || 0}</td>
           <td class="text-end fw-bold text-success">${Number(item.montantRecu || 0).toLocaleString('fr-FR')} FCFA</td>`;
         fragment.appendChild(tr);
       });
@@ -4486,7 +4823,7 @@ function chargerCheckOffPaiements() {
     })
     .withFailureHandler(function(err) {
       console.error("Erreur chargerCheckOffPaiements :", err);
-      body.innerHTML = '<tr><td colspan="3" class="text-center text-danger">Erreur de chargement des paiements.</td></tr>';
+      body.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erreur de chargement des paiements.</td></tr>';
     })
     .getSynthesePaiementsMembres();
 }
@@ -5521,11 +5858,28 @@ function basculerVue(nomVue) {
           if (typeof loadDesignations === 'function') loadDesignations();
           break;
         case 'checkoff':
-          // Réinitialiser le formulaire de versement à l'ouverture de la vue
+          // Réinitialiser le formulaire de versement et les conteneurs dynamiques à l'ouverture de la vue
           const motifSelect = document.getElementById('c_motif');
           if (motifSelect) motifSelect.value = '';
+          
           const suiteContainer = document.getElementById('form-suite-container');
-          if (suiteContainer) suiteContainer.classList.add('d-none');
+          if (suiteContainer) {
+            suiteContainer.style.display = '';
+            suiteContainer.classList.add('d-none');
+          }
+
+          const btnEnr = document.getElementById('btnEnregistrer');
+          if (btnEnr) {
+            btnEnr.style.display = '';
+            btnEnr.classList.remove('d-none');
+          }
+
+          const waveCont = document.getElementById('wavePaymentContainer');
+          if (waveCont) {
+            waveCont.style.display = '';
+            waveCont.classList.add('d-none');
+          }
+
           const alerteBox = document.getElementById('alerteNonAutorise');
           if (alerteBox) alerteBox.classList.add('d-none');
 
@@ -6074,6 +6428,87 @@ function handleDesignationSubmit(e) {
     resetButton();
     console.error("Erreur lors de la soumission de la désignation :", error);
     alert("❌ Impossible de contacter le serveur : " + error.message);
+  }
+}
+// ============================================================================
+// MODULE RAPPORT : WORKFLOW DE RÉINITIALISATION (SUITE)
+// ============================================================================
+
+/**
+ * Réinitialise le formulaire de rapport complet avec gestion optionnelle post-soumission.
+ * @param {boolean} apresSoumission - Indique si la réinitialisation intervient suite à un envoi réussi.
+ */
+function resetRapportWorkflow(apresSoumission = false) {
+  window.evaluationsDuMatch = [];
+
+  // Le superviseur n'est vidé QUE si on est après une soumission
+  const inputSup = document.getElementById('r_sup');
+  if (inputSup && apresSoumission) {
+    inputSup.value = '';
+  }
+
+  const labelSup = document.getElementById('label_r_sup');
+  if (labelSup && apresSoumission) {
+    labelSup.textContent = 'Sélectionner un superviseur...';
+  }
+
+  // Le match n'est vidé qu'après une soumission
+  const matchSelect = document.getElementById('r_match');
+  if (matchSelect && apresSoumission) {
+    matchSelect.value = '';
+  }
+
+  const qualiteSelect = document.getElementById('r_qualite_select');
+  if (qualiteSelect) qualiteSelect.value = '';
+
+  const incidentSelect = document.getElementById('r_incidents_option');
+  if (incidentSelect) incidentSelect.value = '';
+
+  const textareas = document.querySelectorAll('#formRapportComplet textarea');
+  textareas.forEach(ta => ta.value = '');
+
+  // On protège 'r_match_affiche', 'r_match' ET 'r_sup' si on n'est pas après une soumission
+  const inputs = document.querySelectorAll('#formRapportComplet input[type="text"]');
+  inputs.forEach(input => {
+    if (!apresSoumission) {
+      if (input.id !== 'r_match_affiche' && input.id !== 'r_match' && input.id !== 'r_sup') {
+        input.value = '';
+      }
+    } else {
+      input.value = '';
+    }
+  });
+
+  const checkboxes = document.querySelectorAll('#formRapportComplet input[type="checkbox"]');
+  checkboxes.forEach(cb => cb.checked = false);
+
+  const activeCard = document.getElementById('activeQualityCard');
+  if (activeCard) {
+    activeCard.style.display = 'none';
+    activeCard.classList.add('d-none');
+  }
+
+  const blocIncidents = document.getElementById('bloc-incidents-global');
+  if (blocIncidents) {
+    blocIncidents.style.display = 'none';
+    blocIncidents.classList.add('d-none');
+  }
+
+  const incidentNatureBox = document.getElementById('incident_nature_box');
+  if (incidentNatureBox) incidentNatureBox.style.display = 'none';
+
+  const btnSubmit = document.getElementById('btnSubmitAllRapports') || document.getElementById('btn_soumettre_rapport');
+  if (btnSubmit) btnSubmit.classList.add('d-none');
+
+  document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+  if (typeof actualiserOptionsQualite === 'function') actualiserOptionsQualite();
+  if (typeof mettreAJourInterfaceEtapes === 'function') mettreAJourInterfaceEtapes();
+
+  if (apresSoumission) {
+    if (typeof loadRecentMatches === 'function') {
+      loadRecentMatches();
+    }
   }
 }
 
