@@ -1875,18 +1875,13 @@
       })
     }
   };
-
-
-
-    function executeGasFetch(functionName, args, successHandler, failureHandler) {
+function executeGasFetch(functionName, args, successHandler, failureHandler) {
     setTimeout(async () => {
       try {
-        // On transforme les arguments en format JSON sécurisé pour l'URL
-        const payload = encodeURIComponent(JSON.stringify({ function: functionName, args: args }));
-        
-        // Utilisation d'une requête GET pure (contourne 100% des blocages CORS Google)
-        const response = await fetch(`${GAS_URL}?data=${payload}`, {
-          method: 'GET'
+        // En POST sans headers personnalisés pour éviter le preflight CORS bloquant
+        const response = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({ function: functionName, args: args })
         });
         
         const result = await response.json();
@@ -1906,7 +1901,6 @@
 
 
 
-// ========================================================
 // VARIABLES GLOBALES
 // ========================================================
 // ========================================================
@@ -6644,6 +6638,9 @@ function changerCategorieLoi(categorie) {
   containerSousSelect.style.display = 'block';
 }
 
+// URL directe vers votre fichier PDF sur GitHub
+const URL_GITHUB_PDF = "https://raw.githubusercontent.com/albahrou-boop/sous.cra-kpt/main/Lois%20du%20Jeu%202026_27_pages%20simples%20(1).pdf";
+
 function chargerPartieLoi(valeur) {
   const container = document.getElementById('viewer-loi-container');
   if (!container) return;
@@ -6653,6 +6650,7 @@ function chargerPartieLoi(valeur) {
     return;
   }
 
+  // Récupération de l'élément correspondant dans vos données JSON (qui elles, restent sur Google Sheets)
   let itemTrouve = null;
   if (donneesLoisEtMods.modifications) {
     itemTrouve = donneesLoisEtMods.modifications.find(item => item.value === valeur);
@@ -6664,16 +6662,15 @@ function chargerPartieLoi(valeur) {
   const titreTexte = itemTrouve ? itemTrouve.text : "Lois du Jeu";
   const infoPages = itemTrouve ? itemTrouve.pages : "Document Officiel";
 
+  // Extraction automatique du numéro de page depuis votre texte (ex: "Pages 73-78" -> donne "73")
   let numeroPage = "1";
   if (itemTrouve && itemTrouve.pages) {
     const match = itemTrouve.pages.match(/\d+/);
     if (match) numeroPage = match[0];
   }
 
-  // URL directe de votre PDF hébergé via GitHub Pages
-  // Remplacez "https://albahrou-boop.github.io/sous.cra-kpt/" par l'URL exacte de votre site GitHub Pages si elle diffère, 
-  // en y ajoutant le nom de votre fichier PDF encodé.
-  const urlGitHubPagesPdf = "https://albahrou-boop.github.io/sous.cra-kpt/Lois%20du%20Jeu%202026_27_pages%20simples%20(1).pdf#page=" + numeroPage;
+  // Utilisation de PDF.js (le lecteur universel open-source) hébergé en ligne pour forcer le saut de page exact
+  const viewerUrl = "https://mozilla.github.io/pdf.js/web/viewer.html?file=" + encodeURIComponent(URL_GITHUB_PDF) + "#page=" + numeroPage;
 
   container.innerHTML = "";
 
@@ -6688,7 +6685,7 @@ function chargerPartieLoi(valeur) {
       '<h5 class="mb-0 fs-6 fw-bold"><i class="fa-solid fa-book-open me-2"></i>' + titreTexte + '</h5>' +
       '<small class="text-white-50">Section : ' + infoPages + '</small>' +
     '</div>' +
-    '<a href="' + URL_PDF_GIST_OU_GITHUB + '" class="btn btn-sm btn-light text-success fw-bold" target="_blank" download="Lois_du_Jeu.pdf">' +
+    '<a href="' + URL_GITHUB_PDF + '" class="btn btn-sm btn-light text-success fw-bold" target="_blank" download="Lois_du_Jeu.pdf">' +
       '<i class="fa-solid fa-file-pdf me-1"></i> Télécharger' +
     '</a>';
 
@@ -6696,7 +6693,7 @@ function chargerPartieLoi(valeur) {
   cardBody.className = "card-body p-0 bg-light";
   cardBody.innerHTML = 
     '<div style="width: 100%; height: 700px;">' +
-      '<iframe src="' + urlGitHubPagesPdf + '" style="width: 100%; height: 100%; border: none;" allowfullscreen="true"></iframe>' +
+      '<iframe src="' + viewerUrl + '" style="width: 100%; height: 100%; border: none;" allowfullscreen="true"></iframe>' +
     '</div>';
 
   card.appendChild(cardHeader);
@@ -6741,76 +6738,68 @@ function chargerDocumentTopic(topicKey) {
 }
 
 // Charger la liste des fichiers du Drive au démarrage dans le menu déroulant
+// LA VERSION CORRIGÉE POUR GITHUB PAGES :
 function chargerFichiersDrive() {
-  if (typeof google === 'undefined' || !google.script) return;
-  google.script.run
-    .withSuccessHandler(function(fichiers) {
-      const select = document.getElementById('selectFichierDrive');
-      if (!select) return;
-      
-      if (!fichiers || fichiers.length === 0) {
-        select.innerHTML = '<option value="">Aucun fichier PDF trouvé sur votre Drive</option>';
-        return;
-      }
-      
-      var optionsHtml = '<option value="">-- Choisir un fichier --</option>';
-      for (var i = 0; i < fichiers.length; i++) {
-        optionsHtml += '<option value="' + fichiers[i].url + '" data-nom="' + fichiers[i].nom + '">' + fichiers[i].nom + '</option>';
-      }
-      select.innerHTML = optionsHtml;
-    })
-    .recupererFichiersPdfDrive();
+  // On appelle votre script Google Apps Script via l'API Web déployée
+  executeGasFetch("recupererFichiersPdfDrive", [], function(fichiers) {
+    const select = document.getElementById('selectFichierDrive');
+    if (!select) return;
+    
+    if (!fichiers || fichiers.length === 0) {
+      select.innerHTML = '<option value="">Aucun fichier PDF trouvé sur votre Drive</option>';
+      return;
+    }
+    
+    var optionsHtml = '<option value="">-- Choisir un fichier --</option>';
+    for (var i = 0; i < fichiers.length; i++) {
+      optionsHtml += '<option value="' + fichiers[i].url + '" data-nom="' + fichiers[i].nom + '">' + fichiers[i].nom + '</option>';
+    }
+    select.innerHTML = optionsHtml;
+  }, function(erreur) {
+    console.error("Erreur lors du chargement des fichiers Drive :", erreur);
+  });
 }
 
 // ==========================================
 // 1. CHARGEMENT ET AFFICHAGE DU TABLEAU
 // ==========================================
 // ==========================================
-// 1. CHARGEMENT ET AFFICHAGE DES CIRCULAIRES
+// 1. GESTION DES CIRCULAIRES
 // ==========================================
 function chargerCirculaires() {
-  if (typeof google === 'undefined' || !google.script) {
-    console.warn("Environnement Google Apps Script non détecté (test en local ?).");
-    return;
-  }
-  
-  google.script.run
-    .withSuccessHandler(function(circulaires) {
-      const tbody = document.getElementById('listeCirculairesBody');
-      if (!tbody) {
-        console.error("Erreur : l'élément 'listeCirculairesBody' est introuvable dans le DOM !");
-        return;
-      }
-      
-      if (!circulaires || circulaires.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Aucune circulaire pour le moment.</td></tr>';
-        return;
-      }
-      
-      var html = '';
-      for (var i = 0; i < circulaires.length; i++) {
-        var c = circulaires[i];
-        var titreSecuri = (c.titre || 'Sans titre').replace(/'/g, "\\'");
-        var nomFichierSecuri = (c.nomFichier || '').replace(/'/g, "\\'");
-        var urlSecuri = (c.url || '#').replace(/'/g, "\\'");
-        
-        html += '<tr>';
-        html += '<td><a href="#" onclick="ouvrirCirculaireModal(\'' + titreSecuri + '\', \'' + urlSecuri + '\'); return false;" class="text-decoration-none fw-bold text-primary"><i class="fa-solid fa-file-pdf text-danger me-1"></i>' + (c.titre || 'Sans titre') + '</a></td>';
-        html += '<td>' + (c.auteur || 'Admin') + '</td>';
-        html += '<td>' + (c.date || '') + '</td>';
-        html += '<td class="text-end"><button class="btn btn-sm btn-outline-danger" onclick="supprimerCirculaireIndex(' + i + ')"><i class="fa-solid fa-trash"></i></button></td>';
-        html += '</tr>';
-      }
-      tbody.innerHTML = html;
-    })
-    .withFailureHandler(function(err) {
-      console.error("Erreur critique lors de recupererCirculaires : " + err.message);
-    })
-    .recupererCirculaires();
+  executeGasFetch("recupererCirculaires", [], function(circulaires) {
+    const tbody = document.getElementById('listeCirculairesBody');
+    if (!tbody) {
+      console.error("Erreur : l'élément 'listeCirculairesBody' est introuvable dans le DOM !");
+      return;
+    }
+    
+    if (!circulaires || circulaires.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Aucune circulaire pour le moment.</td></tr>';
+      return;
+    }
+    
+    var html = '';
+    for (var i = 0; i < circulaires.length; i++) {
+      var c = circulaires[i];
+      var titreSecuri = (c.titre || 'Sans titre').replace(/'/g, "\\'");
+      var urlSecuri = (c.url || '#').replace(/'/g, "\\'");
+       
+      html += '<tr>';
+      html += '<td><a href="#" onclick="ouvrirCirculaireModal(\'' + titreSecuri + '\', \'' + urlSecuri + '\'); return false;" class="text-decoration-none fw-bold text-primary"><i class="fa-solid fa-file-pdf text-danger me-1"></i>' + (c.titre || 'Sans titre') + '</a></td>';
+      html += '<td>' + (c.auteur || 'Admin') + '</td>';
+      html += '<td>' + (c.date || '') + '</td>';
+      html += '<td class="text-end"><button class="btn btn-sm btn-outline-danger" onclick="supprimerCirculaireIndex(' + i + ')"><i class="fa-solid fa-trash"></i></button></td>';
+      html += '</tr>';
+    }
+    tbody.innerHTML = html;
+  }, function(err) {
+    console.error("Erreur critique lors de recupererCirculaires :", err);
+  });
 }
 
 // ==========================================
-// 2. ACTION D'AJOUT (IMPORTATION DEPUIS LE HAUT)
+// 2. ACTION D'AJOUT (CIRCULAIRES & PUBLICATIONS)
 // ==========================================
 function ajouterCirculaire(event) {
   if (event) event.preventDefault();
@@ -6836,19 +6825,16 @@ function ajouterCirculaire(event) {
     date: new Date().toLocaleDateString() 
   };
   
-  google.script.run
-    .withSuccessHandler(function() {
-      alert('Circulaire ajoutée avec succès !');
-      const form = document.getElementById('formAjoutCirculaire');
-      if (form) form.reset();
-      
-      if (typeof chargerFichiersDrive === 'function') chargerFichiersDrive();
-      chargerCirculaires();
-    })
-    .withFailureHandler(function(err) {
-      alert("Erreur : " + err.message);
-    })
-    .enregistrerCirculaireParLien(meta);
+  executeGasFetch("enregistrerCirculaireParLien", [meta], function() {
+    alert('Circulaire ajoutée avec succès !');
+    const form = document.getElementById('formAjoutCirculaire');
+    if (form) form.reset();
+   
+    if (typeof chargerFichiersDrive === 'function') chargerFichiersDrive();
+    chargerCirculaires();
+  }, function(err) {
+    alert("Erreur : " + err);
+  });
 }
 
 // ==========================================
@@ -6856,11 +6842,11 @@ function ajouterCirculaire(event) {
 // ==========================================
 function supprimerCirculaireIndex(index) {
   if (confirm("Voulez-vous vraiment supprimer cette circulaire ?")) {
-    google.script.run
-      .withSuccessHandler(function() {
-        chargerCirculaires();
-      })
-      .supprimerCirculaire(index);
+    executeGasFetch("supprimerCirculaire", [index], function() {
+      chargerCirculaires();
+    }, function(err) {
+      alert("Erreur lors de la suppression : " + err);
+    });
   }
 }
 
@@ -6964,10 +6950,106 @@ function afficherSection(nomSection) {
 }
 
 // ==========================================
-// 6. INITIALISATION DU DOM (ÉCOUTEURS GLOBAUX)
+// 6. PUBLICATIONS ET FORUM
+// ==========================================
+function chargerPublications() {
+  executeGasFetch("recupererPublications", [], function(posts) {
+    const container = document.getElementById('forumPublicationsContainer');
+    if (!container) return;
+    
+    if (!posts || posts.length === 0) {
+      container.innerHTML = '<div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>';
+      return;
+    }
+    
+    var htmlGlobal = '';
+    for (var i = 0; i < posts.length; i++) {
+      var p = posts[i];
+      var commentairesHtml = '';
+      
+      if (!p.commentaires || p.commentaires.length === 0) {
+        commentairesHtml = '<p class="text-muted small italic">Aucun commentaire pour le moment.</p>';
+      } else {
+        for (var j = 0; j < p.commentaires.length; j++) {
+          var c = p.commentaires[j];
+          commentairesHtml += '<div class="p-2 rounded mb-2 small border" style="background-color: #fff7ed !important; border-color: #ffedd5 !important;">' +
+            '<div class="d-flex justify-content-between">' +
+              '<span class="fw-bold text-dark">' + c.auteur + '</span>' +
+              '<span class="text-muted" style="font-size: 0.75rem;">' + c.date + '</span>' +
+            '</div>' +
+            '<div class="mt-1 text-dark">' + c.texte + '</div>' +
+          '</div>';
+        }
+      }
+
+      htmlGlobal += '<div class="card mb-3 shadow-sm border-0" style="background-color: #f0fdf4 !important;">' +
+        '<div class="card-body">' +
+          '<div class="d-flex justify-content-between mb-2">' +
+            '<strong class="text-success"><i class="fa-solid fa-user-pen me-1"></i>' + p.auteur + '</strong>' +
+            '<small class="text-muted">' + p.date + '</small>' +
+          '</div>' +
+          '<p class="card-text text-dark" style="white-space: pre-line; font-size: 1rem;">' + p.texte + '</p>' +
+          '<hr class="my-3">' +
+          '<div class="comments-section ps-3 border-start border-3 border-warning mb-3">' +
+            '<h6 class="text-secondary fs-7 mb-2 fw-bold">Commentaires :</h6>' +
+            commentairesHtml +
+          '</div>' +
+          '<div class="input-group input-group-sm">' +
+            '<input type="text" id="input-comm-' + p.id + '" class="form-control" placeholder="Écrire un commentaire en tant que membre...">' +
+            '<button class="btn btn-outline-success" type="button" onclick="soumettreCommentaire(\'' + p.id + '\')">Commenter</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    container.innerHTML = htmlGlobal;
+  }, function(err) {
+    console.error("Erreur chargement publications :", err);
+  });
+}
+
+function publierPost(event) {
+  if (event) event.preventDefault();
+  const texteInput = document.getElementById('textePublication');
+  if (!texteInput) return;
+  const texte = texteInput.value.trim();
+  if (!texte) return;
+
+  const meta = { texte: texte, date: new Date().toLocaleString() };
+
+  executeGasFetch("enregistrerPublication", [meta], function() {
+    alert('Publication ajoutée avec succès !');
+    texteInput.value = '';
+    chargerPublications();
+  }, function(err) {
+    alert("Erreur : " + err);
+  });
+}
+
+function soumettreCommentaire(postId) {
+  const input = document.getElementById('input-comm-' + postId);
+  if (!input || !input.value.trim()) return;
+  const texteCommentaire = input.value.trim();
+
+  executeGasFetch("ajouterCommentaire", [postId, texteCommentaire], function() {
+    input.value = '';
+    chargerPublications();
+  }, function(err) {
+    alert("Erreur : " + err);
+  });
+}
+
+// ==========================================
+// 7. INITIALISATION DU DOM (ÉCOUTEURS GLOBAUX)
 // ==========================================
 document.addEventListener("DOMContentLoaded", function() {
+  executeGasFetch("getUtilisateurConnecte", [], function(nom) {
+    const el = document.getElementById('userInfoPublication');
+    if (el) el.textContent = 'Auteur connecté : ' + nom;
+  }, function() {});
+
   chargerCirculaires();
+  chargerPublications();
+
   if (typeof chargerFichiersDrive === 'function') {
     chargerFichiersDrive();
   }
@@ -6990,110 +7072,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
-
-
-function chargerPublications() {
-  google.script.run
-    .withSuccessHandler(function(posts) {
-      const container = document.getElementById('forumPublicationsContainer');
-      if (!container) return;
-      
-      if (!posts || posts.length === 0) {
-        container.innerHTML = '<div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>';
-        return;
-      }
-      
-      var htmlGlobal = '';
-      for (var i = 0; i < posts.length; i++) {
-        var p = posts[i];
-        var commentairesHtml = '';
-        
-        if (!p.commentaires || p.commentaires.length === 0) {
-          commentairesHtml = '<p class="text-muted small italic">Aucun commentaire pour le moment.</p>';
-        } else {
-          for (var j = 0; j < p.commentaires.length; j++) {
-            var c = p.commentaires[j];
-            commentairesHtml += '<div class="p-2 rounded mb-2 small border" style="background-color: #fff7ed !important; border-color: #ffedd5 !important;">' +
-              '<div class="d-flex justify-content-between">' +
-                '<span class="fw-bold text-dark">' + c.auteur + '</span>' +
-                '<span class="text-muted" style="font-size: 0.75rem;">' + c.date + '</span>' +
-              '</div>' +
-              '<div class="mt-1 text-dark">' + c.texte + '</div>' +
-            '</div>';
-          }
-        }
-
-        htmlGlobal += '<div class="card mb-3 shadow-sm border-0" style="background-color: #f0fdf4 !important;">' +
-          '<div class="card-body">' +
-            '<div class="d-flex justify-content-between mb-2">' +
-              '<strong class="text-success"><i class="fa-solid fa-user-pen me-1"></i>' + p.auteur + '</strong>' +
-              '<small class="text-muted">' + p.date + '</small>' +
-            '</div>' +
-            '<p class="card-text text-dark" style="white-space: pre-line; font-size: 1rem;">' + p.texte + '</p>' +
-            '<hr class="my-3">' +
-            '<div class="comments-section ps-3 border-start border-3 border-warning mb-3">' +
-              '<h6 class="text-secondary fs-7 mb-2 fw-bold">Commentaires :</h6>' +
-              commentairesHtml +
-            '</div>' +
-            '<div class="input-group input-group-sm">' +
-              '<input type="text" id="input-comm-' + p.id + '" class="form-control" placeholder="Écrire un commentaire en tant que membre...">' +
-              '<button class="btn btn-outline-success" type="button" onclick="soumettreCommentaire(\'' + p.id + '\')">Commenter</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      }
-      container.innerHTML = htmlGlobal;
-    })
-    .recupererPublications();
-}
-
-function publierPost(event) {
-  if (event) event.preventDefault();
-  const texte = document.getElementById('textePublication').value.trim();
-  if (!texte) return;
-
-  google.script.run
-    .withSuccessHandler(function() {
-      alert('Circulaire ajoutée avec succès !');
-      const form = document.getElementById('formAjoutCirculaire');
-      if (form) form.reset();
-      chargerFichiersDrive();
-      chargerCirculaires();
-    }) // <-- Fermeture du successHandler
-    .withFailureHandler(function(err) {
-      alert("Erreur : " + err.message);
-    }) // <-- Fermeture du failureHandler
-    .enregistrerCirculaire(meta);
-} // <-- IMPORTANT : Ne pas oublier cette accolade pour fermer la fonction ajouterCirculaire(event) !
-
-function soumettreCommentaire(postId) {
-  const input = document.getElementById('input-comm-' + postId);
-  if (!input || !input.value.trim()) return;
-  const texteCommentaire = input.value.trim();
-
-  google.script.run
-    .withSuccessHandler(function() {
-      input.value = '';
-      chargerPublications();
-    })
-    .withFailureHandler(function(err) {
-      alert("Erreur : " + err.message);
-    })
-    .ajouterCommentaire(postId, texteCommentaire);
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function(nom) {
-      const el = document.getElementById('userInfoPublication');
-      if(el) el.textContent = 'Auteur connecté : ' + nom;
-    }).getUtilisateurConnecte();
-  }
-  chargerCirculaires();
-  chargerPublications();
-});
-
-
 
 
 
