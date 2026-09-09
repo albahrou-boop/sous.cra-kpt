@@ -351,7 +351,7 @@
 
       <div class="text-center mt-3">
         <span class="small text-muted">Pas encore de compte ?</span> 
-        <a href="#" onclick="basculerVue('signup'); return false;" class="small text-decoration-none fw-bold text-primary">Créer un compte</a>
+        <a href="#" onclick="Vue('basculersignup'); return false;" class="small text-decoration-none fw-bold text-primary">Créer un compte</a>
       </div>
     </form>
   </div>
@@ -545,6 +545,15 @@
 
     </div>
   </div>
+
+  <!-- Carte du module Lois du Jeu à ajouter dans la grille de menu (après Analyses/Synthèse) -->
+<div class="col-12 col-sm-6 col-lg-4">
+  <div class="card menu-card card-lois p-3 p-md-4 text-center shadow-sm h-100" onclick="basculerVue('lois-du-jeu')">
+    <i class="fa-solid fa-book-open menu-icon fa-2x mb-2 text-warning"></i>
+    <h4 class="h5 fw-bold">Lois du Jeu</h4>
+    <small class="text-muted">Règles, modifications, circulaires et discussions</small>
+  </div>
+</div>
 
 </div> <!-- Fin de #view-home -->
 
@@ -1646,6 +1655,182 @@
 
   </div>
 </div>
+
+
+<!-- Conteneur Vue Lois du Jeu -->
+<div id="view-lois-du-jeu" class="app-view" style="display: none;">
+  
+  <!-- En-tête de la vue -->
+  <div class="container-fluid bg-primary text-white py-3 mb-4 shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+      <button class="btn btn-outline-light btn-sm" onclick="basculerVue('home')">
+        <i class="fa-solid fa-arrow-left me-1"></i> Retour Accueil
+      </button>
+      <h2 class="h4 mb-0 text-center fw-bold">MODULE LOIS DU JEU</h2>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="container py-2">
+    <!-- Navigation par onglets / boutons principaux -->
+    <ul class="nav nav-pills mb-4 justify-content-center gap-2 flex-wrap" id="loisTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active fw-semibold" id="tab-lois-btn" data-bs-toggle="pill" data-bs-target="#content-lois" type="button" role="tab">
+          <i class="fa-solid fa-book me-2"></i>Lois du Jeu
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link fw-semibold" id="tab-topics-btn" data-bs-toggle="pill" data-bs-target="#content-topics" type="button" role="tab">
+          <i class="fa-solid fa-layer-group me-2"></i>Topics
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link fw-semibold" id="tab-circulaires-btn" data-bs-toggle="pill" data-bs-target="#content-circulaires" type="button" role="tab">
+          <i class="fa-solid fa-file-pdf me-2"></i>Circulaires
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link fw-semibold" id="tab-discussion-btn" data-bs-toggle="pill" data-bs-target="#content-discussion" type="button" role="tab">
+          <i class="fa-solid fa-comments me-2"></i>Discussion
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="loisTabsContent">
+      
+      <!-- 1. SECTION LOIS DU JEU -->
+      <div class="tab-pane fade show active" id="content-lois" role="tabpanel">
+        <div class="card shadow-sm p-4 mb-4">
+          <h3 class="h5 fw-bold mb-3 text-primary"><i class="fa-solid fa-list-dropdown me-2"></i>Consulter les Lois du Jeu (2026/27)</h3>
+          
+          <!-- Sélecteur principal : Lois du Jeu ou Modification des lois du jeu -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="selectCategorieLoi" class="form-label fw-semibold">Sélectionner la catégorie :</label>
+              <select id="selectCategorieLoi" class="form-select" onchange="changerCategorieLoi(this.value)">
+                <option value="">-- Choisissez --</option>
+                <option value="lois">Les 17 Lois du Jeu</option>
+                <option value="modifications">Modification des lois du jeu</option>
+              </select>
+            </div>
+
+            <!-- Second sélecteur dynamique (affiché selon la catégorie) -->
+            <div class="col-md-6" id="containerSousSelect" style="display: none;">
+              <label for="selectSousLoi" class="form-label fw-semibold" id="labelSousSelect">Affiner la sélection :</label>
+              <select id="selectSousLoi" class="form-select" onchange="chargerPartieLoi(this.value)">
+                <!-- Rempli dynamiquement par JavaScript -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Visionneuse ou conteneur de consultation restreinte à la loi sélectionnée -->
+          <div id="viewer-loi-container" class="border rounded p-3 bg-light" style="min-height: 400px; max-height: 700px; overflow-y: auto;">
+            <p class="text-muted text-center my-5">Sélectionnez une catégorie et une option pour afficher exclusivement son contenu.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. SECTION TOPICS -->
+      <div class="tab-pane fade" id="content-topics" role="tabpanel">
+        <div class="card shadow-sm p-4 mb-4">
+          <h3 class="h5 fw-bold mb-3 text-success"><i class="fa-solid fa-folder-open me-2"></i>Consultation par Topics</h3>
+          <div class="mb-3">
+            <label for="selectTopic" class="form-label fw-semibold">Choisir un topic :</label>
+            <select id="selectTopic" class="form-select" onchange="chargerDocumentTopic(this.value)">
+              <option value="">-- Sélectionnez un topic --</option>
+              <option value="topic-hors-jeu">Topic_Hors_Jeu</option>
+              <option value="topic-incidents">Topic_Incidents</option>
+              <option value="topic-main">Topic_Main</option>
+              <option value="topic-duels">Topic_Duels (challenge)</option>
+              <option value="topic-fautes-tactiques">Topic_Fautes_Tactiques</option>
+              <option value="topic-positionnement">Topic_Positionnement_Lecture_Jeux</option>
+            </select>
+          </div>
+          <div id="viewer-topic-container" class="border rounded p-3 bg-light" style="min-height: 350px;">
+            <p class="text-muted text-center my-5">Le document associé au topic s'affichera ici lors de la sélection.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. SECTION CIRCULAIRES -->
+      <div class="tab-pane fade" id="content-circulaires" role="tabpanel">
+        <div class="card shadow-sm p-4 mb-4">
+          <h3 class="h5 fw-bold mb-3 text-warning"><i class="fa-solid fa-file-arrow-up me-2"></i>Gestion des Circulaires et Documents</h3>
+          <!-- Formulaire d'ajout de document -->
+          <div class="card bg-light p-3 mb-4 border">
+            <h4 class="h6 fw-bold mb-2">Ajouter un document officiel</h4>
+ <form id="formAjoutCirculaire" onsubmit="ajouterCirculaire(event)">
+  <div class="mb-3">
+    <label for="titreCirculaire" class="form-label fw-bold">Titre de la circulaire</label>
+    <input type="text" id="titreCirculaire" class="form-control" placeholder="Ex: Circulaire sur les hors-jeu" required>
+  </div>
+  <div class="mb-3">
+    <label for="selectFichierDrive" class="form-label fw-bold">Sélectionner le fichier sur Google Drive</label>
+    <select id="selectFichierDrive" class="form-select" required>
+      <option value="">Chargement des fichiers du Drive...</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus me-1"></i> Ajouter la circulaire</button>
+</form>
+          </div>
+          <!-- Liste des circulaires consultables / supprimables -->
+          <h4 class="h6 fw-bold mb-3">Documents disponibles</h4>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Titre du Document</th>
+                  <th>Ajouté par</th>
+                  <th>Date</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="listeCirculairesBody">
+                <!-- Les documents ajoutés dynamiquement apparaîtront ici -->
+                <tr>
+                  <td colspan="4" class="text-center text-muted">Aucune circulaire pour le moment.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. SECTION DISCUSSION (FORUM) -->
+      <div class="tab-pane fade" id="content-discussion" role="tabpanel">
+        <div class="card shadow-sm p-4 mb-4">
+          <h3 class="h5 fw-bold mb-3 text-danger"><i class="fa-solid fa-comments me-2"></i>Forum d'échanges - Lois du Jeu</h3>
+          
+          <!-- Champ de saisie d'une nouvelle publication -->
+          <div class="card border-primary mb-4">
+            <div class="card-header bg-primary text-white fw-semibold">Créer une nouvelle publication (Question ou Contribution)</div>
+            <div class="card-body">
+              <form id="formNouvellePublication" onsubmit="publierPost(event)">
+                <div class="mb-3">
+                  <textarea id="textePublication" class="form-control" rows="4" placeholder="Exprimez votre avis ou posez votre question en texte long sans limite de mots..." required></textarea>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted" id="userInfoPublication">Auteur connecté : Chargement...</small>
+                  <button type="submit" class="btn btn-primary px-4">Publier</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Liste des publications du forum -->
+          <div id="forumPublicationsContainer">
+            <div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div> <!-- Fin de #view-lois-du-jeu -->
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
@@ -1715,7 +1900,7 @@
 
 
 
-    // ========================================================
+// ========================================================
 // VARIABLES GLOBALES
 // ========================================================
 // ========================================================
@@ -3694,6 +3879,7 @@ function handleCheckOffSubmit(e) {
     return;
   }
 
+  // MODIFICATION ICI : On vérifie les matchs/étapes uniquement si c'est un CheckOff strict
   if (motif === 'CheckOff' && (!nombreMatchs || !etape)) {
     alert("⚠️ Le nombre de matchs et l'étape sont obligatoires pour un Check Off.");
     return;
@@ -3705,47 +3891,46 @@ function handleCheckOffSubmit(e) {
     btnEnregistrer.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
   }
 
+  // MODIFICATION ICI : Si c'est "Cotisation" ou "Autre_Cotisation", on neutralise les champs superflus
+  const isSimpleCotisation = (motif === 'Cotisation' || motif === 'Autre_Cotisation');
+
   const data = { 
     auteur, 
     zone, 
-    nombreMatchs: motif === 'Cotisation' ? 0 : nombreMatchs, 
-    etape: motif === 'Cotisation' ? 'Cotisation' : etape, 
+    nombreMatchs: isSimpleCotisation ? 0 : nombreMatchs, 
+    etape: isSimpleCotisation ? 'Cotisation' : etape, 
     montant, 
     motif 
   };
 
   google.script.run
     .withSuccessHandler(function(res) {
-      // 1. Masquer le bouton "Valider & Enregistrer" via les classes Bootstrap
       if (btnEnregistrer) {
         btnEnregistrer.disabled = false;
-        btnEnregistrer.style.display = 'none'; // Nettoyage propre
+        btnEnregistrer.style.display = 'none';
         btnEnregistrer.classList.add('d-none');
         btnEnregistrer.innerHTML = 'Valider & Enregistrer';
       }
 
-      // 2. Vider et réinitialiser tous les champs du formulaire
       const form = document.getElementById('formCheckOff');
       if (form) form.reset();
 
       if (motifElement) motifElement.value = '';
       if (auteurElement) auteurElement.value = '';
-      
+       
       const labelAuteur = document.getElementById('label_c_auteur');
       if (labelAuteur) labelAuteur.innerText = '-- Choisir un membre --';
-      
+       
       if (montantElement) montantElement.value = '';
       if (nombreMatchsElement) nombreMatchsElement.value = '';
       if (etapeElement) etapeElement.value = '';
 
-      // 3. Masquer la suite des champs dynamiques
       const suiteContainer = document.getElementById('form-suite-container');
       if (suiteContainer) {
         suiteContainer.style.display = 'none';
         suiteContainer.classList.add('d-none');
       }
 
-      // 4. Faire apparaître le bloc et configurer correctement le lien de paiement Wave
       const wavePaymentContainer = document.getElementById('wavePaymentContainer');
       if (wavePaymentContainer) {
         wavePaymentContainer.classList.remove('d-none');
@@ -3754,11 +3939,9 @@ function handleCheckOffSubmit(e) {
 
       const btnPayerWave = document.getElementById('btnPayerWave');
       if (btnPayerWave) {
-        // Injection dynamique du montant si le lien Wave le supporte ou sécurisation de l'URL web
         btnPayerWave.href = "https://pay.wave.com/m/M_sn_5YRTcHwYOYZf/c/sn/";
       }
 
-      // Actualisation des tableaux en arrière-plan
       if (typeof loadCheckOffs === 'function') loadCheckOffs();
       if (typeof loadCotisations === 'function') loadCotisations();
     })
@@ -3820,13 +4003,11 @@ function gererAffichageFormulaireVersement(motif) {
   const inputNbMatchs = document.getElementById('c_nbMatchs');
   const inputEtape = document.getElementById('c_etape');
 
-  // Masquer le bloc wave si l'utilisateur change de motif
   if (wavePaymentContainer) {
     wavePaymentContainer.style.display = 'none';
     wavePaymentContainer.classList.add('d-none');
   }
 
-  // Réinitialisation par défaut à chaque changement de motif
   if (suiteContainer) {
     suiteContainer.style.display = 'none';
     suiteContainer.classList.add('d-none');
@@ -3842,11 +4023,9 @@ function gererAffichageFormulaireVersement(motif) {
 
   if (!motif) return;
 
-  // Récupération sécurisée des permissions
   const perms = window.userPermissions || (typeof userPermissions !== 'undefined' ? userPermissions : {});
   const isAuthorizedCheckOff = Boolean(perms.canSaisirTreso || perms.canSaisirDesignations || perms.isAdmin || perms.isTresorier);
 
-  // Vérification des droits pour le CheckOff
   if (motif === 'CheckOff' && !isAuthorizedCheckOff) {
     if (alerteBox) {
       alerteBox.innerText = "❌ Vous n'êtes pas autorisé à saisir un Check Off. Seuls les membres habilités y ont accès.";
@@ -3855,14 +4034,13 @@ function gererAffichageFormulaireVersement(motif) {
     return;
   }
 
-  // Affichage du conteneur principal du formulaire
   if (suiteContainer) {
     suiteContainer.style.display = 'block';
     suiteContainer.classList.remove('d-none');
   }
 
-  // Adaptation des champs selon qu'il s'agit d'une Cotisation ou d'un CheckOff
-  if (motif === 'Cotisation') {
+  // ICI : C'est cette condition qui cache les champs pour "Cotisation" ET "Autre_Cotisation"
+  if (motif === 'Cotisation' || motif === 'Autre_Cotisation') {
     if (colNbMatchs) colNbMatchs.classList.add('d-none');
     if (colEtape) colEtape.classList.add('d-none');
     if (inputNbMatchs) inputNbMatchs.removeAttribute('required');
@@ -5787,128 +5965,6 @@ function surveillerClavierDate(e) {
   }
 }
 
-function basculerVue(nomVue) {
-  try {
-    if (!nomVue || typeof nomVue !== 'string') nomVue = 'home';
-
-    // 1. Gestion des écrans d'authentification (Overlay / Cartes d'accès)
-    const cardLogin = document.getElementById('cardLogin');
-    const cardSignup = document.getElementById('cardSignup');
-    const cardChangePass = document.getElementById('cardChangePass');
-
-    if (cardLogin) cardLogin.classList.add('d-none');
-    if (cardSignup) cardSignup.classList.add('d-none');
-    if (cardChangePass) cardChangePass.classList.add('d-none');
-
-    if (nomVue === 'login' && cardLogin) {
-      cardLogin.classList.remove('d-none');
-      return;
-    }
-    if (nomVue === 'signup' && cardSignup) {
-      cardSignup.classList.remove('d-none');
-      return;
-    }
-    if (nomVue === 'changepass' && cardChangePass) {
-      cardChangePass.classList.remove('d-none');
-      return;
-    }
-
-    // 2. Gestion des vues principales de l'application (Accueil & Modules)
-    const viewHome = document.getElementById('view-home');
-    const header = document.getElementById('appHeader');
-    const title = document.getElementById('titrePageActive');
-    const bgImage = document.getElementById('bg-image');
-
-    // Masquer proprement toutes les vues .app-view en utilisant uniquement Bootstrap (d-none)
-    document.querySelectorAll('.app-view').forEach(view => {
-      view.classList.add('d-none');
-      view.style.display = ''; // Nettoie le style en ligne pour éviter le blocage du flux
-    });
-
-    if (nomVue === 'home') {
-      if (viewHome) {
-        viewHome.classList.remove('d-none');
-        viewHome.style.display = ''; // Laisse le CSS natif / Bootstrap gérer l'affichage et le défilement
-      }
-      if (header) header.classList.add('d-none');
-      if (bgImage) bgImage.style.opacity = '1';
-    } else {
-      if (header) header.classList.remove('d-none');
-      if (title) title.innerText = nomVue.toUpperCase();
-      if (bgImage) bgImage.style.opacity = '0';
-
-      // Afficher la vue cible du module
-      const targetView = document.getElementById('view-' + nomVue);
-      if (targetView) {
-        targetView.classList.remove('d-none');
-        targetView.style.display = ''; // Laisse Bootstrap gérer l'affichage propre
-      }
-
-      // Appliquer vos permissions existantes
-      if (typeof applyPermissions === 'function' && window.userPermissions) {
-        applyPermissions(window.userPermissions);
-      }
-
-      // Appels des fonctions spécifiques à chaque module
-      switch (nomVue) {
-        case 'membres':
-          if (typeof loadMembresTable === 'function') loadMembresTable();
-          break;
-        case 'designations':
-          if (typeof loadDesignations === 'function') loadDesignations();
-          break;
-        case 'checkoff':
-          // Réinitialiser le formulaire de versement et les conteneurs dynamiques à l'ouverture de la vue
-          const motifSelect = document.getElementById('c_motif');
-          if (motifSelect) motifSelect.value = '';
-          
-          const suiteContainer = document.getElementById('form-suite-container');
-          if (suiteContainer) {
-            suiteContainer.style.display = '';
-            suiteContainer.classList.add('d-none');
-          }
-
-          const btnEnr = document.getElementById('btnEnregistrer');
-          if (btnEnr) {
-            btnEnr.style.display = '';
-            btnEnr.classList.remove('d-none');
-          }
-
-          const waveCont = document.getElementById('wavePaymentContainer');
-          if (waveCont) {
-            waveCont.style.display = '';
-            waveCont.classList.add('d-none');
-          }
-
-          const alerteBox = document.getElementById('alerteNonAutorise');
-          if (alerteBox) alerteBox.classList.add('d-none');
-
-          if (typeof loadCheckOffs === 'function') loadCheckOffs();
-          break;
-        case 'rapports':
-          if (typeof reinitialiserFormulaireRapportSuperviseur === 'function') {
-            reinitialiserFormulaireRapportSuperviseur();
-          }
-          break;
-        case 'analyses':
-          // Initialise l'affichage sur l'onglet par défaut pour éviter toute superposition
-          if (typeof switchAnalyseTab === 'function') {
-            switchAnalyseTab('desig');
-          }
-          break;
-      }
-    }
-    window.scrollTo(0, 0);
-  } catch (err) {
-    console.error("Erreur dans basculerVue :", err);
-  }
-}
-
-function naviguerVers(moduleName) {
-  // Redirige simplement vers basculerVue pour un comportement unifié et sans conflit
-  basculerVue(moduleName);
-}
-
 
 function togglePasswordVisibility(inputId, iconId) {
   const input = document.getElementById(inputId);
@@ -6513,6 +6569,528 @@ function resetRapportWorkflow(apresSoumission = false) {
 }
 
 
+// ==========================================
+// DONNÉES ET GESTION DES LOIS DU JEU ET MODIFICATIONS
+// ==========================================
+const donneesLoisEtMods = {
+  modifications: [
+    { value: "mod-notes", text: "Notes et modifications", pages: "Pages 16-19" },
+    { value: "mod-generales", text: "Modifications générales", pages: "Pages 20-21" },
+    { value: "mod-remplacement", text: "Protocole limite de temps - Remplacement", pages: "Pages 22-23" },
+    { value: "mod-blessures", text: "Protocole évaluation des blessures", pages: "Pages 24-27" },
+    { value: "mod-touche-but", text: "Protocole décompte rentrées de touche / 6m", pages: "Pages 28-29" },
+    { value: "mod-capitaine", text: "Seul le capitaine s'adresse à l'arbitre", pages: "Pages 30-33" },
+    { value: "mod-exclusions", text: "Exclusions temporaires", pages: "Pages 34-39" },
+    { value: "mod-libres", text: "Remplacements libres", pages: "Page 40" },
+    { value: "mod-commotion", text: "Protocole commotion cérébrale", pages: "Pages 42-45" }
+  ],
+  lois: [
+    { value: "loi-1", text: "Loi 1 : Terrain", pages: "Pages 49-57" },
+    { value: "loi-2", text: "Loi 2 : Ballon", pages: "Pages 59-60" },
+    { value: "loi-3", text: "Loi 3 : Joueurs", pages: "Pages 63-70" },
+    { value: "loi-4", text: "Loi 4 : Équipement des joueurs", pages: "Pages 73-78" },
+    { value: "loi-5", text: "Loi 5 : Arbitre", pages: "Pages 81-88" },
+    { value: "loi-6", text: "Loi 6 : Autres arbitres", pages: "Page 93" },
+    { value: "loi-7", text: "Loi 7 : Durée d'un match", pages: "Page 101" },
+    { value: "loi-8", text: "Loi 8 : Coup d'envoi et reprise du jeu", pages: "Page 105" },
+    { value: "loi-9", text: "Loi 9 : Ballon en jeu et hors du jeu", pages: "Page 109" },
+    { value: "loi-10", text: "Loi 10 : Issue d'un match", pages: "Page 111" },
+    { value: "loi-11", text: "Loi 11 : Hors-jeu", pages: "Page 117" },
+    { value: "loi-12", text: "Loi 12 : Fautes et incorrections", pages: "Page 123" },
+    { value: "loi-13", text: "Loi 13 : Coups francs", pages: "Page 139" },
+    { value: "loi-14", text: "Loi 14 : Penalty", pages: "Page 143" },
+    { value: "loi-15", text: "Loi 15 : Rentrée de touche", pages: "Page 151" },
+    { value: "loi-16", text: "Loi 16 : Coup de pied de but", pages: "Page 155" },
+    { value: "loi-17", text: "Loi 17 : Corner", pages: "Page 159" }
+  ]
+};
+
+// Remplacez par votre lien brut (Raw) GitHub récupéré à l'étape 1
+const URL_PDF_GIST_OU_GITHUB = "https://raw.githubusercontent.com/albahrou-boop/sous.cra-kpt/main/Lois%20du%20Jeu%202026_27_pages%20simples%20(1).pdf";
+
+function changerCategorieLoi(categorie) {
+  const containerSousSelect = document.getElementById('containerSousSelect');
+  const selectSousLoi = document.getElementById('selectSousLoi');
+  const labelSousSelect = document.getElementById('labelSousSelect');
+  const viewer = document.getElementById('viewer-loi-container');
+
+  if (viewer) {
+    viewer.innerHTML = '<p class="text-muted text-center my-5">Sélectionnez une option dans le menu déroulant pour afficher son contenu.</p>';
+  }
+
+  if (!containerSousSelect || !selectSousLoi) return;
+
+  if (!categorie) {
+    containerSousSelect.style.display = 'none';
+    return;
+  }
+
+  labelSousSelect.textContent = (categorie === 'modifications') ? "La Modification :" : "La Loi :";
+
+  let optionsHtml = '<option value="">-- Sélectionnez --</option>';
+  if (donneesLoisEtMods[categorie]) {
+    donneesLoisEtMods[categorie].forEach(item => {
+      optionsHtml += '<option value="' + item.value + '" data-pages="' + item.pages + '">' + item.text + ' (' + item.pages + ')</option>';
+    });
+  }
+  
+  selectSousLoi.innerHTML = optionsHtml;
+  containerSousSelect.style.display = 'block';
+}
+
+function chargerPartieLoi(valeur) {
+  const container = document.getElementById('viewer-loi-container');
+  if (!container) return;
+
+  if (!valeur) {
+    container.innerHTML = '<p class="text-muted text-center my-5">Sélectionnez une option dans le menu déroulant pour afficher son contenu.</p>';
+    return;
+  }
+
+  let itemTrouve = null;
+  if (donneesLoisEtMods.modifications) {
+    itemTrouve = donneesLoisEtMods.modifications.find(item => item.value === valeur);
+  }
+  if (!itemTrouve && donneesLoisEtMods.lois) {
+    itemTrouve = donneesLoisEtMods.lois.find(item => item.value === valeur);
+  }
+
+  const titreTexte = itemTrouve ? itemTrouve.text : "Lois du Jeu";
+  const infoPages = itemTrouve ? itemTrouve.pages : "Document Officiel";
+
+  let numeroPage = "1";
+  if (itemTrouve && itemTrouve.pages) {
+    const match = itemTrouve.pages.match(/\d+/);
+    if (match) numeroPage = match[0];
+  }
+
+  // URL directe de votre PDF hébergé via GitHub Pages
+  // Remplacez "https://albahrou-boop.github.io/sous.cra-kpt/" par l'URL exacte de votre site GitHub Pages si elle diffère, 
+  // en y ajoutant le nom de votre fichier PDF encodé.
+  const urlGitHubPagesPdf = "https://albahrou-boop.github.io/sous.cra-kpt/Lois%20du%20Jeu%202026_27_pages%20simples%20(1).pdf#page=" + numeroPage;
+
+  container.innerHTML = "";
+
+  const card = document.createElement('div');
+  card.className = "card shadow-sm border-0";
+
+  const cardHeader = document.createElement('div');
+  cardHeader.className = "card-header bg-success text-white d-flex justify-content-between align-items-center py-2";
+  
+  cardHeader.innerHTML = 
+    '<div>' +
+      '<h5 class="mb-0 fs-6 fw-bold"><i class="fa-solid fa-book-open me-2"></i>' + titreTexte + '</h5>' +
+      '<small class="text-white-50">Section : ' + infoPages + '</small>' +
+    '</div>' +
+    '<a href="' + URL_PDF_GIST_OU_GITHUB + '" class="btn btn-sm btn-light text-success fw-bold" target="_blank" download="Lois_du_Jeu.pdf">' +
+      '<i class="fa-solid fa-file-pdf me-1"></i> Télécharger' +
+    '</a>';
+
+  const cardBody = document.createElement('div');
+  cardBody.className = "card-body p-0 bg-light";
+  cardBody.innerHTML = 
+    '<div style="width: 100%; height: 700px;">' +
+      '<iframe src="' + urlGitHubPagesPdf + '" style="width: 100%; height: 100%; border: none;" allowfullscreen="true"></iframe>' +
+    '</div>';
+
+  card.appendChild(cardHeader);
+  card.appendChild(cardBody);
+  container.appendChild(card);
+}
+
+
+function chargerDocumentTopic(topicKey) {
+  const container = document.getElementById('viewer-topic-container');
+  if (!container) return;
+
+  if (!topicKey || !topicsDocs[topicKey]) {
+    container.innerHTML = '<p class="text-muted text-center my-5">Sélectionnez un topic pour afficher son contenu.</p>';
+    return;
+  }
+
+  const fileId = topicsDocs[topicKey];
+  const embedUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+
+  // Récupérer le texte (le nom) du topic depuis le menu déroulant
+  const selectElement = document.getElementById('selectTopic'); // Assurez-vous que c'est bien l'ID de votre <select>
+  let nomTopic = "Support de Présentation";
+  if (selectElement && selectElement.selectedIndex !== -1) {
+    nomTopic = selectElement.options[selectElement.selectedIndex].text;
+  }
+
+  container.innerHTML = 
+    '<div class="card shadow-sm border-0">' +
+      '<div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">' +
+        '<div>' +
+          '<h5 class="mb-0 fs-6 fw-bold"><i class="fa-solid fa-person-chalkboard me-2"></i>' + nomTopic + '</h5>' +
+          '<small class="text-white-50">Mode interactif</small>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-body p-0 bg-dark">' +
+        '<div class="ratio ratio-16x9 shadow-sm" style="min-height: 550px;">' +
+          '<iframe src="' + embedUrl + '" style="border:0;" allowfullscreen="true"></iframe>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+// Charger la liste des fichiers du Drive au démarrage dans le menu déroulant
+function chargerFichiersDrive() {
+  if (typeof google === 'undefined' || !google.script) return;
+  google.script.run
+    .withSuccessHandler(function(fichiers) {
+      const select = document.getElementById('selectFichierDrive');
+      if (!select) return;
+      
+      if (!fichiers || fichiers.length === 0) {
+        select.innerHTML = '<option value="">Aucun fichier PDF trouvé sur votre Drive</option>';
+        return;
+      }
+      
+      var optionsHtml = '<option value="">-- Choisir un fichier --</option>';
+      for (var i = 0; i < fichiers.length; i++) {
+        optionsHtml += '<option value="' + fichiers[i].url + '" data-nom="' + fichiers[i].nom + '">' + fichiers[i].nom + '</option>';
+      }
+      select.innerHTML = optionsHtml;
+    })
+    .recupererFichiersPdfDrive();
+}
+
+// ==========================================
+// 1. CHARGEMENT ET AFFICHAGE DU TABLEAU
+// ==========================================
+// ==========================================
+// 1. CHARGEMENT ET AFFICHAGE DES CIRCULAIRES
+// ==========================================
+function chargerCirculaires() {
+  if (typeof google === 'undefined' || !google.script) {
+    console.warn("Environnement Google Apps Script non détecté (test en local ?).");
+    return;
+  }
+  
+  google.script.run
+    .withSuccessHandler(function(circulaires) {
+      const tbody = document.getElementById('listeCirculairesBody');
+      if (!tbody) {
+        console.error("Erreur : l'élément 'listeCirculairesBody' est introuvable dans le DOM !");
+        return;
+      }
+      
+      if (!circulaires || circulaires.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Aucune circulaire pour le moment.</td></tr>';
+        return;
+      }
+      
+      var html = '';
+      for (var i = 0; i < circulaires.length; i++) {
+        var c = circulaires[i];
+        var titreSecuri = (c.titre || 'Sans titre').replace(/'/g, "\\'");
+        var nomFichierSecuri = (c.nomFichier || '').replace(/'/g, "\\'");
+        var urlSecuri = (c.url || '#').replace(/'/g, "\\'");
+        
+        html += '<tr>';
+        html += '<td><a href="#" onclick="ouvrirCirculaireModal(\'' + titreSecuri + '\', \'' + urlSecuri + '\'); return false;" class="text-decoration-none fw-bold text-primary"><i class="fa-solid fa-file-pdf text-danger me-1"></i>' + (c.titre || 'Sans titre') + '</a></td>';
+        html += '<td>' + (c.auteur || 'Admin') + '</td>';
+        html += '<td>' + (c.date || '') + '</td>';
+        html += '<td class="text-end"><button class="btn btn-sm btn-outline-danger" onclick="supprimerCirculaireIndex(' + i + ')"><i class="fa-solid fa-trash"></i></button></td>';
+        html += '</tr>';
+      }
+      tbody.innerHTML = html;
+    })
+    .withFailureHandler(function(err) {
+      console.error("Erreur critique lors de recupererCirculaires : " + err.message);
+    })
+    .recupererCirculaires();
+}
+
+// ==========================================
+// 2. ACTION D'AJOUT (IMPORTATION DEPUIS LE HAUT)
+// ==========================================
+function ajouterCirculaire(event) {
+  if (event) event.preventDefault();
+  
+  const titreInput = document.getElementById('titreCirculaire');
+  const select = document.getElementById('selectFichierDrive');
+  
+  if (!titreInput || !select) return;
+  const titre = titreInput.value.trim();
+  const urlFichier = select.value;
+  const optionSelected = select.options[select.selectedIndex];
+  const nomFichier = optionSelected ? optionSelected.getAttribute('data-nom') : '';
+  
+  if (!titre || !urlFichier) {
+    alert("Veuillez saisir un titre et sélectionner un fichier.");
+    return;
+  }
+
+  const meta = { 
+    titre: titre, 
+    nomFichier: nomFichier, 
+    url: urlFichier, 
+    date: new Date().toLocaleDateString() 
+  };
+  
+  google.script.run
+    .withSuccessHandler(function() {
+      alert('Circulaire ajoutée avec succès !');
+      const form = document.getElementById('formAjoutCirculaire');
+      if (form) form.reset();
+      
+      if (typeof chargerFichiersDrive === 'function') chargerFichiersDrive();
+      chargerCirculaires();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur : " + err.message);
+    })
+    .enregistrerCirculaireParLien(meta);
+}
+
+// ==========================================
+// 3. SUPPRESSION D'UNE CIRCULAIRE
+// ==========================================
+function supprimerCirculaireIndex(index) {
+  if (confirm("Voulez-vous vraiment supprimer cette circulaire ?")) {
+    google.script.run
+      .withSuccessHandler(function() {
+        chargerCirculaires();
+      })
+      .supprimerCirculaire(index);
+  }
+}
+
+// ==========================================
+// 4. GESTION DE LA VISIONNEUSE (MODALE)
+// ==========================================
+function getEmbedUrl(url) {
+  if (!url) return "";
+  if (url.includes("drive.google.com")) {
+    return url.replace(/\/view.*$/, "/preview").replace(/\/edit.*$/, "/preview");
+  }
+  return url;
+}
+
+function ouvrirCirculaireModal(titre, url) {
+  var embedUrl = getEmbedUrl(url);
+  
+  var titreEl = document.getElementById("modalCirculaireTitre");
+  if (titreEl) titreEl.innerText = titre;
+  
+  var iframe = document.getElementById("iframeCirculaire");
+  if (iframe) iframe.src = embedUrl;
+  
+  var modalEl = document.getElementById('modalCirculaire');
+  if (modalEl) {
+    var myModal = new bootstrap.Modal(modalEl);
+    myModal.show();
+  }
+}
+
+// ==========================================
+// 5. NAVIGATION GLOBALE ET APPLICATION VUE
+// ==========================================
+function basculerVue(nomVue) {
+  try {
+    if (!nomVue || typeof nomVue !== 'string') nomVue = 'home';
+
+    const cardLogin = document.getElementById('cardLogin');
+    const cardSignup = document.getElementById('cardSignup');
+    const cardChangePass = document.getElementById('cardChangePass');
+
+    if (cardLogin) cardLogin.classList.add('d-none');
+    if (cardSignup) cardSignup.classList.add('d-none');
+    if (cardChangePass) cardChangePass.classList.add('d-none');
+
+    if (nomVue === 'login' && cardLogin) { cardLogin.classList.remove('d-none'); return; }
+    if (nomVue === 'signup' && cardSignup) { cardSignup.classList.remove('d-none'); return; }
+    if (nomVue === 'changepass' && cardChangePass) { cardChangePass.classList.remove('d-none'); return; }
+
+    const viewHome = document.getElementById('view-home');
+    const header = document.getElementById('appHeader');
+    const title = document.getElementById('titrePageActive');
+    const bgImage = document.getElementById('bg-image');
+
+    document.querySelectorAll('.app-view').forEach(view => {
+      view.classList.add('d-none');
+      view.style.display = '';
+    });
+
+    if (nomVue === 'home') {
+      if (viewHome) { viewHome.classList.remove('d-none'); viewHome.style.display = ''; }
+      if (header) header.classList.add('d-none');
+      if (bgImage) bgImage.style.opacity = '1';
+    } else {
+      if (header) header.classList.remove('d-none');
+      if (title) title.innerText = nomVue.toUpperCase();
+      if (bgImage) bgImage.style.opacity = '0';
+
+      const targetView = document.getElementById('view-' + nomVue);
+      if (targetView) {
+        targetView.classList.remove('d-none');
+        targetView.style.display = '';
+      }
+
+      if (typeof applyPermissions === 'function' && window.userPermissions) {
+        applyPermissions(window.userPermissions);
+      }
+
+      switch (nomVue) {
+        case 'membres': if (typeof loadMembresTable === 'function') loadMembresTable(); break;
+        case 'designations': if (typeof loadDesignations === 'function') loadDesignations(); break;
+        case 'checkoff': if (typeof loadCheckOffs === 'function') loadCheckOffs(); break;
+        case 'rapports': if (typeof reinitialiserFormulaireRapportSuperviseur === 'function') reinitialiserFormulaireRapportSuperviseur(); break;
+        case 'analyses': if (typeof switchAnalyseTab === 'function') switchAnalyseTab('desig'); break;
+      }
+    }
+    window.scrollTo(0, 0);
+  } catch (err) {
+    console.error("Erreur dans basculerVue :", err);
+  }
+}
+
+function naviguerVers(moduleName) {
+  basculerVue(moduleName);
+}
+
+function afficherSection(nomSection) {
+  if (nomSection === 'circulaires') {
+    chargerCirculaires();
+  }
+}
+
+// ==========================================
+// 6. INITIALISATION DU DOM (ÉCOUTEURS GLOBAUX)
+// ==========================================
+document.addEventListener("DOMContentLoaded", function() {
+  chargerCirculaires();
+  if (typeof chargerFichiersDrive === 'function') {
+    chargerFichiersDrive();
+  }
+  
+  var tabCirculaires = document.getElementById('tab-circulaires-btn');
+  if (tabCirculaires) {
+    tabCirculaires.addEventListener('shown.bs.tab', function () {
+      chargerCirculaires();
+      if (typeof chargerFichiersDrive === 'function') {
+        chargerFichiersDrive();
+      }
+    });
+  }
+
+  var modalEl = document.getElementById('modalCirculaire');
+  if (modalEl) {
+    modalEl.addEventListener('hidden.bs.modal', function () {
+      var iframe = document.getElementById("iframeCirculaire");
+      if (iframe) iframe.src = "";
+    });
+  }
+});
+
+
+function chargerPublications() {
+  google.script.run
+    .withSuccessHandler(function(posts) {
+      const container = document.getElementById('forumPublicationsContainer');
+      if (!container) return;
+      
+      if (!posts || posts.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>';
+        return;
+      }
+      
+      var htmlGlobal = '';
+      for (var i = 0; i < posts.length; i++) {
+        var p = posts[i];
+        var commentairesHtml = '';
+        
+        if (!p.commentaires || p.commentaires.length === 0) {
+          commentairesHtml = '<p class="text-muted small italic">Aucun commentaire pour le moment.</p>';
+        } else {
+          for (var j = 0; j < p.commentaires.length; j++) {
+            var c = p.commentaires[j];
+            commentairesHtml += '<div class="p-2 rounded mb-2 small border" style="background-color: #fff7ed !important; border-color: #ffedd5 !important;">' +
+              '<div class="d-flex justify-content-between">' +
+                '<span class="fw-bold text-dark">' + c.auteur + '</span>' +
+                '<span class="text-muted" style="font-size: 0.75rem;">' + c.date + '</span>' +
+              '</div>' +
+              '<div class="mt-1 text-dark">' + c.texte + '</div>' +
+            '</div>';
+          }
+        }
+
+        htmlGlobal += '<div class="card mb-3 shadow-sm border-0" style="background-color: #f0fdf4 !important;">' +
+          '<div class="card-body">' +
+            '<div class="d-flex justify-content-between mb-2">' +
+              '<strong class="text-success"><i class="fa-solid fa-user-pen me-1"></i>' + p.auteur + '</strong>' +
+              '<small class="text-muted">' + p.date + '</small>' +
+            '</div>' +
+            '<p class="card-text text-dark" style="white-space: pre-line; font-size: 1rem;">' + p.texte + '</p>' +
+            '<hr class="my-3">' +
+            '<div class="comments-section ps-3 border-start border-3 border-warning mb-3">' +
+              '<h6 class="text-secondary fs-7 mb-2 fw-bold">Commentaires :</h6>' +
+              commentairesHtml +
+            '</div>' +
+            '<div class="input-group input-group-sm">' +
+              '<input type="text" id="input-comm-' + p.id + '" class="form-control" placeholder="Écrire un commentaire en tant que membre...">' +
+              '<button class="btn btn-outline-success" type="button" onclick="soumettreCommentaire(\'' + p.id + '\')">Commenter</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+      container.innerHTML = htmlGlobal;
+    })
+    .recupererPublications();
+}
+
+function publierPost(event) {
+  if (event) event.preventDefault();
+  const texte = document.getElementById('textePublication').value.trim();
+  if (!texte) return;
+
+  google.script.run
+    .withSuccessHandler(function() {
+      alert('Circulaire ajoutée avec succès !');
+      const form = document.getElementById('formAjoutCirculaire');
+      if (form) form.reset();
+      chargerFichiersDrive();
+      chargerCirculaires();
+    }) // <-- Fermeture du successHandler
+    .withFailureHandler(function(err) {
+      alert("Erreur : " + err.message);
+    }) // <-- Fermeture du failureHandler
+    .enregistrerCirculaire(meta);
+} // <-- IMPORTANT : Ne pas oublier cette accolade pour fermer la fonction ajouterCirculaire(event) !
+
+function soumettreCommentaire(postId) {
+  const input = document.getElementById('input-comm-' + postId);
+  if (!input || !input.value.trim()) return;
+  const texteCommentaire = input.value.trim();
+
+  google.script.run
+    .withSuccessHandler(function() {
+      input.value = '';
+      chargerPublications();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur : " + err.message);
+    })
+    .ajouterCommentaire(postId, texteCommentaire);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  if (typeof google !== 'undefined' && google.script) {
+    google.script.run.withSuccessHandler(function(nom) {
+      const el = document.getElementById('userInfoPublication');
+      if(el) el.textContent = 'Auteur connecté : ' + nom;
+    }).getUtilisateurConnecte();
+  }
+  chargerCirculaires();
+  chargerPublications();
+});
+
+
+
+
+
   </script>
 <script>
   if ('serviceWorker' in navigator) {
@@ -6523,6 +7101,24 @@ function resetRapportWorkflow(apresSoumission = false) {
     });
   }
 </script>
+
+  <!-- Modale universelle pour la lecture des circulaires -->
+<div class="modal fade" id="modalCirculaire" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fs-6 fw-bold" id="modalCirculaireTitre">Titre de la circulaire</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body p-0 bg-light" style="height: 75vh;">
+        <iframe id="iframeCirculaire" src="" style="width:100%; height:100%; border:none;"></iframe>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
