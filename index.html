@@ -1876,11 +1876,15 @@
     }
   };
 
-  function executeGasFetch(functionName, args, successHandler, failureHandler) {
+function executeGasFetch(functionName, args, successHandler, failureHandler) {
     setTimeout(async () => {
       try {
         const response = await fetch(GAS_URL, {
           method: 'POST',
+          // AJOUT DES HEADERS ESSENTIELS POUR ÉVITER LE CORS BLOQUANT DE GOOGLE
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
           body: JSON.stringify({ function: functionName, args: args })
         });
         const result = await response.json();
