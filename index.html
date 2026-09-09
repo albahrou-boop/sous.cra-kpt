@@ -1876,17 +1876,19 @@
     }
   };
 
-function executeGasFetch(functionName, args, successHandler, failureHandler) {
+
+
+    function executeGasFetch(functionName, args, successHandler, failureHandler) {
     setTimeout(async () => {
       try {
-        const response = await fetch(GAS_URL, {
-          method: 'POST',
-          // AJOUT DES HEADERS ESSENTIELS POUR ÉVITER LE CORS BLOQUANT DE GOOGLE
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify({ function: functionName, args: args })
+        // On transforme les arguments en format JSON sécurisé pour l'URL
+        const payload = encodeURIComponent(JSON.stringify({ function: functionName, args: args }));
+        
+        // Utilisation d'une requête GET pure (contourne 100% des blocages CORS Google)
+        const response = await fetch(`${GAS_URL}?data=${payload}`, {
+          method: 'GET'
         });
+        
         const result = await response.json();
         
         if (result.status === "success") {
