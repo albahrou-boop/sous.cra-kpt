@@ -1665,16 +1665,7 @@
 <!-- Conteneur Vue Lois du Jeu -->
 <div id="view-lois-du-jeu" class="app-view" style="display: none;">
   
-  <!-- En-tête de la vue -->
-  <div class="container-fluid bg-primary text-white py-3 mb-4 shadow-sm">
-    <div class="container d-flex justify-content-between align-items-center">
-      <button class="btn btn-outline-light btn-sm" onclick="basculerVue('home')">
-        <i class="fa-solid fa-arrow-left me-1"></i> Retour Accueil
-      </button>
-      <h2 class="h4 mb-0 text-center fw-bold">MODULE LOIS DU JEU</h2>
-      <span></span>
-    </div>
-  </div>
+
 
   <div class="container py-2">
     <!-- Navigation par onglets / boutons principaux -->
@@ -1801,26 +1792,30 @@
         </div>
       </div>
 
-      <!-- 4. SECTION DISCUSSION (FORUM) -->
-      <div class="tab-pane fade" id="content-discussion" role="tabpanel">
-        <div class="card shadow-sm p-4 mb-4">
-          <h3 class="h5 fw-bold mb-3 text-danger"><i class="fa-solid fa-comments me-2"></i>Forum d'échanges - Lois du Jeu</h3>
-          
-          <!-- Champ de saisie d'une nouvelle publication -->
-          <div class="card border-primary mb-4">
-            <div class="card-header bg-primary text-white fw-semibold">Créer une nouvelle publication (Question ou Contribution)</div>
-            <div class="card-body">
-              <form id="formNouvellePublication" onsubmit="publierPost(event)">
-                <div class="mb-3">
-                  <textarea id="textePublication" class="form-control" rows="4" placeholder="Exprimez votre avis ou posez votre question en texte long sans limite de mots..." required></textarea>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <small class="text-muted" id="userInfoPublication">Auteur connecté : Chargement...</small>
-                  <button type="submit" class="btn btn-primary px-4">Publier</button>
-                </div>
-              </form>
-            </div>
+     <!-- 4. SECTION DISCUSSION (FORUM) -->
+<div class="tab-pane fade" id="content-discussion" role="tabpanel">
+  <div class="card shadow-sm p-4 mb-4">
+    <h3 class="h5 fw-bold mb-3 text-danger">
+      <i class="fa-solid fa-comments me-2"></i>Forum d'échanges - Lois du Jeu
+    </h3>
+   
+    <!-- Espace de publication d'une nouvelle publication (masqué pour les non-autorisés) -->
+    <div id="formulairePublicationContainer" class="card border-primary mb-4" style="display: none;">
+      <div class="card-header bg-primary text-white fw-semibold">
+        Créer une nouvelle publication (Question ou Contribution)
+      </div>
+      <div class="card-body">
+        <form id="formNouvellePublication" onsubmit="publierPost(event)">
+          <div class="mb-3">
+            <textarea id="textePublication" class="form-control" rows="4" placeholder="Exprimez votre avis ou posez votre question en texte long sans limite de mots..." required></textarea>
           </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted" id="userInfoPublication">Auteur connecté : Chargement...</small>
+            <button type="submit" class="btn btn-primary px-4">Publier</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
           <!-- Liste des publications du forum -->
           <div id="forumPublicationsContainer">
@@ -1905,7 +1900,7 @@
 
 
 
-// ========================================================
+    // ========================================================
 // VARIABLES GLOBALES
 // ========================================================
 // ========================================================
@@ -6577,51 +6572,7 @@ function resetRapportWorkflow(apresSoumission = false) {
 // ==========================================
 // DONNÉES ET GESTION DES LOIS DU JEU ET MODIFICATIONS
 // ==========================================
-const donneesLoisEtMods = {
-  modifications: [
-    { value: "mod-notes", text: "Notes et modifications", pages: "Pages 16-19" },
-    { value: "mod-generales", text: "Modifications générales", pages: "Pages 20-21" },
-    { value: "mod-remplacement", text: "Protocole limite de temps - Remplacement", pages: "Pages 22-23" },
-    { value: "mod-blessures", text: "Protocole évaluation des blessures", pages: "Pages 24-27" },
-    { value: "mod-touche-but", text: "Protocole décompte rentrées de touche / 6m", pages: "Pages 28-29" },
-    { value: "mod-capitaine", text: "Seul le capitaine s'adresse à l'arbitre", pages: "Pages 30-33" },
-    { value: "mod-exclusions", text: "Exclusions temporaires", pages: "Pages 34-39" },
-    { value: "mod-libres", text: "Remplacements libres", pages: "Page 40" },
-    { value: "mod-commotion", text: "Protocole commotion cérébrale", pages: "Pages 42-45" }
-  ],
-  lois: [
-    { value: "loi-1", text: "Loi 1 : Terrain", pages: "Pages 49-57" },
-    { value: "loi-2", text: "Loi 2 : Ballon", pages: "Pages 59-60" },
-    { value: "loi-3", text: "Loi 3 : Joueurs", pages: "Pages 63-70" },
-    { value: "loi-4", text: "Loi 4 : Équipement des joueurs", pages: "Pages 73-78" },
-    { value: "loi-5", text: "Loi 5 : Arbitre", pages: "Pages 81-88" },
-    { value: "loi-6", text: "Loi 6 : Autres arbitres", pages: "Page 93" },
-    { value: "loi-7", text: "Loi 7 : Durée d'un match", pages: "Page 101" },
-    { value: "loi-8", text: "Loi 8 : Coup d'envoi et reprise du jeu", pages: "Page 105" },
-    { value: "loi-9", text: "Loi 9 : Ballon en jeu et hors du jeu", pages: "Page 109" },
-    { value: "loi-10", text: "Loi 10 : Issue d'un match", pages: "Page 111" },
-    { value: "loi-11", text: "Loi 11 : Hors-jeu", pages: "Page 117" },
-    { value: "loi-12", text: "Loi 12 : Fautes et incorrections", pages: "Page 123" },
-    { value: "loi-13", text: "Loi 13 : Coups francs", pages: "Page 139" },
-    { value: "loi-14", text: "Loi 14 : Penalty", pages: "Page 143" },
-    { value: "loi-15", text: "Loi 15 : Rentrée de touche", pages: "Page 151" },
-    { value: "loi-16", text: "Loi 16 : Coup de pied de but", pages: "Page 155" },
-    { value: "loi-17", text: "Loi 17 : Corner", pages: "Page 159" }
-  ]
-};
 
-// IDs Google Drive spécifiques pour chaque document
-const ID_PDF_LOIS = "1yN2BEnH0aavhWTO6g09_nOqzs3_p_Wz0";
-const ID_PDF_MODIFICATIONS = "1u1Oyw98fOcdL0mrY3kCLubEIVROTTUj2";
-
-const topicsDocs = {
-  "topic-hors-jeu": "1iZfSBhfWhyXALfPkaTmEJi1zobMbmHYY",
-  "topic-incidents": "16pQzuykTNpKOYy0Vt-0V241Upj88GzaT",
-  "topic-main": "1oZrMEk31ADKYF4CucpBhlDlqICtAXwB_",
-  "topic-duels": "1oytyfvM2c0ORFcOJc78lPNMu6pe2wNET",
-  "topic-fautes-tactiques": "171SwGzWHefRl5SSMZoaMICdqlGmgkAhs",
-  "topic-positionnement": "1oytyfvM2c0ORFcOJc78lPNMu6pe2wNET"
-};
 
 /**
  * Gère la sélection unique pour ouvrir directement le document correspondant dans le viewer
@@ -6934,6 +6885,7 @@ function basculerVue(nomVue) {
         case 'checkoff': if (typeof loadCheckOffs === 'function') loadCheckOffs(); break;
         case 'rapports': if (typeof reinitialiserFormulaireRapportSuperviseur === 'function') reinitialiserFormulaireRapportSuperviseur(); break;
         case 'analyses': if (typeof switchAnalyseTab === 'function') switchAnalyseTab('desig'); break;
+        case 'discussion': if (typeof chargerPublications === 'function') chargerPublications(); break; // <-- AJOUTÉ ICI
       }
     }
     window.scrollTo(0, 0);
@@ -6983,11 +6935,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function chargerPublications() {
   google.script.run
-    .withSuccessHandler(function(posts) {
+    .withSuccessHandler(function(data) {
       const container = document.getElementById('forumPublicationsContainer');
       if (!container) return;
       
-      if (!posts || posts.length === 0) {
+      const posts = (data && Array.isArray(data.posts)) ? data.posts : (Array.isArray(data) ? data : []);
+      const estAutorise = (data && typeof data.estAutorise !== 'undefined') ? data.estAutorise : false;
+      
+      // Gestion de la visibilité du formulaire de publication selon les droits
+      const formPublication = document.getElementById('formulairePublicationContainer');
+      if (formPublication) {
+        formPublication.style.display = estAutorise ? 'block' : 'none';
+      }
+
+      const userInfo = document.getElementById('userInfoPublication');
+      if (userInfo && data && data.emailActuel) {
+        userInfo.innerText = "Auteur connecté : " + data.emailActuel;
+      }
+
+      if (posts.length === 0) {
         container.innerHTML = '<div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>';
         return;
       }
@@ -6996,29 +6962,50 @@ function chargerPublications() {
       for (var i = 0; i < posts.length; i++) {
         var p = posts[i];
         var commentairesHtml = '';
-        
+         
         if (!p.commentaires || p.commentaires.length === 0) {
           commentairesHtml = '<p class="text-muted small italic">Aucun commentaire pour le moment.</p>';
         } else {
           for (var j = 0; j < p.commentaires.length; j++) {
             var c = p.commentaires[j];
+            
+            var boutonSupprComm = '';
+            if (estAutorise) {
+              boutonSupprComm = '<button class="btn btn-sm btn-link text-danger p-0 ms-2" onclick="supprimerComm(\'' + p.id + '\', \'' + c.id + '\')" title="Supprimer ce commentaire"><i class="fa-solid fa-xmark"></i></button>';
+            }
+
             commentairesHtml += '<div class="p-2 rounded mb-2 small border" style="background-color: #fff7ed !important; border-color: #ffedd5 !important;">' +
-              '<div class="d-flex justify-content-between">' +
-                '<span class="fw-bold text-dark">' + c.auteur + '</span>' +
-                '<span class="text-muted" style="font-size: 0.75rem;">' + c.date + '</span>' +
+              '<div class="d-flex justify-content-between align-items-center">' +
+                '<div>' +
+                  '<span class="fw-bold text-dark">' + (c.auteur || 'Membre') + '</span>' +
+                  '<span class="text-muted ms-2" style="font-size: 0.75rem;">' + (c.date || '') + '</span>' +
+                '</div>' +
+                boutonSupprComm +
               '</div>' +
-              '<div class="mt-1 text-dark">' + c.texte + '</div>' +
+              '<div class="mt-1 text-dark">' + (c.texte || '') + '</div>' +
             '</div>';
           }
         }
 
+        var boutonsGestionHtml = '';
+        if (estAutorise) {
+          boutonsGestionHtml = '<div class="btn-group btn-group-sm float-end">' +
+            '<button class="btn btn-outline-secondary" onclick="modifierPost(\'' + p.id + '\')" title="Modifier"><i class="fa-solid fa-pen"></i></button>' +
+            '<button class="btn btn-outline-warning" onclick="archiverPost(\'' + p.id + '\')" title="Archiver"><i class="fa-solid fa-box-archive"></i></button>' +
+            '<button class="btn btn-outline-danger" onclick="supprimerPost(\'' + p.id + '\')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>' +
+          '</div>';
+        }
+
         htmlGlobal += '<div class="card mb-3 shadow-sm border-0" style="background-color: #f0fdf4 !important;">' +
           '<div class="card-body">' +
-            '<div class="d-flex justify-content-between mb-2">' +
-              '<strong class="text-success"><i class="fa-solid fa-user-pen me-1"></i>' + p.auteur + '</strong>' +
-              '<small class="text-muted">' + p.date + '</small>' +
+            '<div class="d-flex justify-content-between align-items-center mb-2">' +
+              '<div>' +
+                '<strong class="text-success"><i class="fa-solid fa-user-pen me-1"></i>' + (p.auteur || 'Anonyme') + '</strong>' +
+                '<br><small class="text-muted">' + (p.date || '') + '</small>' +
+              '</div>' +
+              boutonsGestionHtml +
             '</div>' +
-            '<p class="card-text text-dark" style="white-space: pre-line; font-size: 1rem;">' + p.texte + '</p>' +
+            '<p class="card-text text-dark mt-2" style="white-space: pre-line; font-size: 1rem;">' + (p.texte || '') + '</p>' +
             '<hr class="my-3">' +
             '<div class="comments-section ps-3 border-start border-3 border-warning mb-3">' +
               '<h6 class="text-secondary fs-7 mb-2 fw-bold">Commentaires :</h6>' +
@@ -7033,28 +7020,34 @@ function chargerPublications() {
       }
       container.innerHTML = htmlGlobal;
     })
-    .recupererPublications();
+    .withFailureHandler(function(err) {
+      const container = document.getElementById('forumPublicationsContainer');
+      if (container) {
+        container.innerHTML = '<div class="text-center text-danger my-4">Erreur lors du chargement : ' + err.message + '</div>';
+      }
+    })
+    .recupererPublicationsAvecDroits();
 }
 
 function publierPost(event) {
   if (event) event.preventDefault();
-  const texte = document.getElementById('textePublication').value.trim();
+  const texteInput = document.getElementById('textePublication');
+  if (!texteInput) return;
+  
+  const texte = texteInput.value.trim();
   if (!texte) return;
 
   google.script.run
     .withSuccessHandler(function() {
-      alert('Circulaire ajoutée avec succès !');
-      const form = document.getElementById('formAjoutCirculaire');
-      if (form) form.reset();
-      chargerFichiersDrive();
-      chargerCirculaires();
-    }) // <-- Fermeture du successHandler
+      alert('Publication ajoutée avec succès !');
+      texteInput.value = '';
+      chargerPublications();
+    })
     .withFailureHandler(function(err) {
       alert("Erreur : " + err.message);
-    }) // <-- Fermeture du failureHandler
-    .enregistrerCirculaire(meta);
-} // <-- IMPORTANT : Ne pas oublier cette accolade pour fermer la fonction ajouterCirculaire(event) !
-
+    })
+    .sauvegarderPublication(texte);
+}
 function soumettreCommentaire(postId) {
   const input = document.getElementById('input-comm-' + postId);
   if (!input || !input.value.trim()) return;
@@ -7081,6 +7074,264 @@ document.addEventListener("DOMContentLoaded", function() {
   chargerCirculaires();
   chargerPublications();
 });
+
+function modifierPost(postId) {
+  const nouveauTexte = prompt("Modifier votre publication :");
+  if (nouveauTexte === null || !nouveauTexte.trim()) return;
+
+  google.script.run
+    .withSuccessHandler(function() {
+      chargerPublications();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur lors de la modification : " + err.message);
+    })
+    .modifierPublication(postId, nouveauTexte.trim());
+}
+
+function archiverPost(postId) {
+  if (!confirm("Voulez-vous vraiment archiver cette publication ?")) return;
+
+  google.script.run
+    .withSuccessHandler(function() {
+      chargerPublications();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur lors de l'archivage : " + err.message);
+    })
+    .archiverPublication(postId);
+}
+
+function supprimerPost(postId) {
+  if (!confirm("Voulez-vous vraiment supprimer définitivement cette publication ?")) return;
+
+  google.script.run
+    .withSuccessHandler(function() {
+      chargerPublications();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur lors de la suppression : " + err.message);
+    })
+    .supprimerPublication(postId);
+}
+
+function supprimerComm(postId, commentaireId) {
+  if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
+
+  google.script.run
+    .withSuccessHandler(function() {
+      chargerPublications();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur lors de la suppression du commentaire : " + err.message);
+    })
+    .supprimerCommentaire(postId, commentaireId);
+}
+
+
+
+
+
+// Identifiant Google Drive unique pour l'ensemble du document (Lois et Modifications)
+const ID_PDF_UNIQUE = "1yN2BEnH0aavhWTO6g09_nOqzs3_p_Wz0";
+
+// Données structurées utilisant le même fileId pour toutes les entrées
+const donneesLoisEtMods = {
+  lois: [
+    { value: "loi-1", text: "Loi 1 : Terrain", pages: "Pages 49-57", pageNum: "49", fileId: ID_PDF_UNIQUE },
+    { value: "loi-2", text: "Loi 2 : Ballon", pages: "Pages 59-60", pageNum: "59", fileId: ID_PDF_UNIQUE },
+    { value: "loi-3", text: "Loi 3 : Joueurs", pages: "Pages 63-70", pageNum: "63", fileId: ID_PDF_UNIQUE },
+    { value: "loi-4", text: "Loi 4 : Équipement des joueurs", pages: "Pages 73-78", pageNum: "73", fileId: ID_PDF_UNIQUE },
+    { value: "loi-5", text: "Loi 5 : Arbitre", pages: "Pages 81-88", pageNum: "81", fileId: ID_PDF_UNIQUE },
+    { value: "loi-6", text: "Loi 6 : Autres arbitres", pages: "Page 93", pageNum: "93", fileId: ID_PDF_UNIQUE },
+    { value: "loi-7", text: "Loi 7 : Durée d'un match", pages: "Page 101", pageNum: "101", fileId: ID_PDF_UNIQUE },
+    { value: "loi-8", text: "Loi 8 : Coup d'envoi et reprise du jeu", pages: "Page 105", pageNum: "105", fileId: ID_PDF_UNIQUE },
+    { value: "loi-9", text: "Loi 9 : Ballon en jeu et hors du jeu", pages: "Page 109", pageNum: "109", fileId: ID_PDF_UNIQUE },
+    { value: "loi-10", text: "Loi 10 : Issue d'un match", pages: "Page 111", pageNum: "111", fileId: ID_PDF_UNIQUE },
+    { value: "loi-11", text: "Loi 11 : Hors-jeu", pages: "Page 117", pageNum: "117", fileId: ID_PDF_UNIQUE },
+    { value: "loi-12", text: "Loi 12 : Fautes et incorrections", pages: "Page 123", pageNum: "123", fileId: ID_PDF_UNIQUE },
+    { value: "loi-13", text: "Loi 13 : Coups francs", pages: "Page 139", pageNum: "139", fileId: ID_PDF_UNIQUE },
+    { value: "loi-14", text: "Loi 14 : Penalty", pages: "Page 143", pageNum: "143", fileId: ID_PDF_UNIQUE },
+    { value: "loi-15", text: "Loi 15 : Rentrée de touche", pages: "Page 151", pageNum: "151", fileId: ID_PDF_UNIQUE },
+    { value: "loi-16", text: "Loi 16 : Coup de pied de but", pages: "Page 155", pageNum: "155", fileId: ID_PDF_UNIQUE },
+    { value: "loi-17", text: "Loi 17 : Corner", pages: "Page 159", pageNum: "159", fileId: ID_PDF_UNIQUE }
+  ],
+  modifications: [
+    { value: "mod-notes", text: "Notes et modifications", pages: "Pages 16-19", pageNum: "16", fileId: ID_PDF_UNIQUE },
+    { value: "mod-generales", text: "Modifications générales", pages: "Pages 20-21", pageNum: "20", fileId: ID_PDF_UNIQUE },
+    { value: "mod-remplacement", text: "Protocole limite de temps - Remplacement", pages: "Pages 22-23", pageNum: "22", fileId: ID_PDF_UNIQUE },
+    { value: "mod-blessures", text: "Protocole évaluation des blessures", pages: "Pages 24-27", pageNum: "24", fileId: ID_PDF_UNIQUE },
+    { value: "mod-touche-but", text: "Protocole décompte rentrées de touche / 6m", pages: "Pages 28-29", pageNum: "28", fileId: ID_PDF_UNIQUE },
+    { value: "mod-capitaine", text: "Seul le capitaine s'adresse à l'arbitre", pages: "Pages 30-33", pageNum: "30", fileId: ID_PDF_UNIQUE },
+    { value: "mod-exclusions", text: "Exclusions temporaires", pages: "Pages 34-39", pageNum: "34", fileId: ID_PDF_UNIQUE },
+    { value: "mod-libres", text: "Remplacements libres", pages: "Page 40", pageNum: "40", fileId: ID_PDF_UNIQUE },
+    { value: "mod-commotion", text: "Protocole commotion cérébrale", pages: "Pages 42-45", pageNum: "42", fileId: ID_PDF_UNIQUE }
+  ]
+};
+
+const topicsDocs = {
+  "topic-hors-jeu": "1iZfSBhfWhyXALfPkaTmEJi1zobMbmHYY",
+  "topic-incidents": "16pQzuykTNpKOYy0Vt-0V241Upj88GzaT",
+  "topic-main": "1oZrMEk31ADKYF4CucpBhlDlqICtAXwB_",
+  "topic-duels": "1oytyfvM2c0ORFcOJc78lPNMu6pe2wNET",
+  "topic-fautes-tactiques": "171SwGzWHefRl5SSMZoaMICdqlGmgkAhs",
+  "topic-positionnement": ""
+};
+
+/**
+ * Gère le changement du premier menu (Lois ou Modifications)
+ */
+function changerCategorieLoi(categorie) {
+  const containerSousSelect = document.getElementById('containerSousSelect');
+  const selectSousLoi = document.getElementById('selectSousLoi');
+  const labelSousSelect = document.getElementById('labelSousSelect');
+  const viewer = document.getElementById('viewer-loi-container');
+
+  if (viewer) {
+    viewer.innerHTML = '<p class="text-muted text-center my-5">Sélectionnez une option dans le sous-menu pour afficher la page correspondante.</p>';
+  }
+
+  if (!containerSousSelect || !selectSousLoi) return;
+
+  if (!categorie) {
+    containerSousSelect.style.display = 'none';
+    return;
+  }
+
+  labelSousSelect.textContent = (categorie === 'modifications') ? "La Modification :" : "La Loi :";
+
+  let optionsHtml = '<option value="">-- Sélectionnez une option --</option>';
+  if (donneesLoisEtMods[categorie]) {
+    donneesLoisEtMods[categorie].forEach(item => {
+      optionsHtml += '<option value="' + item.value + '">' + item.text + ' (' + item.pages + ')</option>';
+    });
+  }
+  
+  selectSousLoi.innerHTML = optionsHtml;
+  containerSousSelect.style.display = 'block';
+}
+
+/**
+ * Gère le choix de la sous-section et cible directement la bonne page du document Google Drive unique
+ */
+function chargerPartieLoi(valeur) {
+  if (!valeur) return;
+
+  let itemTrouve = null;
+  if (donneesLoisEtMods.modifications) {
+    itemTrouve = donneesLoisEtMods.modifications.find(item => item.value === valeur);
+  }
+  if (!itemTrouve && donneesLoisEtMods.lois) {
+    itemTrouve = donneesLoisEtMods.lois.find(item => item.value === valeur);
+  }
+
+  if (!itemTrouve) return;
+
+  chargerPdfSurPage(itemTrouve.fileId, itemTrouve.pageNum, itemTrouve.text, itemTrouve.pages);
+}
+
+/**
+ * Charge l'iframe Google Drive avec le paramètre de page
+ */
+function chargerPdfSurPage(fileId, numeroPage, titreTexte, infoPages) {
+  const container = document.getElementById('viewer-loi-container');
+  if (!container) return;
+
+  const embedUrl = 'https://drive.google.com/file/d/' + fileId + '/preview#page=' + numeroPage;
+  const downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+
+  container.innerHTML = "";
+
+  const card = document.createElement('div');
+  card.className = "card shadow-sm border-0";
+
+  const cardHeader = document.createElement('div');
+  cardHeader.className = "card-header bg-success text-white d-flex justify-content-between align-items-center py-2";
+  
+  cardHeader.innerHTML = 
+    '<div>' +
+      '<h5 class="mb-0 fs-6 fw-bold"><i class="fa-solid fa-book-open me-2"></i>' + titreTexte + '</h5>' +
+      '<small class="text-white-50">Section : ' + infoPages + '</small>' +
+    '</div>' +
+    '<a href="' + downloadUrl + '" class="btn btn-sm btn-light text-success fw-bold" target="_blank" download>' +
+      '<i class="fa-solid fa-file-pdf me-1"></i> Télécharger' +
+    '</a>';
+
+  const cardBody = document.createElement('div');
+  cardBody.className = "card-body p-0 bg-light";
+  cardBody.innerHTML = 
+    '<div style="width: 100%; height: 700px;">' +
+      '<iframe src="' + embedUrl + '" style="width: 100%; height: 100%; border: none;" allowfullscreen="true"></iframe>' +
+    '</div>';
+
+  card.appendChild(cardHeader);
+  card.appendChild(cardBody);
+  container.appendChild(card);
+}
+
+function chargerDocumentTopic(topicKey) {
+  const container = document.getElementById('viewer-topic-container');
+  if (!container) return;
+
+  if (!topicKey || !topicsDocs[topicKey]) {
+    container.innerHTML = '<p class="text-muted text-center my-5">Sélectionnez un topic pour afficher son contenu.</p>';
+    return;
+  }
+
+  const fileId = topicsDocs[topicKey];
+  const embedUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+
+  const selectElement = document.getElementById('selectTopic');
+  let nomTopic = "Support de Présentation";
+  if (selectElement && selectElement.selectedIndex !== -1) {
+    nomTopic = selectElement.options[selectElement.selectedIndex].text;
+  }
+
+  container.innerHTML = 
+    '<div class="card shadow-sm border-0">' +
+      '<div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">' +
+        '<div>' +
+          '<h5 class="mb-0 fs-6 fw-bold"><i class="fa-solid fa-person-chalkboard me-2"></i>' + nomTopic + '</h5>' +
+          '<small class="text-white-50">Mode interactif</small>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-body p-0 bg-dark">' +
+        '<div class="ratio ratio-16x9 shadow-sm" style="min-height: 550px;">' +
+          '<iframe src="' + embedUrl + '" style="border:0;" allowfullscreen="true"></iframe>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+function chargerFichiersDrive() {
+  if (typeof google === 'undefined' || !google.script) {
+    console.warn("Environnement Google Apps Script non détecté.");
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(fichiers) {
+      const select = document.getElementById('selectFichierDrive');
+      if (!select) return;
+      
+      if (!fichiers || fichiers.length === 0) {
+        select.innerHTML = '<option value="">Aucun fichier PDF trouvé sur votre Drive</option>';
+        return;
+      }
+      
+      var optionsHtml = '<option value="">-- Choisir un fichier --</option>';
+      for (var i = 0; i < fichiers.length; i++) {
+        optionsHtml += '<option value="' + fichiers[i].url + '" data-nom="' + fichiers[i].nom + '">' + fichiers[i].nom + '</option>';
+      }
+      select.innerHTML = optionsHtml;
+    })
+    .withFailureHandler(function(erreur) {
+      console.error("Erreur lors du chargement des fichiers Drive :", erreur);
+      const select = document.getElementById('selectFichierDrive');
+      if (select) select.innerHTML = '<option value="">Erreur de chargement du Drive</option>';
+    })
+    .recupererFichiersPdfDrive();
+}
 
 
   </script>
