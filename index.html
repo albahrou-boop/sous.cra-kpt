@@ -17,20 +17,6 @@
   <meta name="apple-mobile-web-app-title" content="Sous-CRA">
   <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK">
 
-<style>
-        body {
-            margin: 0;
-            padding: 0;
-            /* C'est ici que l'on définit l'image */
-            background-image: url('icon-512.png'); 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-        }
-    </style>
 
   <!-- 3. STYLES CSS UNIFIÉS ET OPTIMISÉS -->
   <style>
@@ -6928,62 +6914,57 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyfT6H-M-9tRH6707rA
 // 2. ACTION D'AJOUT (IMPORTATION DEPUIS LE HAUT)
 // ==========================================
 function chargerCirculaires() {
-  const payload = {
-    function: "recupererCirculaires",
-    args: []
-  };
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
-  const urlComprehensible = WEB_APP_URL + "?data=" + encodeURIComponent(JSON.stringify(payload));
+  google.script.run
+    .withSuccessHandler(function(res) {
+      // res = { circulaires: [...], estAutorise: bool }
+      const circulaires = (res && Array.isArray(res.circulaires)) ? res.circulaires : [];
+      const estAutorise = (res && typeof res.estAutorise !== 'undefined') ? res.estAutorise : false;
 
-  fetch(urlComprehensible)
-    .then(response => response.json())
-    .then(res => {
-      if (res.status !== "success") {
-        console.error("Erreur renvoyée par le serveur :", res.error);
-        return;
-      }
-
-      // Extraction robuste des données renvoyées par Apps Script
-      const dataResult = res.data;
-      let circulaires = [];
-      
-      if (dataResult) {
-        if (Array.isArray(dataResult.circulaires)) {
-          circulaires = dataResult.circulaires;
-        } else if (Array.isArray(dataResult)) {
-          circulaires = dataResult;
-        }
+      // 🔒 Masquage du formulaire d'ajout si non autorisé
+      const blocAjout = document.getElementById('blocAjoutCirculaire');
+      if (blocAjout) {
+        blocAjout.classList.toggle('d-none', !estAutorise);
       }
 
       const tbody = document.getElementById('listeCirculairesBody');
-      if (!tbody) {
-        console.error("Erreur : l'élément 'listeCirculairesBody' est introuvable dans le DOM !");
-        return;
-      }
-      
+      if (!tbody) return;
+
       if (circulaires.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Aucune circulaire pour le moment.</td></tr>';
         return;
       }
-      
-      var html = '';
-      for (var i = 0; i < circulaires.length; i++) {
-        var c = circulaires[i];
-        var titreSecuri = (c.titre || 'Sans titre').replace(/'/g, "\\'");
-        var urlSecuri = (c.url || '#').replace(/'/g, "\\'");
-        
+
+      let html = '';
+      for (let i = 0; i < circulaires.length; i++) {
+        const c = circulaires[i];
+        const titreSecuri = (c.titre || 'Sans titre').replace(/'/g, "\\'");
+        const urlSecuri = (c.url || '#').replace(/'/g, "\\'");
+
         html += '<tr>';
         html += '<td><a href="#" onclick="ouvrirCirculaireModal(\'' + titreSecuri + '\', \'' + urlSecuri + '\'); return false;" class="text-decoration-none fw-bold text-primary"><i class="fa-solid fa-file-pdf text-danger me-1"></i>' + (c.titre || 'Sans titre') + '</a></td>';
         html += '<td>' + (c.auteur || 'Admin') + '</td>';
         html += '<td>' + (c.date || '') + '</td>';
-        html += '<td class="text-end"><button class="btn btn-sm btn-outline-danger" onclick="supprimerCirculaireIndex(' + i + ')"><i class="fa-solid fa-trash"></i></button></td>';
+
+        // 🔒 Bouton supprimer conditionnel
+        html += '<td class="text-end">' + (estAutorise
+          ? '<button class="btn btn-sm btn-outline-danger" onclick="supprimerCirculaireIndex(' + i + ')"><i class="fa-solid fa-trash"></i></button>'
+          : '<span class="text-muted small">-</span>'
+        ) + '</td>';
+
         html += '</tr>';
       }
       tbody.innerHTML = html;
     })
-    .catch(err => {
-      console.error("Erreur critique lors de la récupération des circulaires : " + err);
-    });
+    .withFailureHandler(function(err) {
+      console.error("Erreur de chargement des circulaires :", err);
+      const tbody = document.getElementById('listeCirculairesBody');
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Erreur de chargement.</td></tr>';
+      }
+    })
+    .recupererCirculaires(emailUser);
 }
 
 function ajouterCirculaire(event) {
