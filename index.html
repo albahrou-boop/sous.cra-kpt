@@ -8131,10 +8131,17 @@ function consulterDevoir(devoirId) {
     .obtenirDevoirComplet(devoirId);
 }
 
-// ================= INDIVIDUEL =================
+// ============================================================================
+// ================= MODULE NOTES =================
+// ============================================================================
+
+// ---------- INDIVIDUEL ----------
 function ouvrirNotesIndividuel() {
   const container = document.getElementById('notesContainer');
+  if (!container) return;
   container.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(d) {
@@ -8145,9 +8152,11 @@ function ouvrirNotesIndividuel() {
               '<label class="form-label small fw-bold">1. Devoir</label>' +
               '<select class="form-select" id="selectDevoirIndividuel" onchange="onDevoirIndividuelChange()">' +
                 '<option value="">-- Choisir un devoir --</option>';
+
       (d.devoirs || []).forEach(function(dv) {
         html += '<option value="' + dv.id + '">' + dv.titre + ' (n°' + dv.numero + ')</option>';
       });
+
       html += '</select></div>' +
         '<div class="col-md-6">' +
           '<label class="form-label small fw-bold">2. Membre</label>' +
@@ -8163,7 +8172,7 @@ function ouvrirNotesIndividuel() {
     .withFailureHandler(function(err) {
       container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
     })
-    .listerDevoirsPourNotes();
+    .listerDevoirsPourNotes(emailUser);   // ✅ ENVOI EMAIL
 }
 
 function onDevoirIndividuelChange() {
@@ -8181,6 +8190,8 @@ function onDevoirIndividuelChange() {
   selectMembre.disabled = true;
   selectMembre.innerHTML = '<option value="">Chargement...</option>';
 
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+
   google.script.run
     .withSuccessHandler(function(data) {
       // 🔒 Cas 1 : Un seul membre (l'utilisateur lui-même) → on cache le menu
@@ -8189,7 +8200,7 @@ function onDevoirIndividuelChange() {
         selectMembre.innerHTML = '<option value="' + m.email + '" selected>' + m.nomComplet + '</option>';
         selectMembre.disabled = false;
 
-        // 🔒 Cacher le bloc du menu déroulant membre
+        // Cacher le bloc du menu déroulant membre
         const colMembre = selectMembre.closest('.col-md-6');
         if (colMembre) colMembre.style.display = 'none';
 
@@ -8198,7 +8209,7 @@ function onDevoirIndividuelChange() {
         return;
       }
 
-      // Cas 2 : Plusieurs membres (auteur ou technique)
+      // 🔒 Cas 2 : Plusieurs membres (auteur ou technique)
       const colMembre = selectMembre.closest('.col-md-6');
       if (colMembre) colMembre.style.display = '';
 
@@ -8213,7 +8224,7 @@ function onDevoirIndividuelChange() {
       selectMembre.innerHTML = '<option value="">Erreur</option>';
       res.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
     })
-    .listerMembresPourDevoir(devoirId);
+    .listerMembresPourDevoir(devoirId, emailUser);   // ✅ ENVOI EMAIL
 }
 
 function chargerNoteIndividuel(emailOverride, devoirIdOverride) {
@@ -8223,6 +8234,8 @@ function chargerNoteIndividuel(emailOverride, devoirIdOverride) {
   if (!membre || !devoirId) { cible.innerHTML = ''; return; }
 
   cible.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
@@ -8235,13 +8248,16 @@ function chargerNoteIndividuel(emailOverride, devoirIdOverride) {
     .withFailureHandler(function(err) {
       cible.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
     })
-    .obtenirNoteMembreDevoir(membre, devoirId);
+    .obtenirNoteMembreDevoir(membre, devoirId, emailUser);   // ✅ ENVOI EMAIL
 }
 
-// ================= TOUTES =================
+// ---------- TOUTES ----------
 function ouvrirNotesToutes() {
   const container = document.getElementById('notesContainer');
+  if (!container) return;
   container.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(d) {
@@ -8250,16 +8266,18 @@ function ouvrirNotesToutes() {
           '<label class="form-label small fw-bold">Choisir un devoir</label>' +
           '<select class="form-select" id="selectDevoirToutes" onchange="chargerToutesNotes()">' +
             '<option value="">-- Choisir un devoir --</option>';
+
       (d.devoirs || []).forEach(function(dv) {
         html += '<option value="' + dv.id + '">' + dv.titre + ' (n°' + dv.numero + ')</option>';
       });
+
       html += '</select></div><div id="resultatToutesNotes"></div>';
       container.innerHTML = html;
     })
     .withFailureHandler(function(err) {
       container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
     })
-    .listerDevoirsPourNotes();
+    .listerDevoirsPourNotes(emailUser);   // ✅ ENVOI EMAIL
 }
 
 function chargerToutesNotes() {
@@ -8268,6 +8286,8 @@ function chargerToutesNotes() {
   if (!devoirId) { cible.innerHTML = ''; return; }
 
   cible.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
@@ -8318,10 +8338,10 @@ function chargerToutesNotes() {
     .withFailureHandler(function(err) {
       cible.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
     })
-    .obtenirToutesLesNotesDevoir(devoirId);
+    .obtenirToutesLesNotesDevoir(devoirId, emailUser);   // ✅ ENVOI EMAIL
 }
 
-// ================= AFFICHAGE D'UNE NOTE =================
+// ---------- AFFICHAGE D'UNE NOTE ----------
 function construireAffichageNote(data) {
   const pct = data.noteMax > 0 ? Math.round((data.noteObtenue / data.noteMax) * 100) : 0;
   const couleur = pct >= 70 ? 'success' : (pct >= 50 ? 'warning' : 'danger');
@@ -8384,17 +8404,21 @@ function toggleDetailNote(id) {
 
 // Détail d'une ligne (technique ou auteur)
 function voirDetailLigne(arbitreEmail, devoirId) {
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data.trouve) { alert(data.message); return; }
       afficherModalDetail('Détail — ' + (data.arbitreNom || data.arbitreEmail), construireDetailReponses(data));
     })
     .withFailureHandler(function(err) { alert('Erreur : ' + err.message); })
-    .obtenirNoteMembreDevoir(arbitreEmail, devoirId);
+    .obtenirNoteMembreDevoir(arbitreEmail, devoirId, emailUser);   // ✅ ENVOI EMAIL
 }
 
 // Détail de TOUS les membres (technique uniquement)
 function voirTousDetails(devoirId) {
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+
   google.script.run
     .withSuccessHandler(function(data) {
       let html = '';
@@ -8408,7 +8432,7 @@ function voirTousDetails(devoirId) {
       afficherModalDetail('Détails de tous les membres', html);
     })
     .withFailureHandler(function(err) { alert('Erreur : ' + err.message); })
-    .obtenirDetailsTousMembres(devoirId);
+    .obtenirDetailsTousMembres(devoirId, emailUser);   // ✅ ENVOI EMAIL
 }
 
 function afficherModalDetail(titre, contenuHtml) {
@@ -8427,6 +8451,9 @@ function afficherModalDetail(titre, contenuHtml) {
   new bootstrap.Modal(document.getElementById('modalDetailNoteTemp')).show();
 }
 
+// ============================================================================
+// ================= MODULE CORRIGÉS =================
+// ============================================================================
 function chargerListeCorriges() {
   const container = document.getElementById('listeCorrigesContainer');
   if (!container) { console.error('[CORRIGÉS] #listeCorrigesContainer introuvable'); return; }
@@ -8435,6 +8462,8 @@ function chargerListeCorriges() {
   // Vider le conteneur de résultat à chaque rechargement
   const cible = document.getElementById('corrigeContainer');
   if (cible) cible.innerHTML = '';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
@@ -8471,7 +8500,7 @@ function chargerListeCorriges() {
       console.error('[CORRIGÉS] erreur serveur :', err);
       container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
     })
-    .listerDevoirsCorriges();
+    .listerDevoirsCorriges(emailUser);   // ✅ ENVOI EMAIL
 }
 
 function afficherCorrigeSelectionne() {
@@ -8480,6 +8509,8 @@ function afficherCorrigeSelectionne() {
   if (!devoirId) { cible.innerHTML = ''; return; }
 
   cible.innerHTML = '<p class="text-muted text-center my-3">Chargement du corrigé...</p>';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
@@ -8556,8 +8587,9 @@ function afficherCorrigeSelectionne() {
     .withFailureHandler(function(err) {
       cible.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
     })
-    .obtenirCorrigeDevoir(devoirId);
+    .obtenirCorrigeDevoir(devoirId, emailUser);   // ✅ ENVOI EMAIL
 }
+
 // Déclenche le chargement des corrigés à l'ouverture du sous-onglet
 document.addEventListener('shown.bs.tab', function(e) {
   const cible = e.target.getAttribute('data-bs-target');
