@@ -1895,8 +1895,8 @@
           <button class="btn btn-outline-primary" onclick="ouvrirNotesIndividuel()">
             <i class="fa-solid fa-user me-1"></i>Individuel
           </button>
-          <button class="btn btn-outline-secondary" onclick="ouvrirNotesToutes()">
-            <i class="fa-solid fa-users me-1"></i>Toutes
+          <button class="btn btn-outline-secondary" id="btnNotesToutes" onclick="ouvrirNotesToutes()">
+          <i class="fa-solid fa-users me-1"></i>Toutes
           </button>
         </div>
         <div id="notesContainer"></div>
@@ -2644,31 +2644,40 @@ function afficherEmailDansBanniere(email) {
 // APPLICATION DROITS UI & MASQUAGE SECURISE
 // ============================================================================
 
+// ============================================================================
+// APPLICATION DES PERMISSIONS UI & MASQUAGE SÉCURISÉ
+// ============================================================================
 function applyPermissions(perms) {
   const safePerms = perms || {};
   window.userPermissions = safePerms;
 
+  // =====================================================
+  // CALCUL DES DROITS
+  // =====================================================
   const isAdmin = Boolean(safePerms.isAdmin);
   const canSaisirMembres = Boolean(safePerms.canSaisirMembres || isAdmin);
   const canDesig = Boolean(safePerms.canSaisirDesignations || isAdmin);
   const canVoirRapports = Boolean(safePerms.canVoirRapports || safePerms.isRapportsAllowed || isAdmin);
   const isTresorier = Boolean(safePerms.isTresorier || isAdmin || safePerms.isUserTresorier);
-  
   const canSaisirTreso = Boolean(safePerms.canSaisirTreso || canDesig || isTresorier || isAdmin);
+  const estTechnique = Boolean(safePerms.estTechnique || isAdmin);
 
-  // A. MODULE MEMBRES (Masquage / Affichage strict des éléments protégés)
+  // =====================================================
+  // A. MODULE MEMBRES
+  // =====================================================
   toggleElementVisibility('menu-saisie-membre-item', canSaisirMembres);
   toggleElementVisibility('m-saisie', canSaisirMembres);
   toggleElementVisibility('th-date-lieu-naiss', canSaisirMembres);
   toggleElementVisibility('th-cni', canSaisirMembres);
   toggleElementVisibility('th-actions-membre', canSaisirMembres);
 
-  // Applique la classe d'affichage/masquage sur toutes les cellules de la table correspondantes
   document.querySelectorAll('.col-admin, .btn-admin-only, .col-date-lieu, .col-cni, .col-membre-action').forEach(el => {
     el.classList.toggle('d-none', !canSaisirMembres);
   });
 
+  // =====================================================
   // B. MODULE DÉSIGNATIONS
+  // =====================================================
   toggleElementVisibility('item-tab-d-saisie', canDesig);
   toggleElementVisibility('item-tab-d-modifier', canDesig);
   toggleElementVisibility('d-saisie', canDesig);
@@ -2679,7 +2688,9 @@ function applyPermissions(perms) {
     el.classList.toggle('d-none', !canDesig);
   });
 
+  // =====================================================
   // C. MODULE RAPPORTS & ANALYSES
+  // =====================================================
   toggleElementVisibility('li-tab-r-view', canVoirRapports);
   toggleElementVisibility('containerTblRapports', canVoirRapports);
   toggleElementVisibility('alertRestreintRapports', !canVoirRapports);
@@ -2691,13 +2702,22 @@ function applyPermissions(perms) {
     el.classList.toggle('d-none', !canVoirRapports);
   });
 
-  // D. TRÉSORERIE
+  // =====================================================
+  // D. MODULE NOTES — Bouton "Toutes" réservé aux techniques
+  // =====================================================
+  const btnNotesToutes = document.getElementById('btnNotesToutes');
+  if (btnNotesToutes) {
+    btnNotesToutes.classList.toggle('d-none', !estTechnique);
+  }
 
+  // =====================================================
+  // E. TRÉSORERIE
+  // =====================================================
   if (!canSaisirTreso) {
     const tabVersements = document.getElementById('tab-co-versements');
     const contenuVersements = document.getElementById('c-affichage');
     const contenuSaisie = document.getElementById('c-saisie');
-    
+
     if (contenuSaisie && contenuSaisie.classList.contains('show')) {
       contenuSaisie.classList.remove('show', 'active');
       if (contenuVersements) contenuVersements.classList.add('show', 'active');
@@ -2706,7 +2726,7 @@ function applyPermissions(perms) {
   }
 
   toggleElementVisibility('th-actions-treso', isTresorier);
-  
+
   document.querySelectorAll('.col-treso-action, .btn-valider-statut').forEach(el => {
     if (isTresorier) {
       el.classList.remove('d-none');
@@ -7384,6 +7404,24 @@ function sauvegarderModification(id) {
     .modifierPublication(id, nouveauTexte, emailUser);
 }
 
+// ============================================================================
+// SUPPRESSION D'UN COMMENTAIRE
+// ============================================================================
+function supprimerComm(postId, commentaireId) {
+  if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+
+  google.script.run
+    .withSuccessHandler(function() {
+      chargerPublications();
+    })
+    .withFailureHandler(function(err) {
+      alert("Erreur lors de la suppression du commentaire : " + err.message);
+    })
+    .supprimerCommentaire(postId, commentaireId, emailUser);
+}
+
 
 
 
@@ -8145,16 +8183,26 @@ function onDevoirIndividuelChange() {
 
   google.script.run
     .withSuccessHandler(function(data) {
-      let html = '<option value="">-- Choisir un membre --</option>';
+      // 🔒 Cas 1 : Un seul membre (l'utilisateur lui-même) → on cache le menu
       if (data.membres.length === 1) {
-        // Un seul choix possible → pré-sélection
         const m = data.membres[0];
-        html = '<option value="' + m.email + '" selected>' + m.nomComplet + '</option>';
-        selectMembre.innerHTML = html;
+        selectMembre.innerHTML = '<option value="' + m.email + '" selected>' + m.nomComplet + '</option>';
         selectMembre.disabled = false;
-        chargerNoteIndividuel();
+
+        // 🔒 Cacher le bloc du menu déroulant membre
+        const colMembre = selectMembre.closest('.col-md-6');
+        if (colMembre) colMembre.style.display = 'none';
+
+        // Charger la note directement
+        chargerNoteIndividuel(m.email, devoirId);
         return;
       }
+
+      // Cas 2 : Plusieurs membres (auteur ou technique)
+      const colMembre = selectMembre.closest('.col-md-6');
+      if (colMembre) colMembre.style.display = '';
+
+      let html = '<option value="">-- Choisir un membre --</option>';
       data.membres.forEach(function(m) {
         html += '<option value="' + m.email + '">' + m.nomComplet + ' (' + m.email + ')</option>';
       });
@@ -8168,9 +8216,9 @@ function onDevoirIndividuelChange() {
     .listerMembresPourDevoir(devoirId);
 }
 
-function chargerNoteIndividuel() {
-  const membre = document.getElementById('selectMembreIndividuel').value;
-  const devoirId = document.getElementById('selectDevoirIndividuel').value;
+function chargerNoteIndividuel(emailOverride, devoirIdOverride) {
+  const membre = emailOverride || document.getElementById('selectMembreIndividuel').value;
+  const devoirId = devoirIdOverride || document.getElementById('selectDevoirIndividuel').value;
   const cible = document.getElementById('resultatNoteIndividuel');
   if (!membre || !devoirId) { cible.innerHTML = ''; return; }
 
