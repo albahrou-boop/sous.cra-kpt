@@ -3424,16 +3424,22 @@ function remplirListeSuperviseursRapport() {
  * Charge et affiche la liste des rapports d'évaluation des arbitres.
  * Gère l'affichage responsive, le regroupement par rencontre et les accès restreints.
  */
+/**
+ * Charge et affiche la liste des rapports d'évaluation des arbitres.
+ * Version optimisée : affichage complet des motifs d'incidents + performance améliorée.
+ */
 function loadRapportsDisplay() {
   const liTab = document.getElementById('li-tab-r-view');
-  const container = document.getElementById('conteneurRapportsView') || document.querySelector('#containerTblRapports') || document.querySelector('#tblRapports')?.parentNode;
+  const container = document.getElementById('conteneurRapportsView') 
+    || document.querySelector('#containerTblRapports') 
+    || document.querySelector('#tblRapports')?.parentNode;
 
   if (!container) {
     console.warn("Conteneur des rapports introuvable.");
     return;
   }
 
-  // 👉 Affichage immédiat d'un indicateur de chargement visible
+  // 👉 Indicateur de chargement immédiat
   container.innerHTML = `
     <div class="text-center text-primary p-5 my-5">
       <div class="spinner-border mb-3" role="status" style="width: 3rem; height: 3rem;">
@@ -3450,33 +3456,32 @@ function loadRapportsDisplay() {
 
   google.script.run
     .withSuccessHandler(function(data) {
-      if (liTab) {
-        liTab.classList.remove('d-none');
-      }
+      if (liTab) liTab.classList.remove('d-none');
 
-      if (!container) {
-        console.warn("Conteneur des rapports introuvable.");
-        return;
-      }
+      if (!container) return;
 
       if (!data || data.length === 0) {
         container.innerHTML = '<div class="text-center text-muted p-3">Aucun rapport enregistré.</div>';
         return;
       }
 
+      // ========== GESTION DES PERMISSIONS D'ARCHIVAGE ==========
       const ALLOWED_MEMBRES_SAISIE = [
-        "albahrou@gmail.com", 
+        "albahrou@gmail.com",
         "barrymamadu94@gmail.com"
       ];
       const ADMIN_EMAIL = ["albahrou@gmail.com"];
-      
+
       let currentUserEmail = (typeof getUserEmail === 'function' ? getUserEmail() : '').toLowerCase().trim();
       if (!currentUserEmail && typeof userEmailCourant !== 'undefined') {
         currentUserEmail = String(userEmailCourant).toLowerCase().trim();
       }
-      
-      const canUserArchive = ADMIN_EMAIL.includes(currentUserEmail) || ALLOWED_MEMBRES_SAISIE.includes(currentUserEmail) || currentUserEmail === "";
 
+      const canUserArchive = ADMIN_EMAIL.includes(currentUserEmail) 
+        || ALLOWED_MEMBRES_SAISIE.includes(currentUserEmail) 
+        || currentUserEmail === "";
+
+      // ========== SÉPARATION NON EXPLOITÉS / EXPLOITÉS ==========
       const nonExploites = [];
       const exploites = [];
 
@@ -3489,6 +3494,7 @@ function loadRapportsDisplay() {
         }
       });
 
+      // Tri des non exploités (par lieu, puis incidents prioritaires, puis date)
       nonExploites.sort(function(a, b) {
         const lieuA = String(a.lieu || '-').trim().toLowerCase();
         const lieuB = String(b.lieu || '-').trim().toLowerCase();
@@ -3498,6 +3504,7 @@ function loadRapportsDisplay() {
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
 
+      // Tri des exploités (par lieu, puis date)
       exploites.sort(function(a, b) {
         const lieuA = String(a.lieu || '-').trim().toLowerCase();
         const lieuB = String(b.lieu || '-').trim().toLowerCase();
@@ -3505,29 +3512,138 @@ function loadRapportsDisplay() {
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
 
+      // ========== GÉNÉRATION DES LIGNES D'UN TABLEAU ==========
+      function genererLignesTableau(itemsList) {
+        let htmlRows = '';
+
+        itemsList.forEach(function(item) {
+          const isExploite = String(item.situation || '').toUpperCase() === 'EXPLOITÉ';
+
+          if (!item.arbitres || !Array.isArray(item.arbitres) || item.arbitres.length === 0) {
+            return;
+          }
+
+          const rowCount = item.arbitres.length;
+
+          item.arbitres.forEach(function(r, index) {
+            let qualiteBadge = 'badge bg-primary';
+            if (r.qualite === 'AC') qualiteBadge = 'badge bg-danger';
+            else if (r.qualite === '4EME') qualiteBadge = 'badge bg-info text-dark';
+
+            const isLastArbitre = (index === rowCount - 1);
+            const borderStyle = isLastArbitre ? 'border-bottom: 2px solid #212529 !important;' : '';
+
+            htmlRows += `<tr style="${borderStyle}">`;
+
+            // ---- Cellules fusionnées (Superviseur + Rencontre) ----
+            if (index === 0) {
+              htmlRows += `
+                <td rowspan="${rowCount}" data-label="Superviseur" class="text-center bg-light text-break small">
+                  <b>${item.superviseur || '-'}</b>
+                </td>
+                <td rowspan="${rowCount}" data-label="Rencontre" class="text-center bg-light text-break small">
+                  <b>${item.rencontre || '-'}</b>
+                  ${isExploite ? `<br><small class="text-muted">Stade: ${item.lieu || '-'}</small>` : ''}
+                </td>`;
+            }
+
+            // ---- Cellules par arbitre ----
+            htmlRows += `
+              <td data-label="Qualité" class="text-center">
+                <span class="${qualiteBadge}">${r.qualite || '-'}</span>
+              </td>
+              <td data-label="Arbitre" class="text-break small"><b>${r.arbitre || '-'}</b></td>
+              <td data-label="Note" class="text-center">
+                <span class="badge bg-warning text-dark">${r.note || '-'}</span>
+              </td>
+              <td data-label="Forces Tech." class="text-break small text-success">${r.forcesTech || '-'}</td>
+              <td data-label="Faiblesses Tech." class="text-break small text-danger">${r.faiblessesTech || '-'}</td>
+              <td data-label="Forces Phys." class="text-break small text-success">
+                ${r.forcesPhys || '-'}${r.forcesPhysCom ? '<br><small class="text-muted">' + r.forcesPhysCom + '</small>' : ''}
+              </td>
+              <td data-label="Faiblesses Phys." class="text-break small text-danger">
+                ${r.faiblessesPhys || '-'}${r.faiblessesPhysCom ? '<br><small class="text-muted">' + r.faiblessesPhysCom + '</small>' : ''}
+              </td>
+              <td data-label="Commentaires" class="text-break small text-muted">${r.commentaires || '-'}</td>
+            `;
+
+            // ---- Cellules fusionnées (Incidents + Date + Action) ----
+            if (index === 0) {
+              // ✅ CORRECTION : Récupération du texte complet de l'incident
+              const incidentsGlobalTexte = item.incidentsGlobal || 'NON';
+              const isGlobalIncident = String(incidentsGlobalTexte).toUpperCase().startsWith('OUI');
+
+              // Extraction du motif (on retire le préfixe "OUI - " ou "OUI ")
+              let motifIncident = '';
+              if (isGlobalIncident) {
+                motifIncident = incidentsGlobalTexte
+                  .replace(/^OUI\s*[-:–—]?\s*/i, '')
+                  .trim();
+              }
+
+              const badgeClass = isGlobalIncident
+                ? 'badge bg-danger text-white'
+                : 'badge bg-secondary text-white';
+
+              htmlRows += `
+                <td rowspan="${rowCount}" data-label="Incidents" class="text-center align-middle bg-light">
+                  <span class="${badgeClass}">
+                    ${isGlobalIncident ? 'OUI' : 'NON'}
+                  </span>
+                  ${isGlobalIncident && motifIncident ? `
+                    <div class="mt-1 small text-danger fw-bold" 
+                         style="max-width: 200px; white-space: normal; word-break: break-word; margin: 0 auto;">
+                      <i class="fa-solid fa-triangle-exclamation me-1"></i>${motifIncident}
+                    </div>
+                  ` : ''}
+                </td>
+                <td rowspan="${rowCount}" data-label="Date Saisie" 
+                    class="text-center text-muted small bg-light align-middle">
+                  ${item.dateSaisie || '-'}
+                </td>`;
+
+              if (canUserArchive) {
+                htmlRows += `
+                  <td rowspan="${rowCount}" data-label="Action" class="text-center bg-light align-middle">
+                    <button class="btn btn-sm ${isExploite ? 'btn-secondary' : 'btn-success'} text-nowrap"
+                      onclick="gererArchivageRapport('${item.idDesignation}', '${item.rencontre ? item.rencontre.replace(/'/g, "\\'") : ''}')"
+                      ${isExploite ? 'disabled' : ''}>
+                      ${isExploite ? 'Exploité' : 'Archiver'}
+                    </button>
+                  </td>`;
+              }
+            }
+
+            htmlRows += `</tr>`;
+          });
+        });
+
+        return htmlRows;
+      }
+
+      // ========== GÉNÉRATION D'UN TABLEAU COMPLET ==========
       function genererTableauHTML(items, isPartieExploitee) {
         if (!items || items.length === 0) {
           return `<p class="text-muted fst-italic ms-2">Aucun rapport dans cette section.</p>`;
         }
 
-        // 👉 Largeur globale augmentée pour accommoder l'élargissement des colonnes forces/faiblesses
         const tableStyle = `min-width: ${canUserArchive ? '1650px' : '1550px'}; table-layout: auto; width: 100%;`;
 
         const colGroupHTML = `
           <colgroup>
-            <col style="width: 90px;">   <!-- Superviseur -->
-            <col style="width: 110px;">  <!-- Rencontre -->
-            <col style="width: 60px;">   <!-- Qualité -->
-            <col style="width: 110px;">  <!-- Arbitre -->
-            <col style="width: 50px;">   <!-- Note -->
-            <col style="width: 280px;">  <!-- Forces Tech. (Élargie) -->
-            <col style="width: 280px;">  <!-- Faiblesses Tech. (Élargie) -->
-            <col style="width: 280px;">  <!-- Forces Phys. (Élargie) -->
-            <col style="width: 280px;">  <!-- Faiblesses Phys. (Élargie) -->
-            <col style="width: 150px;">  <!-- Commentaires -->
-            <col style="width: 70px;">   <!-- Incidents -->
-            <col style="width: 90px;">   <!-- Date Saisie -->
-            ${canUserArchive ? '<col style="width: 90px;">' : ''}   <!-- Action Archiver -->
+            <col style="width: 90px;">
+            <col style="width: 110px;">
+            <col style="width: 60px;">
+            <col style="width: 110px;">
+            <col style="width: 50px;">
+            <col style="width: 280px;">
+            <col style="width: 280px;">
+            <col style="width: 280px;">
+            <col style="width: 280px;">
+            <col style="width: 150px;">
+            <col style="width: 120px;">
+            <col style="width: 90px;">
+            ${canUserArchive ? '<col style="width: 90px;">' : ''}
           </colgroup>
         `;
 
@@ -3551,15 +3667,16 @@ function loadRapportsDisplay() {
           </thead>
         `;
 
-        let htmlGroupes = '';
+        // Cas 1 : Section NON exploités → regroupement par lieu
         if (!isPartieExploitee) {
-          let groupedByLieu = {};
+          const groupedByLieu = {};
           items.forEach(item => {
             const lieu = item.lieu || 'Lieu non spécifié';
             if (!groupedByLieu[lieu]) groupedByLieu[lieu] = [];
             groupedByLieu[lieu].push(item);
           });
 
+          let htmlGroupes = '';
           Object.keys(groupedByLieu).sort().forEach(lieu => {
             htmlGroupes += `
               <div class="card mb-4 border-primary shadow-sm">
@@ -3572,7 +3689,7 @@ function loadRapportsDisplay() {
                       ${colGroupHTML}
                       ${tableHeaders}
                       <tbody>
-                        ${genererLignesTableau(groupedByLieu[lieu], isPartieExploitee)}
+                        ${genererLignesTableau(groupedByLieu[lieu])}
                       </tbody>
                     </table>
                   </div>
@@ -3580,100 +3697,26 @@ function loadRapportsDisplay() {
               </div>`;
           });
           return htmlGroupes;
-        } else {
-          return `
-            <div class="card mb-4 border-secondary shadow-sm">
-              <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped align-middle mb-0" style="${tableStyle}">
-                    ${colGroupHTML}
-                    ${tableHeaders}
-                    <tbody>
-                      ${genererLignesTableau(items, isPartieExploitee)}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>`;
         }
+
+        // Cas 2 : Section EXPLOITÉE → un seul tableau global
+        return `
+          <div class="card mb-4 border-secondary shadow-sm">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle mb-0" style="${tableStyle}">
+                  ${colGroupHTML}
+                  ${tableHeaders}
+                  <tbody>
+                    ${genererLignesTableau(items)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>`;
       }
 
-      function genererLignesTableau(itemsList, isPartieExploitee) {
-        let htmlRows = '';
-        itemsList.forEach(function(item) {
-          const isExploite = String(item.situation || '').toUpperCase() === 'EXPLOITÉ';
-
-          if (item.arbitres && Array.isArray(item.arbitres) && item.arbitres.length > 0) {
-            const rowCount = item.arbitres.length;
-
-            item.arbitres.forEach(function(r, index) {
-              let qualiteBadge = 'badge bg-primary';
-              if (r.qualite === 'AC') qualiteBadge = 'badge bg-danger';
-              else if (r.qualite === '4EME') qualiteBadge = 'badge bg-info text-dark';
-
-              const isLastArbitre = (index === rowCount - 1);
-              const borderStyle = isLastArbitre ? 'border-bottom: 2px solid #212529 !important;' : '';
-
-              htmlRows += `<tr style="${borderStyle}">`;
-
-              if (index === 0) {
-                htmlRows += `
-                  <td rowspan="${rowCount}" data-label="Superviseur" class="text-center bg-light text-break small">
-                    <b>${item.superviseur || '-'}</b>
-                  </td>
-                  <td rowspan="${rowCount}" data-label="Rencontre" class="text-center bg-light text-break small">
-                    <b>${item.rencontre || '-'}</b>
-                    ${isPartieExploitee ? `<br><small class="text-muted">Stade: ${item.lieu || '-'}</small>` : ''}
-                  </td>`;
-              }
-
-              // Le maintien du retour à la ligne est assuré par la classe 'text-break'
-              htmlRows += `
-                <td data-label="Qualité" class="text-center"><span class="${qualiteBadge}">${r.qualite || '-'}</span></td>
-                <td data-label="Arbitre" class="text-break small"><b>${r.arbitre || '-'}</b></td>
-                <td data-label="Note" class="text-center"><span class="badge bg-warning text-dark">${r.note || '-'}</span></td>
-                <td data-label="Forces Tech." class="text-break small text-success">${r.forcesTech || '-'}</td>
-                <td data-label="Faiblesses Tech." class="text-break small text-danger">${r.faiblessesTech || '-'}</td>
-                <td data-label="Forces Phys." class="text-break small text-success">${r.forcesPhys || '-'}${r.forcesPhysCom ? '<br><small class="text-muted">' + r.forcesPhysCom + '</small>' : ''}</td>
-                <td data-label="Faiblesses Phys." class="text-break small text-danger">${r.faiblessesPhys || '-'}${r.faiblessesPhysCom ? '<br><small class="text-muted">' + r.faiblessesPhysCom + '</small>' : ''}</td>
-                <td data-label="Commentaires" class="text-break small text-muted">${r.commentaires || '-'}</td>
-              `;
-
-              if (index === 0) {
-                const globalIncidentVal = item.aIncidentOui ? 'OUI' : (item.incidentsGlobal || 'NON');
-                const isGlobalIncident = String(globalIncidentVal).toUpperCase().startsWith('OUI');
-                const badgeClass = isGlobalIncident 
-                  ? 'badge bg-danger text-white text-wrap d-inline-block' 
-                  : 'badge bg-secondary text-white text-wrap d-inline-block';
-
-                htmlRows += `
-                  <td rowspan="${rowCount}" data-label="Incidents" class="text-center align-middle bg-light">
-                    <span class="${badgeClass}">${globalIncidentVal}</span>
-                    ${item.aIncidentOui ? '<br><span class="badge bg-danger mt-1">⚠️ Incident</span>' : ''}
-                  </td>
-                  <td rowspan="${rowCount}" data-label="Date Saisie" class="text-center text-muted small bg-light align-middle">
-                    ${item.dateSaisie || '-'}
-                  </td>`;
-
-                if (canUserArchive) {
-                  htmlRows += `
-                    <td rowspan="${rowCount}" data-label="Action" class="text-center bg-light align-middle">
-                      <button class="btn btn-sm ${isExploite ? 'btn-secondary' : 'btn-success'} text-nowrap" 
-                        onclick="gererArchivageRapport('${item.idDesignation}', '${item.rencontre ? item.rencontre.replace(/'/g, "\\'") : ''}')" 
-                        ${isExploite ? 'disabled' : ''}>
-                        ${isExploite ? 'Exploité' : 'Archiver'}
-                      </button>
-                    </td>`;
-                }
-              }
-
-              htmlRows += `</tr>`;
-            });
-          }
-        });
-        return htmlRows;
-      }
-
+      // ========== ASSEMBLAGE FINAL ==========
       container.innerHTML = `
         <div class="mb-5">
           <h3 class="text-primary border-bottom pb-2 mb-3">📁 Matchs non exploités</h3>
