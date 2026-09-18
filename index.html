@@ -7,19 +7,431 @@
   <title>Sous-CRA Koumpentoum</title>
 
   <!-- 1. LIENS EXTERNES (Bootstrap 5 & FontAwesome) -->
-<link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-  <!-- 2. CONFIGURATION MOBILE (iOS & Web App) -->
+<!-- Configuration Mobile (iOS, Android & PWA) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Sous-CRA">
+  <meta name="theme-color" content="#198754">
+  
+  <!-- Icônes de l'application -->
+  <link rel="icon" sizes="192x192" href="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK">
   <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK">
 
+  <script>
+  (function() {
+    // Évite de bloquer le rendu pendant la vérification
+    window.addEventListener('DOMContentLoaded', function() {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(serverVersion) {
+            if (!serverVersion) return;
+            
+            const localVersion = localStorage.getItem('app_auto_version');
+            
+            if (localVersion && localVersion !== serverVersion) {
+              console.log("Nouvelle version détectée sur le serveur. Mise à jour automatique...");
+              localStorage.setItem('app_auto_version', serverVersion);
+              
+              // Nettoyage des caches du navigateur/PWA si disponibles
+              if (typeof caches !== 'undefined') {
+                caches.keys().then(function(names) {
+                  names.forEach(function(name) { caches.delete(name); });
+                });
+              }
+              
+              // Rechargement forcé de la page pour appliquer les nouveautés
+              window.location.reload(true);
+            } else if (!localVersion) {
+              // Première mémorisation de la version
+              localStorage.setItem('app_auto_version', serverVersion);
+            }
+          })
+          .getAppVersion();
+      }
+    });
+  })();
+</script>
 
   <!-- 3. STYLES CSS UNIFIÉS ET OPTIMISÉS -->
   <style>
+
+/* ============================================================
+   PALETTE DE COULEURS UNIFIÉE
+   ============================================================ */
+:root {
+  /* Couleurs principales */
+  --scra-primary: #198754;
+  --scra-primary-dark: #157347;
+  --scra-primary-light: #d1e7dd;
+
+  --scra-secondary: #0d6efd;
+  --scra-secondary-dark: #0a58ca;
+
+  --scra-warning: #fd7e14;
+  --scra-warning-dark: #e8590c;
+
+  --scra-danger: #dc3545;
+  --scra-danger-dark: #b02a37;
+
+  --scra-info: #0dcaf0;
+  --scra-info-dark: #0aa2c0;
+
+  --scra-purple: #6f42c1;
+
+  /* Neutres */
+  --scra-bg-soft: #f8f9fa;
+  --scra-bg-card: #ffffff;
+  --scra-border: #e9ecef;
+  --scra-border-strong: #dee2e6;
+
+  /* Texte */
+  --scra-text: #212529;
+  --scra-text-muted: #6c757d;
+  --scra-text-light: #adb5bd;
+
+  /* Ombres */
+  --scra-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --scra-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --scra-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+  /* Arrondis */
+  --scra-radius-sm: 8px;
+  --scra-radius: 12px;
+  --scra-radius-lg: 16px;
+  --scra-radius-pill: 50rem;
+
+  /* Transitions */
+  --scra-transition: 0.2s ease;
+  --scra-transition-slow: 0.3s ease;
+}
+
+/* ============================================================
+   ANIMATIONS GLOBALES
+   ============================================================ */
+@keyframes scraFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scraFadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scraFadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scraSlideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scraPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+/* Application des animations */
+.app-view:not(.d-none) {
+  animation: scraFadeInUp 0.25s ease-out;
+}
+
+.analyse-section:not(.d-none) {
+  animation: scraFadeIn 0.2s ease-out;
+}
+
+/* Cartes de menu */
+.menu-card {
+  animation: scraFadeInUp 0.3s ease-out both;
+}
+
+.menu-card:nth-child(1) { animation-delay: 0.02s; }
+.menu-card:nth-child(2) { animation-delay: 0.04s; }
+.menu-card:nth-child(3) { animation-delay: 0.06s; }
+.menu-card:nth-child(4) { animation-delay: 0.08s; }
+.menu-card:nth-child(5) { animation-delay: 0.10s; }
+.menu-card:nth-child(6) { animation-delay: 0.12s; }
+.menu-card:nth-child(7) { animation-delay: 0.14s; }
+
+/* Cartes d'accordéon */
+.membre-item,
+.designation-item,
+.versement-item,
+.match-card {
+  animation: scraFadeInUp 0.25s ease-out both;
+}
+
+/* Modals */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transform: translateY(-20px);
+}
+.modal.show .modal-dialog {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   BOUTONS — Arrondis et transitions améliorées
+   ============================================================ */
+.btn {
+  border-radius: var(--scra-radius-sm);
+  font-weight: 600;
+  transition: all var(--scra-transition);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--scra-shadow-sm);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-primary {
+  background-color: var(--scra-secondary);
+  border-color: var(--scra-secondary);
+}
+
+.btn-primary:hover {
+  background-color: var(--scra-secondary-dark);
+  border-color: var(--scra-secondary-dark);
+}
+
+.btn-success {
+  background-color: var(--scra-primary);
+  border-color: var(--scra-primary);
+}
+
+.btn-success:hover {
+  background-color: var(--scra-primary-dark);
+  border-color: var(--scra-primary-dark);
+}
+
+.btn-warning {
+  background-color: var(--scra-warning);
+  border-color: var(--scra-warning);
+  color: #fff;
+}
+
+.btn-warning:hover {
+  background-color: var(--scra-warning-dark);
+  border-color: var(--scra-warning-dark);
+  color: #fff;
+}
+
+.btn-danger {
+  background-color: var(--scra-danger);
+  border-color: var(--scra-danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--scra-danger-dark);
+  border-color: var(--scra-danger-dark);
+}
+
+/* Boutons "rounded-pill" déjà arrondis */
+.rounded-pill {
+  border-radius: var(--scra-radius-pill) !important;
+}
+
+/* Boutons d'action dans les cartes */
+.btn-sm {
+  border-radius: var(--scra-radius-sm);
+  transition: all var(--scra-transition);
+}
+
+/* Boutons icône dans les headers */
+.btn-link {
+  text-decoration: none;
+  transition: color var(--scra-transition);
+}
+
+.btn-link:hover {
+  text-decoration: none;
+}
+
+/* ============================================================
+   CARTES — Ombre, arrondis et transitions
+   ============================================================ */
+.card {
+  border-radius: var(--scra-radius);
+  border: 1px solid var(--scra-border);
+  transition: box-shadow var(--scra-transition), transform var(--scra-transition);
+}
+
+.card.shadow-sm {
+  box-shadow: var(--scra-shadow-sm) !important;
+}
+
+.card:hover {
+  box-shadow: var(--scra-shadow-md);
+}
+
+/* Cartes cliquables (menu principal) */
+.menu-card {
+  border: none !important;
+  border-radius: var(--scra-radius-lg);
+  box-shadow: var(--scra-shadow-sm);
+  transition: transform var(--scra-transition), box-shadow var(--scra-transition);
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--scra-shadow-lg) !important;
+}
+
+/* Cards de formulaire */
+.card-body {
+  transition: background var(--scra-transition);
+}
+
+/* ============================================================
+   BADGES — Plus arrondis, plus lisibles
+   ============================================================ */
+.badge {
+  font-weight: 600;
+  padding: 0.4em 0.7em;
+  border-radius: 6px;
+  transition: transform var(--scra-transition);
+}
+
+.badge.bg-success,
+.badge.bg-primary,
+.badge.bg-danger,
+.badge.bg-warning,
+.badge.bg-info {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================
+   INPUTS — Bordures douces et focus
+   ============================================================ */
+.form-control,
+.form-select {
+  border-radius: var(--scra-radius-sm);
+  border: 1.5px solid var(--scra-border-strong);
+  transition: border-color var(--scra-transition), box-shadow var(--scra-transition);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--scra-secondary);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+}
+
+/* ============================================================
+   NAVBAR — Améliorer le rendu du header
+   ============================================================ */
+#appHeader {
+  transition: background var(--scra-transition);
+}
+
+.navbar-brand {
+  transition: opacity var(--scra-transition);
+}
+
+/* ============================================================
+   BANNIÈRE PRINCIPALE — Plus moderne
+   ============================================================ */
+.banner-violet {
+  animation: scraFadeInDown 0.4s ease-out;
+  transition: box-shadow var(--scra-transition);
+}
+
+/* ============================================================
+   LIENS — Transitions douces
+   ============================================================ */
+a {
+  transition: color var(--scra-transition), opacity var(--scra-transition);
+}
+
+a:hover {
+  opacity: 0.85;
+}
+
+/* ============================================================
+   TABLES — Style unifié
+   ============================================================ */
+.table {
+  border-radius: var(--scra-radius);
+  overflow: hidden;
+}
+
+.table-dark th {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   DROPDOWNS — Animation d'apparition
+   ============================================================ */
+.dropdown-menu {
+  animation: scraFadeInDown 0.15s ease-out;
+  border-radius: var(--scra-radius-sm);
+  border: 1px solid var(--scra-border-strong);
+  box-shadow: var(--scra-shadow-md);
+}
+
+/* ============================================================
+   RECHERCHE — Animation du conteneur
+   ============================================================ */
+.accordion-search-wrapper {
+  animation: scraFadeIn 0.2s ease-out;
+}
+
+/* ============================================================
+   BANDEAUX RÉCAPITULATIFS — Plus attrayants
+   ============================================================ */
+.recap-banner {
+  animation: scraFadeIn 0.3s ease-out;
+  transition: transform var(--scra-transition);
+}
+
+.recap-banner:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   MODALS — Animation d'apparition douce
+   ============================================================ */
+.modal-content {
+  border-radius: var(--scra-radius-lg);
+  border: none;
+  box-shadow: var(--scra-shadow-lg);
+}
+
+/* ============================================================
+   TOASTS — Déjà animés, ajuster les arrondis
+   ============================================================ */
+#toast-container-app > div {
+  border-radius: var(--scra-radius-sm);
+}
+
+/* ============================================================
+   RÉDUCTION DES ANIMATIONS (Accessibilité)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+
     /* Configuration globale */
     html, body {
       margin: 0 !important;
@@ -299,6 +711,993 @@
     #tblRapportsPerf th:nth-child(4), #tblRapportsPerf td:nth-child(4) { width: 300px; }
     #tblRapportsPerf th:nth-child(5), #tblRapportsPerf td:nth-child(5) { width: 90px; }
     #tblRapportsPerf th:nth-child(6), #tblRapportsPerf td:nth-child(6) { width: 120px; }
+
+    /* ============================================================
+   CARTES MATCH DÉPLIABLES (Rapports)
+   ============================================================ */
+.match-card {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  background: white;
+  transition: box-shadow 0.2s ease;
+}
+
+.match-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.match-card.incident {
+  border-left: 4px solid #dc3545;
+}
+
+.match-card.normal {
+  border-left: 4px solid #0d6efd;
+}
+
+.match-card.archived {
+  border-left: 4px solid #6c757d;
+  opacity: 0.85;
+}
+
+.match-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  transition: background 0.2s ease;
+}
+
+.match-header:hover {
+  background: #e9ecef;
+}
+
+.match-header-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.match-title {
+  font-weight: 700;
+  color: #212529;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.match-meta {
+  font-size: 0.8rem;
+  color: #6c757d;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.match-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.match-chevron {
+  font-size: 1.1rem;
+  color: #6c757d;
+  transition: transform 0.2s ease;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.match-card.expanded .match-chevron {
+  transform: rotate(180deg);
+}
+
+.match-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 16px;
+}
+
+.match-card.expanded .match-body {
+  max-height: 3000px;
+  padding: 12px 16px 16px 16px;
+}
+
+.arbitre-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px dashed #e9ecef;
+  align-items: flex-start;
+}
+
+.arbitre-row:last-child {
+  border-bottom: none;
+}
+
+.arbitre-qualite {
+  flex-shrink: 0;
+  min-width: 55px;
+}
+
+.arbitre-nom {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #212529;
+  flex: 1;
+  min-width: 140px;
+}
+
+.arbitre-details {
+  width: 100%;
+  font-size: 0.85rem;
+  color: #495057;
+  margin-top: 6px;
+}
+
+.arbitre-details dt {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+}
+
+.arbitre-details dd {
+  margin-bottom: 4px;
+  margin-left: 0;
+  word-wrap: break-word;
+}
+
+.incident-alert {
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: #842029;
+}
+
+@media (max-width: 768px) {
+  .match-header {
+    padding: 10px 12px;
+  }
+  
+  .match-title {
+    font-size: 0.9rem;
+  }
+  
+  .match-meta {
+    font-size: 0.75rem;
+  }
+  
+  .arbitre-nom {
+    min-width: 100%;
+  }
+}
+
+/* ============================================================
+   MODE CARDS POUR TABLES SUR MOBILE (< 768px)
+   Chaque ligne devient une carte verticale lisible
+   ============================================================ */
+@media (max-width: 768px) {
+  .table-cards-mobile {
+    border: 0;
+    margin-bottom: 0;
+  }
+  
+  .table-cards-mobile thead {
+    display: none;
+  }
+  
+  .table-cards-mobile tbody tr {
+    display: block;
+    margin-bottom: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 12px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .table-cards-mobile tbody tr:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .table-cards-mobile tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 0;
+    padding: 8px 0;
+    text-align: right;
+    white-space: normal !important;
+    word-wrap: break-word;
+    gap: 12px;
+  }
+  
+  .table-cards-mobile tbody td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #495057;
+    text-align: left;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 90px;
+  }
+  
+  /* Enlever la colonne "Actions" si elle est vide */
+  .table-cards-mobile tbody td:empty {
+    display: none;
+  }
+  
+  /* Masquer le libellé des colonnes sans data-label (ex: actions) */
+  .table-cards-mobile tbody td[data-label=""]::before {
+    content: none;
+  }
+  
+  /* Cas particulier : la cellule d'action s'affiche en bas, centrée */
+  .table-cards-mobile tbody td[data-label="Actions"] {
+    justify-content: center;
+    padding-top: 12px;
+    border-top: 1px solid #e9ecef;
+    margin-top: 8px;
+  }
+  
+  .table-cards-mobile tbody td[data-label="Actions"]::before {
+    content: none;
+  }
+}
+
+/* ============================================================
+   ACCORDÉON MEMBRES (liste compacte + carte dépliable)
+   ============================================================ */
+.membre-item {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: white;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.membre-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.membre-item.expanded {
+  border-color: #0d6efd;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+}
+
+.membre-item-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.membre-item-header:hover {
+  background: #f8f9fa;
+}
+
+.membre-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.membre-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.membre-item.arbitre .membre-avatar {
+  background: linear-gradient(135deg, #198754, #157347);
+}
+
+.membre-item.superviseur .membre-avatar {
+  background: linear-gradient(135deg, #fd7e14, #e8590c);
+}
+
+.membre-name-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.membre-name {
+  font-weight: 700;
+  color: #212529;
+  font-size: 0.95rem;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.membre-qualite-line {
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-top: 2px;
+}
+
+.membre-item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.membre-chevron {
+  color: #6c757d;
+  font-size: 1rem;
+  transition: transform 0.25s ease;
+}
+
+.membre-item.expanded .membre-chevron {
+  transform: rotate(180deg);
+}
+
+.membre-item-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #f8f9fa;
+  border-top: 0 solid #e9ecef;
+}
+
+.membre-item.expanded .membre-item-body {
+  max-height: 800px;
+  border-top: 1px solid #e9ecef;
+}
+
+.membre-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.membre-info-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.87rem;
+}
+
+.membre-info-row .info-icon {
+  color: #6c757d;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.membre-info-row .info-label {
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 6px;
+}
+
+.membre-info-row .info-value {
+  color: #212529;
+  font-weight: 500;
+  word-wrap: break-word;
+  flex: 1;
+}
+
+.membre-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px 16px;
+  flex-wrap: wrap;
+}
+
+/* Sur desktop, on garde quand même le tableau classique (optionnel) */
+@media (min-width: 992px) {
+  .membres-container-accordion {
+    max-width: 100%;
+  }
+}
+
+/* Sur mobile, les infos s'affichent en colonne */
+@media (max-width: 768px) {
+  .membre-item-header {
+    padding: 10px 12px;
+  }
+  
+  .membre-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+  
+  .membre-name {
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================================
+   ACCORDÉON DÉSIGNATIONS (cartes dépliables)
+   ============================================================ */
+.designation-item {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: white;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.designation-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.designation-item.expanded {
+  border-color: #198754;
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.15);
+}
+
+/* Bandeau coloré à gauche selon le statut */
+.designation-item.programme {
+  border-left: 4px solid #0d6efd;
+}
+
+.designation-item.termine {
+  border-left: 4px solid #198754;
+}
+
+.designation-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.designation-header:hover {
+  background: #f8f9fa;
+}
+
+.designation-header-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.designation-title {
+  font-weight: 700;
+  color: #212529;
+  font-size: 0.95rem;
+  margin: 0 0 4px 0;
+  word-wrap: break-word;
+}
+
+.designation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-top: 4px;
+}
+
+.designation-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.designation-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.designation-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.designation-chevron {
+  color: #6c757d;
+  font-size: 1rem;
+  transition: transform 0.25s ease;
+  margin-top: 4px;
+}
+
+.designation-item.expanded .designation-chevron {
+  transform: rotate(180deg);
+}
+
+.designation-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #f8f9fa;
+  border-top: 0 solid #e9ecef;
+}
+
+.designation-item.expanded .designation-body {
+  max-height: 1200px;
+  border-top: 1px solid #e9ecef;
+}
+
+.designation-section {
+  padding: 12px 16px;
+}
+
+.designation-section-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.arbitre-detail {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e9ecef;
+  font-size: 0.88rem;
+}
+
+.arbitre-detail:last-child {
+  border-bottom: none;
+}
+
+.arbitre-detail .qualite-badge {
+  flex-shrink: 0;
+  min-width: 52px;
+  text-align: center;
+}
+
+.arbitre-detail .nom-arbitre {
+  flex: 1;
+  color: #212529;
+  font-weight: 500;
+  word-wrap: break-word;
+}
+
+.designation-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .designation-header {
+    padding: 10px 12px;
+  }
+  
+  .designation-title {
+    font-size: 0.9rem;
+  }
+  
+  .designation-meta {
+    font-size: 0.72rem;
+    gap: 6px;
+  }
+  
+  .designation-meta span {
+    max-width: 100%;
+  }
+}
+
+/* ============================================================
+   ACCORDÉON TRÉSORERIE (Check-Offs, Cotisations, Autres Cotisations)
+   ============================================================ */
+.versement-item {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: white;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.versement-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.versement-item.expanded {
+  border-color: #0dcaf0;
+  box-shadow: 0 4px 12px rgba(13, 202, 240, 0.15);
+}
+
+/* Bandeau coloré à gauche selon le statut */
+.versement-item.en-attente {
+  border-left: 4px solid #fd7e14;
+}
+
+.versement-item.confirme {
+  border-left: 4px solid #198754;
+}
+
+.versement-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.versement-header:hover {
+  background: #f8f9fa;
+}
+
+.versement-header-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.versement-title {
+  font-weight: 700;
+  color: #212529;
+  font-size: 0.95rem;
+  margin: 0 0 4px 0;
+  word-wrap: break-word;
+}
+
+.versement-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-top: 4px;
+}
+
+.versement-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.versement-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.versement-montant {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #198754;
+}
+
+.versement-chevron {
+  color: #6c757d;
+  font-size: 1rem;
+  transition: transform 0.25s ease;
+}
+
+.versement-item.expanded .versement-chevron {
+  transform: rotate(180deg);
+}
+
+.versement-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #f8f9fa;
+  border-top: 0 solid #e9ecef;
+}
+
+.versement-item.expanded .versement-body {
+  max-height: 800px;
+  border-top: 1px solid #e9ecef;
+}
+
+.versement-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.versement-info-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.87rem;
+}
+
+.versement-info-row .info-icon {
+  color: #6c757d;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.versement-info-row .info-label {
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 6px;
+}
+
+.versement-info-row .info-value {
+  color: #212529;
+  font-weight: 500;
+  word-wrap: break-word;
+  flex: 1;
+}
+
+.versement-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .versement-header {
+    padding: 10px 12px;
+  }
+  
+  .versement-title {
+    font-size: 0.9rem;
+  }
+  
+  .versement-meta {
+    font-size: 0.72rem;
+    gap: 6px;
+  }
+  
+  .versement-montant {
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================================
+   BANDEAU RÉCAPITULATIF (Total + Montant global)
+   ============================================================ */
+.recap-banner {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #0d6efd;
+}
+
+.recap-banner.checkoff {
+  border-left-color: #0dcaf0;
+  background: linear-gradient(135deg, #e7f6f9, #d1ecf1);
+}
+
+.recap-banner.cotisation {
+  border-left-color: #0d6efd;
+  background: linear-gradient(135deg, #e7f0ff, #d6e4ff);
+}
+
+.recap-banner.autre-cotisation {
+  border-left-color: #6f42c1;
+  background: linear-gradient(135deg, #f0e8fa, #e2d4f5);
+}
+
+.recap-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.recap-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  font-weight: 700;
+}
+
+.recap-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #212529;
+  line-height: 1.2;
+}
+
+.recap-value.total {
+  font-size: 1.35rem;
+  color: #198754;
+}
+
+.recap-sub {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.recap-sub.success {
+  color: #198754;
+}
+
+.recap-sub.warning {
+  color: #fd7e14;
+}
+
+@media (max-width: 768px) {
+  .recap-banner {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .recap-block {
+    min-width: 100px;
+    flex: 1;
+  }
+  
+  .recap-value {
+    font-size: 1rem;
+  }
+  
+  .recap-value.total {
+    font-size: 1.15rem;
+  }
+  
+  .recap-label {
+    font-size: 0.65rem;
+  }
+  
+  .recap-sub {
+    font-size: 0.72rem;
+  }
+}
+
+/* ============================================================
+   BARRE DE RECHERCHE DANS LES ACCORDÉONS
+   ============================================================ */
+.accordion-search-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.accordion-search-wrapper .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  pointer-events: none;
+  font-size: 0.95rem;
+}
+
+.accordion-search-wrapper .search-input {
+  width: 100%;
+  padding: 10px 40px 10px 40px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  background: #f8f9fa;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.accordion-search-wrapper .search-input:focus {
+  border-color: #0d6efd;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.accordion-search-wrapper .search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: none;
+  transition: background 0.15s ease;
+}
+
+.accordion-search-wrapper .search-clear:hover {
+  background: #e9ecef;
+  color: #dc3545;
+}
+
+.accordion-search-wrapper.has-value .search-clear {
+  display: block;
+}
+
+/* Compteur de résultats */
+.search-results-count {
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+  display: none;
+}
+
+.search-results-count.visible {
+  display: block;
+}
+
+.search-results-count .badge {
+  font-weight: 600;
+}
+
+/* Carte masquée lors d'une recherche */
+.accordion-item-hidden {
+  display: none !important;
+}
+
+/* Message "aucun résultat" */
+.no-results-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  display: none;
+}
+
+.no-results-message.visible {
+  display: block;
+}
+
+.no-results-message i {
+  font-size: 2.5rem;
+  color: #dee2e6;
+  margin-bottom: 12px;
+}
+
+
+
   </style>
 </head>
 <body>
@@ -586,24 +1985,12 @@
           
           <!-- Tab Liste Membres (Accessible à tous) -->
           <div class="tab-pane fade show active" id="m-affichage" role="tabpanel">
-            <div class="table-responsive" id="containerTblMembres">
-              <table class="table table-striped table-hover align-middle text-nowrap w-100" id="tblMembres">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Prénoms & Nom</th>
-                    <!-- Colonnes réservées à l'administrateur (col-admin) -->
-                    <th class="col-admin" id="th-date-lieu-naiss">Date & Lieu Naiss.</th>
-                    <th>Qualité / Grade</th>
-                    <th>Téléphone</th>
-                    <th>Email</th>
-                    <th class="col-admin" id="th-cni">N° CNI</th>
-                    <th class="col-admin btn-admin-action text-center" id="th-actions-membre">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="tbodyMembres"></tbody>
-              </table>
-            </div>
-          </div>
+  <div class="export-header">
+    <span class="badge bg-primary"><i class="fa-solid fa-users me-1"></i>Liste des Membres</span>
+    <div id="exportBarreMembres"></div>
+  </div>
+  <div id="containerTblMembres"></div>
+</div>
 
           <!-- Tab Saisie Membre (Réservé Admin via JS) -->
           <div class="tab-pane fade" id="m-saisie" role="tabpanel">
@@ -723,29 +2110,12 @@
           
           <!-- Liste des Désignations -->
           <div class="tab-pane fade show active" id="d-affichage">
-            <div id="containerTblDes">
-              <div class="mb-3">
-                <input type="text" id="searchDes" onkeyup="filterTable('tblDes', this.value)" placeholder="🔍 Rechercher une désignation..." class="form-control form-control-sm">
-              </div>
-              <div class="table-responsive">
-                <table class="table table-striped table-hover bg-white rounded shadow-sm align-middle text-nowrap w-100" id="tblDes">
-                  <thead class="table-dark">
-                    <tr>
-                      <th>Rencontre</th>
-                      <th>Date & Heure</th>
-                      <th>Lieu / Stade</th>
-                      <th>Arbitres Désignés</th>
-                      <th>Superviseur</th>
-                      <th>Étape</th>
-                      <th>Statut</th>
-                      <th class="btn-admin-action text-center" id="th-actions-des">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+  <div class="export-header">
+    <span class="badge bg-success"><i class="fa-solid fa-clipboard-list me-1"></i>Liste des Désignations</span>
+    <div id="exportBarreDesignations"></div>
+  </div>
+  <div id="containerTblDes"></div>
+</div>
 
           <!-- Formulaire Saisie Désignation -->
           <div class="tab-pane fade" id="d-saisie">
@@ -1095,33 +2465,16 @@
           </div>
 
           <!-- Tab Consultation Rapports (Alerte / Conteneur gérés par JS) -->
-          <div class="tab-pane fade" id="r-affichage" role="tabpanel">
-            <div id="alertRestreintRapports" class="alert alert-warning text-center" role="alert">
-              <i class="fa-solid fa-lock me-2"></i> Accès restreint : Seuls les membres autorisés peuvent consulter l'ensemble des rapports.
-            </div>
-            <div class="table-responsive shadow-sm rounded" id="containerTblRapports">
-              <table class="table table-hover table-bordered bg-white align-middle mb-0 text-nowrap" id="tblRapports" style="font-size: 0.85rem;">
-                <thead class="table-dark text-center align-middle">
-                  <tr>
-                    <th style="min-width: 110px;">Superviseur</th>
-                    <th style="min-width: 120px;">Rencontre</th>
-                    <th style="width: 70px;">Qualité</th>
-                    <th style="min-width: 110px;">Arbitre</th>
-                    <th style="width: 60px;">Note</th>
-                    <th style="min-width: 140px;">Forces Tech.</th>
-                    <th style="min-width: 140px;">Faiblesses Tech.</th>
-                    <th style="min-width: 140px;">Forces Phys.</th>
-                    <th style="min-width: 140px;">Faiblesses Phys.</th>
-                    <th style="min-width: 160px;">Commentaires</th>
-                    <th style="width: 90px;">Incidents</th>
-                    <th style="min-width: 100px;">Date Saisie</th>
-                    <th class="btn-admin-action text-center" id="th-actions-rapport" style="min-width: 80px;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>          
-          </div>
+        <div class="tab-pane fade" id="r-affichage" role="tabpanel">
+  <div id="alertRestreintRapports" class="alert alert-warning text-center" role="alert">
+    <i class="fa-solid fa-lock me-2"></i> Accès restreint : Seuls les membres autorisés peuvent consulter l'ensemble des rapports.
+  </div>
+  <div class="export-header">
+    <span class="badge bg-warning text-dark"><i class="fa-solid fa-file-signature me-1"></i>Rapports d'évaluation</span>
+    <div id="exportBarreRapports"></div>
+  </div>
+  <div id="containerTblRapports"></div>
+</div>
 
         </div>
       </div>
@@ -1279,88 +2632,41 @@
         </div> <!-- Fin de #c-saisie -->
 
         <!-- 2. Affichage Versements (Public) -->
-        <div class="tab-pane fade" id="c-affichage" role="tabpanel">
-          <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
-            <h5 class="text-primary mb-3 fw-bold h6">Historique des CheckOff</h5>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCheckOffs">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Date</th>
-                    <th>Auteur</th>
-                    <th>Zone</th>
-                    <th class="text-center">Nb Matchs</th>
-                    <th>Étape / Tour</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-checkoffs"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+       <div class="tab-pane fade" id="c-affichage" role="tabpanel">
+  <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
+    <div class="export-header">
+      <h5 class="text-primary mb-0 fw-bold h6">Historique des Check-Offs</h5>
+      <div id="exportBarreCheckOffs"></div>
+    </div>
+    <div id="containerCheckOffs"></div>
+  </div>
+</div>
 
         <!-- 3. Cotisations (Public) -->
         <div class="tab-pane fade" id="c-cotisations" role="tabpanel" aria-labelledby="tab-co-cotisations">
-          <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
-            <h5 class="text-primary mb-3 fw-bold h6">
-              <i class="fa-solid fa-file-invoice-dollar me-2"></i>Situation des Cotisations annuelles
-            </h5>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblCotisations">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Date</th>
-                    <th>Membre</th>
-                    <th>Zone</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
-                    <!-- Colonne d'action conditionnelle -->
-                    <th id="thActionCotisation" style="display: none;">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-cotisations">
-                  <tr>
-                    <td colspan="6" class="text-center text-muted py-3">
-                      <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des cotisations...
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+  <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
+    <div class="export-header">
+      <h5 class="text-primary mb-0 fw-bold h6">
+        <i class="fa-solid fa-file-invoice-dollar me-2"></i>Situation des Cotisations annuelles
+      </h5>
+      <div id="exportBarreCotisations"></div>
+    </div>
+    <div id="containerCotisations"></div>
+  </div>
+</div>
 
         <!-- 4. NOUVEAU : Autres Cotisations (Montant != 2500) -->
         <div class="tab-pane fade" id="c-autres-cotisations" role="tabpanel" aria-labelledby="tab-co-autres-cotisations">
-          <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
-            <h5 class="text-primary mb-3 fw-bold h6">
-              <i class="fa-solid fa-coins me-2"></i>Situation des Autres Cotisations 
-            </h5>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover align-middle bg-white rounded text-nowrap w-100" id="tblAutresCotisations">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Date</th>
-                    <th>Membre</th>
-                    <th>Zone</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
-                    <th id="thActionAutresCotisations" style="display: none;">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-autres-cotisations">
-                  <tr>
-                    <td colspan="6" class="text-center text-muted py-3">
-                      <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des autres cotisations...
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+  <div class="card p-2 p-md-3 shadow-sm border-0 bg-white">
+    <div class="export-header">
+      <h5 class="text-primary mb-0 fw-bold h6">
+        <i class="fa-solid fa-coins me-2"></i>Situation des Autres Cotisations 
+      </h5>
+      <div id="exportBarreAutresCotisations"></div>
+    </div>
+    <div id="containerAutresCotisations"></div>
+  </div>
+</div>
 
       </div> <!-- Fin de #subTabCheckoffContent -->
 
@@ -2114,6 +3420,7 @@
 
 
 
+// ========================================================
 // VARIABLES GLOBALES
 // ========================================================
 // ========================================================
@@ -2134,6 +3441,32 @@ const TOUTES_LES_QUALITES = ['AC', 'AA1', 'AA2', '4EME'];
 window.globalDesignations = window.globalDesignations || [];
 window.evaluationsDuMatch = window.evaluationsDuMatch || [];
 
+// ============================================================================
+// 🔔 SURCHARGE GLOBALE D'ALERT() → TOASTS MODERNES
+// ============================================================================
+// Tous les alert() existants du code basculent automatiquement en toast.
+// Détection du type (success/danger/warning) selon le contenu du message.
+window.alert = function(message) {
+  const msg = String(message || '');
+  let type = 'success';
+  
+  if (msg.startsWith('❌') || msg.toLowerCase().includes('erreur')) {
+    type = 'danger';
+  } else if (
+    msg.startsWith('⚠️') || 
+    msg.toLowerCase().includes('attention') || 
+    msg.toLowerCase().includes('veuillez') ||
+    msg.toLowerCase().includes('impossible')
+  ) {
+    type = 'warning';
+  }
+  
+  if (typeof afficherToastTemporaire === 'function') {
+    afficherToastTemporaire(msg, type);
+  } else {
+    console.log('[ALERT]', msg);
+  }
+};
 
 
 // ============================================================================
@@ -2662,31 +3995,45 @@ function applyPermissions(perms) {
   const canSaisirTreso = Boolean(safePerms.canSaisirTreso || canDesig || isTresorier || isAdmin);
   const estTechnique = Boolean(safePerms.estTechnique || isAdmin);
 
-  // =====================================================
-  // A. MODULE MEMBRES
-  // =====================================================
-  toggleElementVisibility('menu-saisie-membre-item', canSaisirMembres);
-  toggleElementVisibility('m-saisie', canSaisirMembres);
-  toggleElementVisibility('th-date-lieu-naiss', canSaisirMembres);
-  toggleElementVisibility('th-cni', canSaisirMembres);
-  toggleElementVisibility('th-actions-membre', canSaisirMembres);
+// =====================================================
+// A. MODULE MEMBRES
+// =====================================================
+// Onglet "Saisie/Modification" réservé aux admins
+toggleElementVisibility('menu-saisie-membre-item', canSaisirMembres);
+toggleElementVisibility('m-saisie', canSaisirMembres);
 
-  document.querySelectorAll('.col-admin, .btn-admin-only, .col-date-lieu, .col-cni, .col-membre-action').forEach(el => {
-    el.classList.toggle('d-none', !canSaisirMembres);
-  });
+// ✅ NOUVEAU : Cibler les nouveaux éléments de l'accordéon membres
+// Les boutons Modifier/Supprimer sont dans .membre-actions (nouvelle structure)
+document.querySelectorAll('.membre-actions').forEach(el => {
+  el.classList.toggle('d-none', !canSaisirMembres);
+});
 
-  // =====================================================
-  // B. MODULE DÉSIGNATIONS
-  // =====================================================
-  toggleElementVisibility('item-tab-d-saisie', canDesig);
-  toggleElementVisibility('item-tab-d-modifier', canDesig);
-  toggleElementVisibility('d-saisie', canDesig);
-  toggleElementVisibility('d-modifier', canDesig);
-  toggleElementVisibility('th-actions-des', canDesig);
+// ✅ Les infos sensibles (Date/Lieu naiss, CNI) dans les cartes
+document.querySelectorAll('.membre-info-row.info-admin').forEach(el => {
+  el.classList.toggle('d-none', !canSaisirMembres);
+});
 
-  document.querySelectorAll('.col-desig-action').forEach(el => {
-    el.classList.toggle('d-none', !canDesig);
-  });
+// Compatibilité avec l'ancien tableau (au cas où)
+document.querySelectorAll('.col-admin, .btn-admin-only, .col-date-lieu, .col-cni, .col-membre-action, #th-actions-membre, #th-date-lieu-naiss, #th-cni').forEach(el => {
+  el.classList.toggle('d-none', !canSaisirMembres);
+});
+
+ // =====================================================
+// B. MODULE DÉSIGNATIONS
+// =====================================================
+// Onglet "Saisie Désignation" réservé aux désignateurs/admins
+toggleElementVisibility('item-tab-d-saisie', canDesig);
+toggleElementVisibility('d-saisie', canDesig);
+
+// ✅ NOUVEAU : Cibler les boutons d'action dans les cartes accordéon
+document.querySelectorAll('.designation-action-protected').forEach(el => {
+  el.classList.toggle('d-none', !canDesig);
+});
+
+// Compatibilité ancien tableau
+document.querySelectorAll('.col-desig-action, #th-actions-des').forEach(el => {
+  el.classList.toggle('d-none', !canDesig);
+});
 
   // =====================================================
   // C. MODULE RAPPORTS & ANALYSES
@@ -2797,79 +4144,179 @@ function onSelectMatchSuperviseur(matchId) {
 // ========================================================
 // FONCTIONS DU TABLEAU MEMBRES
 // ========================================================
-
-// Variable globale pour stocker les membres et leurs rowIndex
-function loadMembresTable(emailUser) {
-  const tbody = document.getElementById('tbodyMembres');
-  if (!tbody) return;
-
-  tbody.innerHTML = '<tr><td colspan="7" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des membres...</td></tr>';
-
-  google.script.run
-    .withSuccessHandler(function(res) {
-      if (!res) return;
-      const isAdmin = Boolean(res.isAdmin);
-      currentMembresData = res.data || [];
-
-      // Gestion de l'affichage des menus d'administration / saisie
-      const menuSaisie = document.getElementById('menu-saisie-membre-item');
-      const paneSaisie = document.getElementById('m-saisie');
-      if (menuSaisie) menuSaisie.style.display = isAdmin ? 'block' : 'none';
-      if (paneSaisie) paneSaisie.style.display = isAdmin ? 'block' : 'none';
-
-      document.querySelectorAll('.col-admin').forEach(el => el.style.display = isAdmin ? '' : 'none');
-
-      renderMembresTable(currentMembresData, res.permissions || { canSaisirMembres: isAdmin });
-    })
-    .withFailureHandler(function(err) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-3">❌ Erreur : ${err ? err.message : 'Inconnue'}</td></tr>`;
-    })
-    .getListeMembres(emailUser);
+// ============================================================================
+// TOGGLE D'UNE CARTE MEMBRE
+// ============================================================================
+function toggleMembreCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  
+  const isExpanded = card.classList.contains('expanded');
+  
+  // Optionnel : fermer les autres cartes (accordéon strict)
+  // Décommentez les 3 lignes ci-dessous si vous voulez un seul ouvert à la fois
+  // document.querySelectorAll('.membre-item.expanded').forEach(function(el) {
+  //   if (el.id !== cardId) el.classList.remove('expanded');
+  // });
+  
+  card.classList.toggle('expanded', !isExpanded);
 }
 
-function renderMembresTable(data, permissions) {
-  const tbody = document.getElementById('tbodyMembres');
-  if (!tbody) return;
+window.toggleMembreCard = toggleMembreCard;
+
+// Extraire les initiales d'un nom complet
+function extraireInitiales(nomComplet) {
+  if (!nomComplet) return '?';
+  const parts = String(nomComplet).trim().split(/\s+/);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+window.extraireInitiales = extraireInitiales;
+
+function renderMembresTable(data, permissions, append) {
+  const container = document.getElementById('containerTblMembres') 
+    || document.getElementById('tbodyMembres')?.parentNode;
+  
+  if (!container) return;
 
   const canSaisir = Boolean(permissions && permissions.canSaisirMembres);
-  tbody.innerHTML = '';
 
   if (!data || data.length === 0) {
-    const colCount = canSaisir ? 7 : 4;
-    tbody.innerHTML = `<tr><td colspan="${colCount}" class="text-center text-muted py-3">Aucun membre trouvé</td></tr>`;
+    const msgVide = '<div class="text-center text-muted py-3">Aucun membre trouvé</div>';
+    if (append) {
+      const counter = container.querySelector('.search-results-count');
+      if (counter) counter.insertAdjacentHTML('afterend', msgVide);
+      else container.insertAdjacentHTML('beforeend', msgVide);
+    } else {
+      container.innerHTML = msgVide;
+    }
     return;
   }
 
-  let html = '';
-  data.forEach(m => {
-    const qualiteGrade = [m.qualite, m.grade].filter(Boolean).join(' / ') || '-';
-    const telBadge = (m.telephone && m.telephone !== '-') 
-      ? `<span class="badge bg-secondary fs-6">${m.telephone}</span>` 
-      : '-';
+  let html = '<div class="membres-container-accordion">';
 
+  data.forEach(function(m, index) {
+    const cardId = 'membre-card-' + (m.rowIndex || index);
+    const qualite = (m.qualite || '').toUpperCase();
+    const grade = m.grade || '';
+    const qualiteGrade = [qualite, grade].filter(Boolean).join(' / ') || '-';
+    
+    let typeClass = 'arbitre';
+    if (qualite === 'SUPERVISEUR') typeClass = 'superviseur';
+    
+    const initiales = extraireInitiales(m.nomComplet);
+    
+    let infosHtml = '';
+    
+    if (m.telephone && m.telephone !== '-' && m.telephone !== '') {
+      infosHtml += `
+        <div class="membre-info-row">
+          <span class="info-icon"><i class="fa fa-phone"></i></span>
+          <span class="info-label">Téléphone :</span>
+          <span class="info-value">${m.telephone}</span>
+        </div>
+      `;
+    }
+    
+    if (m.email && m.email !== '-' && m.email !== '') {
+      infosHtml += `
+        <div class="membre-info-row">
+          <span class="info-icon"><i class="fa fa-envelope"></i></span>
+          <span class="info-label">Email :</span>
+          <span class="info-value">${m.email}</span>
+        </div>
+      `;
+    }
+    
+    if (canSaisir) {
+      if (m.dateLieuNaiss && m.dateLieuNaiss !== '-' && m.dateLieuNaiss !== '') {
+        infosHtml += `
+          <div class="membre-info-row info-admin" data-sensitive="date-naissance">
+            <span class="info-icon"><i class="fa fa-calendar"></i></span>
+            <span class="info-label">Naissance :</span>
+            <span class="info-value">${m.dateLieuNaiss}</span>
+          </div>
+        `;
+      }
+      
+      if (m.cni && m.cni !== '-' && m.cni !== '') {
+        infosHtml += `
+          <div class="membre-info-row info-admin" data-sensitive="cni">
+            <span class="info-icon"><i class="fa fa-id-card"></i></span>
+            <span class="info-label">CNI :</span>
+            <span class="info-value">${m.cni}</span>
+          </div>
+        `;
+      }
+    }
+    
+    let actionsHtml = '';
+    if (canSaisir) {
+      actionsHtml = `
+        <div class="membre-actions admin-action" data-protected="true">
+          <button class="btn btn-warning btn-sm fw-bold" 
+                  onclick="event.stopPropagation(); prepareEditMembre(${m.rowIndex})">
+            <i class="fa-solid fa-pen me-1"></i> Modifier
+          </button>
+          <button class="btn btn-danger btn-sm fw-bold" 
+                  onclick="event.stopPropagation(); confirmDeleteMembre(${m.rowIndex})">
+            <i class="fa-solid fa-trash me-1"></i> Supprimer
+          </button>
+        </div>
+      `;
+    }
+    
+    let qualiteBadge = '';
+    if (qualite === 'SUPERVISEUR') {
+      qualiteBadge = '<span class="badge bg-warning text-dark">' + qualite + '</span>';
+    } else if (qualite === 'ARBITRE') {
+      qualiteBadge = '<span class="badge bg-success">' + qualite + '</span>';
+    } else if (qualite) {
+      qualiteBadge = '<span class="badge bg-secondary">' + qualite + '</span>';
+    }
+    
     html += `
-      <tr>
-        <td><strong>${m.nomComplet || ''}</strong></td>
-        ${canSaisir ? `<td>${m.dateLieuNaiss || '-'}</td>` : ''}
-        <td>${qualiteGrade}</td>
-        <td><td>${telBadge}</td></td> <!-- Corrigé pour éviter le décalage -->
-        <td>${m.email || '-'}</td>
-        ${canSaisir ? `<td class="fw-bold">${m.cni || '-'}</td>` : ''}
-        ${canSaisir ? `
-          <td class="text-nowrap text-center">
-            <button class="btn btn-warning btn-sm fw-bold me-1" title="Modifier" onclick="prepareEditMembre(${m.rowIndex})">
-              <i class="fa-solid fa-pen me-1"></i> Modifier
-            </button>
-            <button class="btn btn-danger btn-sm fw-bold" title="Supprimer" onclick="confirmDeleteMembre(${m.rowIndex})">
-              <i class="fa-solid fa-trash me-1"></i> Supprimer
-            </button>
-          </td>` : ''}
-      </tr>
+      <div class="membre-item accordion-item ${typeClass}" id="${cardId}">
+        <div class="membre-item-header" onclick="toggleMembreCard('${cardId}')">
+          <div class="membre-item-left">
+            <div class="membre-avatar">${initiales}</div>
+            <div class="membre-name-block">
+              <p class="membre-name">${m.nomComplet || '-'}</p>
+              <div class="membre-qualite-line">${qualiteGrade}</div>
+            </div>
+          </div>
+          <div class="membre-item-right">
+            ${qualiteBadge}
+            <i class="fa fa-chevron-down membre-chevron"></i>
+          </div>
+        </div>
+        <div class="membre-item-body">
+          <div class="membre-info-grid">
+            ${infosHtml || '<p class="text-muted small mb-0">Aucune information supplémentaire.</p>'}
+          </div>
+          ${actionsHtml}
+        </div>
+      </div>
     `;
   });
 
-  tbody.innerHTML = html;
+  html += '</div>';
+  
+  if (append) {
+    const counter = container.querySelector('.search-results-count');
+    if (counter) {
+      counter.insertAdjacentHTML('afterend', html);
+    } else {
+      container.insertAdjacentHTML('beforeend', html);
+    }
+  } else {
+    container.innerHTML = html;
+  }
 }
+
+window.renderMembresTable = renderMembresTable;
 
 function prepareEditMembre(rowIndex) {
   const m = currentMembresData.find(item => Number(item.rowIndex) === Number(rowIndex));
@@ -3021,17 +4468,21 @@ function handleMembreSubmit(e) {
 }
 
 function confirmDeleteMembre(rowIndex) {
-  if (confirm("Voulez-vous vraiment supprimer définitivement ce membre ?")) {
-    google.script.run
-      .withSuccessHandler(function() {
-        alert("🗑️ Membre supprimé.");
-        loadMembresTable();
-      })
-      .withFailureHandler(function(err) {
-        alert("❌ Erreur lors de la suppression : " + (err ? err.message : ''));
-      })
-      .deleteMembre(rowIndex);
-  }
+  confirmerAction(
+    "Voulez-vous vraiment supprimer définitivement ce membre ?",
+    function() {
+      google.script.run
+        .withSuccessHandler(function() {
+          afficherToastTemporaire("🗑️ Membre supprimé.", "success");
+          loadMembresTable();
+        })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("❌ Erreur : " + (err ? err.message : ''), "danger");
+        })
+        .deleteMembre(rowIndex);
+    },
+    { titre: 'Supprimer le membre', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-user-xmark' }
+  );
 }
 
 // ====================================================================
@@ -3245,23 +4696,39 @@ function focusSearchInput() {
  * Chargement centralisé des membres pour l'ensemble des modules
  */
 function loadMembresTable() {
-  const tbody = document.getElementById('tbodyMembres');
-  if (!tbody) return;
+  const container = document.getElementById('containerTblMembres');
+  if (!container) {
+    console.warn('[loadMembresTable] containerTblMembres introuvable');
+    return;
+  }
 
-  tbody.innerHTML = '<tr><td colspan="7" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des membres...</td></tr>';
+  // Indicateur de chargement
+  container.innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+      <p class="mt-3 text-muted fw-bold">Chargement des membres...</p>
+    </div>
+  `;
 
-  // On récupère l'email stocké pour s'assurer de passer le bon contexte sur mobile
   const emailUser = window.currentUser || sessionStorage.getItem('user_email_souscra') || "";
 
   google.script.run
     .withSuccessHandler(function(res) {
-      if (!res) return;
+      if (!res) {
+        container.innerHTML = '<div class="text-center text-muted py-3">Aucune donnée reçue.</div>';
+        return;
+      }
       
-      // On récupère les permissions de manière robuste
       const permissions = res.permissions || { isAdmin: Boolean(res.isAdmin), canSaisirMembres: Boolean(res.isAdmin) };
+      
+      // ✅ DOUBLE STOCKAGE : variable locale + variable globale (window)
       currentMembresData = res.data || [];
-
-      // Gestion de l'affichage du menu et du volet de saisie selon les droits réels
+      window.currentMembresData = res.data || [];
+      
+      // 🔍 Diagnostic console
+      console.log('[loadMembresTable] ✅ Données reçues :', (res.data || []).length, 'membres');
+      console.log('[loadMembresTable] window.currentMembresData :', window.currentMembresData.length);
+      
       const menuSaisie = document.getElementById('menu-saisie-membre-item');
       const paneSaisie = document.getElementById('m-saisie');
       const canSaisie = Boolean(permissions.canSaisirMembres || permissions.isAdmin);
@@ -3269,14 +4736,36 @@ function loadMembresTable() {
       if (menuSaisie) menuSaisie.style.display = canSaisie ? 'block' : 'none';
       if (paneSaisie) paneSaisie.style.display = canSaisie ? 'block' : 'none';
 
-      // Appel de la fonction de rendu dédiée
-      renderMembresTable(currentMembresData, permissions);
+      // ✅ Injecter la barre d'export (admin uniquement)
+      const barreExport = document.getElementById('exportBarreMembres');
+      if (barreExport) {
+        barreExport.innerHTML = htmlBarreExport('membres', verifierDroitExport('membres'));
+      }
+
+      // ✅ Vider et ajouter la barre de recherche
+      container.innerHTML = htmlBarreRecherche(
+        'search-membres', 
+        'Rechercher un membre (nom, qualité, téléphone...)', 
+        'containerTblMembres'
+      );
+      
+      // ✅ Ajouter les cartes APRÈS la barre
+      renderMembresTable(currentMembresData, permissions, true);
+      
+      // 🔍 Vérification après rendu
+      setTimeout(function() {
+        const nbCartes = document.querySelectorAll('#containerTblMembres .membre-item').length;
+        console.log('[loadMembresTable] 🎯 Cartes générées dans le DOM :', nbCartes);
+      }, 100);
     })
     .withFailureHandler(function(err) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-3">❌ Erreur : ${err ? err.message : 'Inconnue'}</td></tr>`;
+      console.error('[loadMembresTable] ❌ Erreur :', err);
+      container.innerHTML = `<div class="text-center text-danger py-3">❌ Erreur : ${err ? err.message : 'Inconnue'}</div>`;
     })
     .getMembresData(emailUser);
 }
+
+window.loadMembresTable = loadMembresTable;
 
 
 /**
@@ -3339,22 +4828,6 @@ function alimenterDropdownAuteurCheckOff(listeMembres) {
   container.innerHTML = html;
 }
 
-
-function filtrerMembresDropdown(inputEl) {
-  if (!inputEl) return;
-  const query = (inputEl.value || '').toLowerCase().trim();
-  const dropdownMenu = inputEl.closest('.dropdown-menu');
-  if (!dropdownMenu) return;
-
-  const listItems = dropdownMenu.querySelectorAll('ul li');
-  listItems.forEach(li => {
-    if (li.classList.contains('text-muted')) return; 
-    const text = li.textContent.toLowerCase();
-    li.style.display = text.includes(query) ? '' : 'none';
-  });
-}
-
-
 // ====================================================================
 // 1. FONCTIONS DE SÉLECTION & ALIGNEMENT DES MAPPINGS
 // ====================================================================
@@ -3366,11 +4839,6 @@ function selectMembreDropdown(inputId, labelId, nom) {
   if (typeof window.selectionnerMembreCustom === 'function') {
     window.selectionnerMembreCustom(inputId, nom);
   }
-}
-
-
-function selectionnerSuperviseur(nomSuperviseur) {
-  selectMembreDropdown('r_sup', 'label_r_sup', nomSuperviseur);
 }
 
 // ====================================================================
@@ -3430,22 +4898,18 @@ function remplirListeSuperviseursRapport() {
  */
 function loadRapportsDisplay() {
   const liTab = document.getElementById('li-tab-r-view');
-  const container = document.getElementById('conteneurRapportsView') 
-    || document.querySelector('#containerTblRapports') 
-    || document.querySelector('#tblRapports')?.parentNode;
+  const container = document.getElementById('containerTblRapports');
 
   if (!container) {
     console.warn("Conteneur des rapports introuvable.");
     return;
   }
 
-  // 👉 Indicateur de chargement immédiat
+  // Indicateur de chargement
   container.innerHTML = `
-    <div class="text-center text-primary p-5 my-5">
-      <div class="spinner-border mb-3" role="status" style="width: 3rem; height: 3rem;">
-        <span class="visually-hidden">Chargement...</span>
-      </div>
-      <p class="fw-bold">Chargement de la liste des rapports en cours...</p>
+    <div class="text-center p-5">
+      <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+      <p class="mt-3 text-muted fw-bold">Chargement des rapports...</p>
     </div>
   `;
 
@@ -3458,18 +4922,19 @@ function loadRapportsDisplay() {
     .withSuccessHandler(function(data) {
       if (liTab) liTab.classList.remove('d-none');
 
-      if (!container) return;
-
       if (!data || data.length === 0) {
         container.innerHTML = '<div class="text-center text-muted p-3">Aucun rapport enregistré.</div>';
         return;
       }
 
-      // ========== GESTION DES PERMISSIONS D'ARCHIVAGE ==========
-      const ALLOWED_MEMBRES_SAISIE = [
-        "albahrou@gmail.com",
-        "barrymamadu94@gmail.com"
-      ];
+      // ✅ Injecter la barre d'export (selon droits rapports)
+      const barreExport = document.getElementById('exportBarreRapports');
+      if (barreExport) {
+        barreExport.innerHTML = htmlBarreExport('rapports', verifierDroitExport('rapports'));
+      }
+
+      // Permissions d'archivage
+      const ALLOWED_MEMBRES_SAISIE = ["albahrou@gmail.com", "barrymamadu94@gmail.com"];
       const ADMIN_EMAIL = ["albahrou@gmail.com"];
 
       let currentUserEmail = (typeof getUserEmail === 'function' ? getUserEmail() : '').toLowerCase().trim();
@@ -3481,30 +4946,27 @@ function loadRapportsDisplay() {
         || ALLOWED_MEMBRES_SAISIE.includes(currentUserEmail) 
         || currentUserEmail === "";
 
-      // ========== SÉPARATION NON EXPLOITÉS / EXPLOITÉS ==========
+      // Séparer non exploités / exploités
       const nonExploites = [];
       const exploites = [];
 
       data.forEach(function(item) {
         const isExploite = String(item.situation || '').toUpperCase() === 'EXPLOITÉ';
-        if (isExploite) {
-          exploites.push(item);
-        } else {
-          nonExploites.push(item);
-        }
+        if (isExploite) exploites.push(item);
+        else nonExploites.push(item);
       });
 
-      // Tri des non exploités (par lieu, puis incidents prioritaires, puis date)
+      // Tri des non exploités : incidents d'abord, puis par lieu, puis par date
       nonExploites.sort(function(a, b) {
+        if (a.aIncidentOui && !b.aIncidentOui) return -1;
+        if (!a.aIncidentOui && b.aIncidentOui) return 1;
         const lieuA = String(a.lieu || '-').trim().toLowerCase();
         const lieuB = String(b.lieu || '-').trim().toLowerCase();
         if (lieuA !== lieuB) return lieuA.localeCompare(lieuB);
-        if (a.aIncidentOui && !b.aIncidentOui) return -1;
-        if (!a.aIncidentOui && b.aIncidentOui) return 1;
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
 
-      // Tri des exploités (par lieu, puis date)
+      // Tri des exploités : par lieu, puis par date
       exploites.sort(function(a, b) {
         const lieuA = String(a.lieu || '-').trim().toLowerCase();
         const lieuB = String(b.lieu || '-').trim().toLowerCase();
@@ -3512,253 +4974,61 @@ function loadRapportsDisplay() {
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
 
-      // ========== GÉNÉRATION DES LIGNES D'UN TABLEAU ==========
-      function genererLignesTableau(itemsList) {
-        let htmlRows = '';
+      // Générer le HTML
+      let html = '';
 
-        itemsList.forEach(function(item) {
-          const isExploite = String(item.situation || '').toUpperCase() === 'EXPLOITÉ';
-
-          if (!item.arbitres || !Array.isArray(item.arbitres) || item.arbitres.length === 0) {
-            return;
-          }
-
-          const rowCount = item.arbitres.length;
-
-          item.arbitres.forEach(function(r, index) {
-            let qualiteBadge = 'badge bg-primary';
-            if (r.qualite === 'AC') qualiteBadge = 'badge bg-danger';
-            else if (r.qualite === '4EME') qualiteBadge = 'badge bg-info text-dark';
-
-            const isLastArbitre = (index === rowCount - 1);
-            const borderStyle = isLastArbitre ? 'border-bottom: 2px solid #212529 !important;' : '';
-
-            htmlRows += `<tr style="${borderStyle}">`;
-
-            // ---- Cellules fusionnées (Superviseur + Rencontre) ----
-            if (index === 0) {
-              htmlRows += `
-                <td rowspan="${rowCount}" data-label="Superviseur" class="text-center bg-light text-break small">
-                  <b>${item.superviseur || '-'}</b>
-                </td>
-                <td rowspan="${rowCount}" data-label="Rencontre" class="text-center bg-light text-break small">
-                  <b>${item.rencontre || '-'}</b>
-                  ${isExploite ? `<br><small class="text-muted">Stade: ${item.lieu || '-'}</small>` : ''}
-                </td>`;
-            }
-
-            // ---- Cellules par arbitre ----
-            htmlRows += `
-              <td data-label="Qualité" class="text-center">
-                <span class="${qualiteBadge}">${r.qualite || '-'}</span>
-              </td>
-              <td data-label="Arbitre" class="text-break small"><b>${r.arbitre || '-'}</b></td>
-              <td data-label="Note" class="text-center">
-                <span class="badge bg-warning text-dark">${r.note || '-'}</span>
-              </td>
-              <td data-label="Forces Tech." class="text-break small text-success">${r.forcesTech || '-'}</td>
-              <td data-label="Faiblesses Tech." class="text-break small text-danger">${r.faiblessesTech || '-'}</td>
-              <td data-label="Forces Phys." class="text-break small text-success">
-                ${r.forcesPhys || '-'}${r.forcesPhysCom ? '<br><small class="text-muted">' + r.forcesPhysCom + '</small>' : ''}
-              </td>
-              <td data-label="Faiblesses Phys." class="text-break small text-danger">
-                ${r.faiblessesPhys || '-'}${r.faiblessesPhysCom ? '<br><small class="text-muted">' + r.faiblessesPhysCom + '</small>' : ''}
-              </td>
-              <td data-label="Commentaires" class="text-break small text-muted">${r.commentaires || '-'}</td>
-            `;
-
-            // ---- Cellules fusionnées (Incidents + Date + Action) ----
-            if (index === 0) {
-              // ✅ CORRECTION : Récupération du texte complet de l'incident
-              const incidentsGlobalTexte = item.incidentsGlobal || 'NON';
-              const isGlobalIncident = String(incidentsGlobalTexte).toUpperCase().startsWith('OUI');
-
-              // Extraction du motif (on retire le préfixe "OUI - " ou "OUI ")
-              let motifIncident = '';
-              if (isGlobalIncident) {
-                motifIncident = incidentsGlobalTexte
-                  .replace(/^OUI\s*[-:–—]?\s*/i, '')
-                  .trim();
-              }
-
-              const badgeClass = isGlobalIncident
-                ? 'badge bg-danger text-white'
-                : 'badge bg-secondary text-white';
-
-              htmlRows += `
-                <td rowspan="${rowCount}" data-label="Incidents" class="text-center align-middle bg-light">
-                  <span class="${badgeClass}">
-                    ${isGlobalIncident ? 'OUI' : 'NON'}
-                  </span>
-                  ${isGlobalIncident && motifIncident ? `
-                    <div class="mt-1 small text-danger fw-bold" 
-                         style="max-width: 200px; white-space: normal; word-break: break-word; margin: 0 auto;">
-                      <i class="fa-solid fa-triangle-exclamation me-1"></i>${motifIncident}
-                    </div>
-                  ` : ''}
-                </td>
-                <td rowspan="${rowCount}" data-label="Date Saisie" 
-                    class="text-center text-muted small bg-light align-middle">
-                  ${item.dateSaisie || '-'}
-                </td>`;
-
-              if (canUserArchive) {
-                htmlRows += `
-                  <td rowspan="${rowCount}" data-label="Action" class="text-center bg-light align-middle">
-                    <button class="btn btn-sm ${isExploite ? 'btn-secondary' : 'btn-success'} text-nowrap"
-                      onclick="gererArchivageRapport('${item.idDesignation}', '${item.rencontre ? item.rencontre.replace(/'/g, "\\'") : ''}')"
-                      ${isExploite ? 'disabled' : ''}>
-                      ${isExploite ? 'Exploité' : 'Archiver'}
-                    </button>
-                  </td>`;
-              }
-            }
-
-            htmlRows += `</tr>`;
-          });
+      // Section non exploités
+      html += '<div class="mb-5">';
+      html += '<h5 class="text-primary border-bottom pb-2 mb-3"><i class="fa fa-folder-open me-2"></i>Matchs non exploités (' + nonExploites.length + ')</h5>';
+      if (nonExploites.length === 0) {
+        html += '<p class="text-muted fst-italic">Aucun match en attente.</p>';
+      } else {
+        nonExploites.forEach(function(match) {
+          html += construireCarteMatch(match, canUserArchive, false);
         });
-
-        return htmlRows;
       }
+      html += '</div>';
 
-      // ========== GÉNÉRATION D'UN TABLEAU COMPLET ==========
-      function genererTableauHTML(items, isPartieExploitee) {
-        if (!items || items.length === 0) {
-          return `<p class="text-muted fst-italic ms-2">Aucun rapport dans cette section.</p>`;
-        }
-
-        const tableStyle = `min-width: ${canUserArchive ? '1650px' : '1550px'}; table-layout: auto; width: 100%;`;
-
-        const colGroupHTML = `
-          <colgroup>
-            <col style="width: 90px;">
-            <col style="width: 110px;">
-            <col style="width: 60px;">
-            <col style="width: 110px;">
-            <col style="width: 50px;">
-            <col style="width: 280px;">
-            <col style="width: 280px;">
-            <col style="width: 280px;">
-            <col style="width: 280px;">
-            <col style="width: 150px;">
-            <col style="width: 120px;">
-            <col style="width: 90px;">
-            ${canUserArchive ? '<col style="width: 90px;">' : ''}
-          </colgroup>
-        `;
-
-        const tableHeaders = `
-          <thead class="table-light text-center small">
-            <tr>
-              <th>Superviseur</th>
-              <th>Rencontre</th>
-              <th>Qualité</th>
-              <th>Arbitre</th>
-              <th>Note</th>
-              <th>Forces Tech.</th>
-              <th>Faiblesses Tech.</th>
-              <th>Forces Phys.</th>
-              <th>Faiblesses Phys.</th>
-              <th>Commentaires</th>
-              <th>Incidents</th>
-              <th>Date Saisie</th>
-              ${canUserArchive ? '<th>Actions</th>' : ''}
-            </tr>
-          </thead>
-        `;
-
-        // Cas 1 : Section NON exploités → regroupement par lieu
-        if (!isPartieExploitee) {
-          const groupedByLieu = {};
-          items.forEach(item => {
-            const lieu = item.lieu || 'Lieu non spécifié';
-            if (!groupedByLieu[lieu]) groupedByLieu[lieu] = [];
-            groupedByLieu[lieu].push(item);
-          });
-
-          let htmlGroupes = '';
-          Object.keys(groupedByLieu).sort().forEach(lieu => {
-            htmlGroupes += `
-              <div class="card mb-4 border-primary shadow-sm">
-                <div class="card-header bg-primary text-white fw-bold">
-                  🏟️ Stade / Lieu : ${lieu}
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle mb-0" style="${tableStyle}">
-                      ${colGroupHTML}
-                      ${tableHeaders}
-                      <tbody>
-                        ${genererLignesTableau(groupedByLieu[lieu])}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>`;
-          });
-          return htmlGroupes;
-        }
-
-        // Cas 2 : Section EXPLOITÉE → un seul tableau global
-        return `
-          <div class="card mb-4 border-secondary shadow-sm">
-            <div class="card-body p-0">
-              <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle mb-0" style="${tableStyle}">
-                  ${colGroupHTML}
-                  ${tableHeaders}
-                  <tbody>
-                    ${genererLignesTableau(items)}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>`;
+      // Section exploités
+      html += '<div class="mt-5">';
+      html += '<h5 class="text-secondary border-bottom pb-2 mb-3"><i class="fa fa-box-archive me-2"></i>Matchs exploités et archivés (' + exploites.length + ')</h5>';
+      if (exploites.length === 0) {
+        html += '<p class="text-muted fst-italic">Aucun match archivé.</p>';
+      } else {
+        exploites.forEach(function(match) {
+          html += construireCarteMatch(match, canUserArchive, true);
+        });
       }
+      html += '</div>';
 
-      // ========== ASSEMBLAGE FINAL ==========
-      container.innerHTML = `
-        <div class="mb-5">
-          <h3 class="text-primary border-bottom pb-2 mb-3">📁 Matchs non exploités</h3>
-          ${genererTableauHTML(nonExploites, false)}
-        </div>
-         
-        <div class="mt-5">
-          <h3 class="text-secondary border-bottom pb-2 mb-3">📦 Matchs exploités et archivés</h3>
-          ${genererTableauHTML(exploites, true)}
-        </div>
-      `;
-
-      if (typeof installerRechercheAutomatiqueSurTousLesTableaux === 'function') {
-        installerRechercheAutomatiqueSurTousLesTableaux();
-      }
+      container.innerHTML = html;
     })
     .withFailureHandler(function(err) {
       if (liTab) liTab.classList.add('d-none');
       console.error("Erreur d'accès aux rapports :", err);
-      if (container) {
-        container.innerHTML = '<div class="text-center text-danger p-3">⚠️ Accès restreint ou erreur de chargement.</div>';
-      }
+      container.innerHTML = '<div class="text-center text-danger p-3">⚠️ Accès restreint ou erreur de chargement.</div>';
     })
     .getRapports();
 }
 
-function gererArchivageRapport(idDesignation, rencontre) {
-  if (!confirm("Voulez-vous vraiment archiver ce rapport ?")) return;
+window.loadRapportsDisplay = loadRapportsDisplay;
 
-  google.script.run
-    .withSuccessHandler(function() {
-      if (typeof afficherToastTemporaire === 'function') {
-        afficherToastTemporaire("✅ Rapport Exploité et archivé avec succès !", "success");
-      }
-      loadRapportsDisplay();
-    })
-    .withFailureHandler(function(err) {
-      if (typeof afficherToastTemporaire === 'function') {
-        afficherToastTemporaire("❌ Erreur : " + err.message, "danger");
-      }
-    })
-    .archiverRapport(idDesignation, rencontre);
+function gererArchivageRapport(idDesignation, rencontre) {
+  confirmerAction(
+    "Voulez-vous vraiment archiver ce rapport ?",
+    function() {
+      google.script.run
+        .withSuccessHandler(function() {
+          afficherToastTemporaire("✅ Rapport exploité et archivé !", "success");
+          loadRapportsDisplay();
+        })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("❌ Erreur : " + err.message, "danger");
+        })
+        .archiverRapport(idDesignation, rencontre);
+    },
+    { titre: 'Archiver le rapport', texteConfirmer: 'Archiver', couleurConfirmer: 'success', icone: 'fa-box-archive' }
+  );
 }
 
 window.loadRapportsDisplay = loadRapportsDisplay;
@@ -3980,28 +5250,152 @@ function soumettreRapportFinal(e) {
   }
 }
 
-// ==========================================
-// COMPOSANT NOTIFICATION (TOAST)
-// ==========================================
+function confirmerAction(message, onConfirm, options) {
+  const opts = options || {};
+  const titre = opts.titre || 'Confirmation';
+  const texteConfirmer = opts.texteConfirmer || 'Confirmer';
+  const texteAnnuler = opts.texteAnnuler || 'Annuler';
+  const couleurConfirmer = opts.couleurConfirmer || 'danger';
+  const icone = opts.icone || 'fa-triangle-exclamation';
 
-function afficherToastTemporaire(message, type = 'success') {
-  let toast = document.getElementById('toast-notification-app');
-
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'toast-notification-app';
-    document.body.appendChild(toast);
+  // ✅ Vérification Bootstrap
+  if (typeof bootstrap === 'undefined' || !bootstrap.Modal) {
+    console.warn('[confirmerAction] Bootstrap non chargé, fallback confirm');
+    if (window.confirm(message)) {
+      if (typeof onConfirm === 'function') onConfirm();
+    }
+    return;
   }
 
-  let bgColor = '#198754';
-  if (type === 'warning') bgColor = '#fd7e14';
-  if (type === 'danger')  bgColor = '#dc3545';
+  // ✅ Nettoyage ancien modal
+  const ancienModal = document.getElementById('modalConfirmApp');
+  if (ancienModal) ancienModal.remove();
+  document.querySelectorAll('.modal-backdrop').forEach(function(el) {
+    if (el) el.remove();
+  });
+  if (document.body) {
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
 
+  // ✅ Création directe dans le DOM (pas de wrapper.innerHTML)
+  const modalEl = document.createElement('div');
+  modalEl.className = 'modal fade';
+  modalEl.id = 'modalConfirmApp';
+  modalEl.tabIndex = -1;
+  modalEl.setAttribute('aria-hidden', 'true');
+  modalEl.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+        <div class="modal-body text-center p-4">
+          <div class="mb-3">
+            <i class="fa-solid ${icone} text-${couleurConfirmer}" style="font-size: 3rem;"></i>
+          </div>
+          <h6 class="fw-bold mb-2">${titre}</h6>
+          <p class="text-muted mb-0 small">${message}</p>
+        </div>
+        <div class="modal-footer justify-content-center border-0 pt-0 pb-3 gap-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm px-4" id="btnConfirmAppAnnuler" style="border-radius: 8px;">
+            ${texteAnnuler}
+          </button>
+          <button type="button" class="btn btn-${couleurConfirmer} btn-sm px-4" id="btnConfirmAppValider" style="border-radius: 8px;">
+            ${texteConfirmer}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modalEl);
+
+  // ✅ Instanciation
+  let modal;
+  try {
+    modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: true });
+  } catch (e) {
+    console.error('[confirmerAction] Erreur instanciation :', e);
+    if (modalEl.parentNode) modalEl.parentNode.removeChild(modalEl);
+    if (window.confirm(message)) {
+      if (typeof onConfirm === 'function') onConfirm();
+    }
+    return;
+  }
+
+  // ✅ Listeners
+  const btnAnnuler = document.getElementById('btnConfirmAppAnnuler');
+  if (btnAnnuler) {
+    btnAnnuler.addEventListener('click', function() {
+      try { modal.hide(); } catch (e) { console.warn(e); }
+    });
+  }
+
+  const btnValider = document.getElementById('btnConfirmAppValider');
+  if (btnValider) {
+    btnValider.addEventListener('click', function() {
+      try { modal.hide(); } catch (e) { console.warn(e); }
+      if (typeof onConfirm === 'function') {
+        setTimeout(onConfirm, 150);
+      }
+    });
+  }
+
+  // ✅ Nettoyage final
+  modalEl.addEventListener('hidden.bs.modal', function() {
+    if (modalEl && modalEl.parentNode) modalEl.parentNode.removeChild(modalEl);
+    document.querySelectorAll('.modal-backdrop').forEach(function(el) {
+      if (el) el.remove();
+    });
+    if (document.body) {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+  });
+
+  // ✅ Affichage
+  try {
+    modal.show();
+  } catch (e) {
+    console.error('[confirmerAction] Erreur show :', e);
+    if (modalEl.parentNode) modalEl.parentNode.removeChild(modalEl);
+    if (window.confirm(message)) {
+      if (typeof onConfirm === 'function') onConfirm();
+    }
+  }
+}
+
+// ============================================================================
+// 🔔 SYSTÈME DE NOTIFICATION (TOASTS)
+// ============================================================================
+function afficherToastTemporaire(message, type = 'success') {
+  // ✅ Conteneur dédié pour empiler plusieurs toasts sans qu'ils se chevauchent
+  let container = document.getElementById('toast-container-app');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container-app';
+    container.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 90vw;
+      pointer-events: none;
+    `;
+    document.body.appendChild(container);
+  }
+
+  // ✅ Couleur selon le type
+  let bgColor = '#198754';        // success (vert)
+  if (type === 'warning') bgColor = '#fd7e14';  // warning (orange)
+  if (type === 'danger')  bgColor = '#dc3545';  // danger (rouge)
+  if (type === 'info')    bgColor = '#0dcaf0';  // info (cyan)
+
+  // ✅ Création du toast
+  const toast = document.createElement('div');
   toast.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 99999;
     background: ${bgColor};
     color: #ffffff;
     padding: 12px 22px;
@@ -4009,17 +5403,30 @@ function afficherToastTemporaire(message, type = 'success') {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     font-weight: 600;
     font-size: 15px;
-    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+    max-width: 100%;
+    word-wrap: break-word;
   `;
-
   toast.innerHTML = message;
-  toast.style.display = 'block';
-  toast.style.opacity = '1';
+  container.appendChild(toast);
 
+  // ✅ Animation d'entrée
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(0)';
+  });
+
+  // ✅ Animation de sortie + suppression propre du DOM
   setTimeout(() => {
     toast.style.opacity = '0';
-    setTimeout(() => { toast.style.display = 'none'; }, 300);
-  }, 2500);
+    toast.style.transform = 'translateX(30px)';
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 300);
+  }, 2800);
 }
 
 /**
@@ -4403,41 +5810,52 @@ function gererAffichageFormulaireVersement(motif) {
 
 
 function loadCheckOffs() {
-  const tbody = document.querySelector('#tblCheckOffs tbody');
-  const thAction = document.getElementById('thAction');
-  if (!tbody) return;
-
-  let userConnected = "";
-  if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
-  else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
-  else if (window.userPermissions && window.userPermissions.email) userConnected = window.userPermissions.email;
-  else {
-    const inputEl = document.getElementById('email-input');
-    if (inputEl) userConnected = inputEl.value;
+  const container = document.getElementById('containerCheckOffs');
+  
+  if (!container) {
+    console.warn('[loadCheckOffs] containerCheckOffs introuvable');
+    return;
   }
 
-  const tresoEmails = (typeof TRESORIER_EMAIL !== 'undefined') 
-    ? TRESORIER_EMAIL.map(e => e.toLowerCase()) 
-    : ["sekounielek@gmail.com", "albahrou@gmail.com"];
-
+  let userConnected = currentUser || userEmail || (window.userPermissions && window.userPermissions.email) || '';
+  const tresoEmails = ["sekounielek@gmail.com", "albahrou@gmail.com"];
   const isGlobalTresorier = window.userPermissions && (window.userPermissions.isTresorier || window.userPermissions.isAdmin);
   const isTresorier = isGlobalTresorier || (userConnected && tresoEmails.includes(userConnected.toLowerCase().trim()));
 
-  if (thAction) thAction.style.display = isTresorier ? '' : 'none';
-
-  const nbColonnes = isTresorier ? 8 : 7;
-  tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement...</td></tr>`;
+  container.innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+      <p class="mt-3 text-muted fw-bold">Chargement des Check-Offs...</p>
+    </div>
+  `;
 
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucun check-off enregistré.</td></tr>`;
+        container.innerHTML = '<div class="text-center text-muted p-3">Aucun check-off enregistré.</div>';
         return;
       }
 
-      let htmlRows = '';
-      data.forEach(function(c) {
+      // ✅ Injecter la barre d'export (admin + trésorier uniquement)
+      const barreExport = document.getElementById('exportBarreCheckOffs');
+      if (barreExport) {
+        barreExport.innerHTML = htmlBarreExport('checkoffs', verifierDroitExport('checkoffs'));
+      }
+
+      // ✅ Vider et ajouter la barre de recherche
+      container.innerHTML = htmlBarreRecherche(
+        'search-checkoffs', 
+        'Rechercher un check-off (auteur, zone...)', 
+        'containerCheckOffs'
+      );
+
+      // Bandeau récapitulatif en haut
+      let html = construireBandeauTotal(data, 'checkoff', 'Check-Offs');
+      html += '<div class="versements-container-accordion">';
+
+      data.forEach(function(c, index) {
         if (!c) return;
+        
         const id = c.id || '';
         const date = c.date || '-';
         const auteur = c.auteur || '-';
@@ -4446,55 +5864,104 @@ function loadCheckOffs() {
         const etape = c.etape || '-';
         const montant = c.montant || 0;
         const statut = String(c.statut || 'ATTENTE').trim().toUpperCase();
+        const isConfirme = (statut === 'CONFIRME' || statut === 'VALIDE');
 
         const montantNum = Number(montant);
-        const montantFormate = !isNaN(montantNum) && montantNum > 0 ? montantNum.toLocaleString('fr-FR') + ' FCFA' : '0 FCFA';
+        const montantFormate = !isNaN(montantNum) && montantNum > 0 
+          ? montantNum.toLocaleString('fr-FR') + ' FCFA' 
+          : '0 FCFA';
 
-        const isConfirme = (statut === 'CONFIRME' || statut === 'VALIDE');
+        const statutClass = isConfirme ? 'confirme' : 'en-attente';
+        const cardId = 'checkoff-card-' + (id || index).toString().replace(/[^a-zA-Z0-9]/g, '_');
+
         const badgeStatut = isConfirme 
           ? '<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>CONFIRMÉ</span>'
           : '<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>ATTENTE</span>';
 
-        let actionTd = '';
+        let actionsHtml = '';
         if (isTresorier) {
-          actionTd += `<td><div class="btn-group btn-group-sm" role="group">`;
+          let boutons = '';
           
           if (isConfirme) {
-            actionTd += `<button class="btn btn-secondary" disabled title="Déjà validé"><i class="fa-solid fa-check-double"></i></button>`;
+            boutons += `<button class="btn btn-secondary btn-sm" disabled title="Déjà validé"><i class="fa-solid fa-check-double"></i></button>`;
+            boutons += `<button class="btn btn-outline-secondary btn-sm" disabled title="Verrouillé"><i class="fa-solid fa-trash"></i></button>`;
           } else {
-            actionTd += `<button class="btn btn-outline-success" onclick="validateCheck('${id}')" title="Valider"><i class="fa-solid fa-check"></i></button>`;
+            boutons += `<button class="btn btn-success btn-sm fw-bold" onclick="event.stopPropagation(); validateCheck('${id}')">
+              <i class="fa-solid fa-check me-1"></i>Valider
+            </button>`;
+            boutons += `<button class="btn btn-danger btn-sm fw-bold" onclick="event.stopPropagation(); supprimerVersement('${id}')">
+              <i class="fa-solid fa-trash me-1"></i>Supprimer
+            </button>`;
           }
 
-          if (!isConfirme) {
-            actionTd += `<button class="btn btn-outline-danger" onclick="supprimerVersement('${id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>`;
-          } else {
-            actionTd += `<button class="btn btn-outline-secondary" disabled title="Verrouillé (Confirmé)"><i class="fa-solid fa-trash"></i></button>`;
-          }
-
-          actionTd += `</div></td>`;
+          actionsHtml = `<div class="versement-actions admin-action">${boutons}</div>`;
         }
 
-        htmlRows += `
-          <tr>
-            <td><small class="text-muted fw-bold">${date}</small></td>
-            <td><strong>${auteur}</strong></td>
-            <td><span class="badge bg-info text-dark">${zone}</span></td>
-            <td class="text-center">${nbMatchs}</td>
-            <td><span class="badge bg-light text-dark border">${etape}</span></td>
-            <td class="fw-bold text-success">${montantFormate}</td>
-            <td>${badgeStatut}</td>
-            ${actionTd}
-          </tr>
+        html += `
+          <div class="versement-item accordion-item ${statutClass}" id="${cardId}">
+            <div class="versement-header" onclick="toggleVersementCard('${cardId}')">
+              <div class="versement-header-main">
+                <p class="versement-title">
+                  <i class="fa-solid fa-money-bill-wave me-1 text-info"></i>
+                  ${auteur}
+                </p>
+                <div class="versement-meta">
+                  <span><i class="fa fa-calendar"></i>${date}</span>
+                  <span><i class="fa fa-map-marker-alt"></i>${zone}</span>
+                </div>
+              </div>
+              <div class="versement-right">
+                <div class="versement-montant">${montantFormate}</div>
+                ${badgeStatut}
+                <i class="fa fa-chevron-down versement-chevron"></i>
+              </div>
+            </div>
+            <div class="versement-body">
+              <div class="versement-info-grid">
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-list"></i></span>
+                  <span class="info-label">Type :</span>
+                  <span class="info-value">Check-Off</span>
+                </div>
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-futbol"></i></span>
+                  <span class="info-label">Nb matchs :</span>
+                  <span class="info-value">${nbMatchs}</span>
+                </div>
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-trophy"></i></span>
+                  <span class="info-label">Étape :</span>
+                  <span class="info-value">${etape}</span>
+                </div>
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-hashtag"></i></span>
+                  <span class="info-label">ID :</span>
+                  <span class="info-value"><small class="text-muted">${id}</small></span>
+                </div>
+              </div>
+              ${actionsHtml}
+            </div>
+          </div>
         `;
       });
 
-      tbody.innerHTML = htmlRows;
+      html += '</div>';
+      
+      // ✅ Insérer après la barre de recherche
+      const counter = container.querySelector('.search-results-count');
+      if (counter) {
+        counter.insertAdjacentHTML('afterend', html);
+      } else {
+        container.insertAdjacentHTML('beforeend', html);
+      }
     })
     .withFailureHandler(function(err) {
-      tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-danger py-3">❌ Erreur : ${err ? err.message : ''}</td></tr>`;
+      container.innerHTML = `<div class="text-center text-danger p-3">❌ Erreur : ${err ? err.message : ''}</div>`;
     })
     .getCheckOffs();
 }
+
+window.loadCheckOffs = loadCheckOffs;
 
 /**
  * Charge les cotisations de la feuille PARTICIPATIONS (généralement 2500 FCFA)
@@ -4503,56 +5970,69 @@ function loadCheckOffs() {
  * Charge les cotisations annuelles (Feuille PARTICIPATIONS)
  */
 function loadCotisations() {
-  chargerTableauDonnees('PARTICIPATIONS', '#tblCotisations', '#tbody-cotisations', '#thActionCotisation', 'getCotisations');
+  chargerTableauDonnees('PARTICIPATIONS', '#containerCotisations', null, null, 'getCotisations');
 }
 
-/**
- * Charge les autres cotisations (Feuille COTISATIONS)
- */
 function loadAutresCotisations() {
-  chargerTableauDonnees('COTISATIONS', '#tblAutresCotisations', '#tbody-autres-cotisations', '#thActionAutresCotisations', 'getAutresCotisations');
+  chargerTableauDonnees('COTISATIONS', '#containerAutresCotisations', null, null, 'getAutresCotisations');
 }
 
 /**
  * Fonction générique mutualisée pour afficher les tableaux de cotisations
  */
-function chargerTableauDonnees(nomSource, tableId, tbodyId, thActionId, nomFonctionBackend) {
-  const tbody = document.querySelector(tbodyId);
-  const thAction = document.querySelector(thActionId);
-  if (!tbody) return;
+/**
+ * Fonction générique pour afficher les cotisations (annuelles ou autres) en accordéon
+ */
+function chargerTableauDonnees(nomSource, containerId, tbodyId, thActionId, nomFonctionBackend) {
+  // ✅ Trouver le conteneur directement par son ID
+  const container = document.querySelector(containerId);
+  
+  if (!container) {
+    console.warn('[chargerTableauDonnees] container introuvable : ' + containerId);
+    return;
+  }
 
-  // Gestion des permissions Trésorier / Admin
-  let userConnected = "";
-  if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
-  else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
-  else if (window.userPermissions && window.userPermissions.email) userConnected = window.userPermissions.email;
-
-  const tresoEmails = (typeof TRESORIER_EMAIL !== 'undefined') 
-    ? TRESORIER_EMAIL.map(e => e.toLowerCase()) 
-    : ["sekounielek@gmail.com", "albahrou@gmail.com"];
-
+  // Déterminer si trésorier
+  const userConnected = currentUser || userEmail || (window.userPermissions && window.userPermissions.email) || '';
+  const tresoEmails = ["sekounielek@gmail.com", "albahrou@gmail.com"];
   const isGlobalTresorier = window.userPermissions && (window.userPermissions.isTresorier || window.userPermissions.isAdmin);
   const isTresorier = isGlobalTresorier || (userConnected && tresoEmails.includes(userConnected.toLowerCase().trim()));
 
-  if (thAction) thAction.style.display = isTresorier ? '' : 'none';
-  const nbColonnes = isTresorier ? 6 : 5;
+  // Indicateur de chargement
+  container.innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+      <p class="mt-3 text-muted fw-bold">Chargement (${nomSource})...</p>
+    </div>
+  `;
 
-  tbody.innerHTML = `
-    <tr>
-      <td colspan="${nbColonnes}" class="text-center text-muted py-3">
-        <i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des données (${nomSource})...
-      </td>
-    </tr>`;
-
-  // Appel dynamique de getCotisations() ou getAutresCotisations()
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${nbColonnes}" class="text-center text-muted py-3">Aucune donnée trouvée dans ${nomSource}.</td></tr>`;
+        container.innerHTML = `<div class="text-center text-muted p-3">Aucune donnée dans ${nomSource}.</div>`;
         return;
       }
 
-      let htmlRows = '';
+      // ✅ Injecter la barre d'export (admin + trésorier uniquement)
+      const prefixeExport = nomSource === 'PARTICIPATIONS' ? 'cotisations' : 'autres-cotisations';
+      const barreExportId = nomSource === 'PARTICIPATIONS' ? 'exportBarreCotisations' : 'exportBarreAutresCotisations';
+      const barreExport = document.getElementById(barreExportId);
+      if (barreExport) {
+        barreExport.innerHTML = htmlBarreExport(prefixeExport, verifierDroitExport(prefixeExport));
+      }
+
+      // ✅ Vider et ajouter la barre de recherche
+      const searchId = nomSource === 'PARTICIPATIONS' ? 'search-cotisations' : 'search-autres-cotisations';
+      const searchPlaceholder = nomSource === 'PARTICIPATIONS' ? 'Rechercher une cotisation...' : 'Rechercher une autre cotisation...';
+      const containerIdStr = containerId.replace('#', '');
+      container.innerHTML = htmlBarreRecherche(searchId, searchPlaceholder, containerIdStr);
+
+      // ✅ Bandeau récapitulatif en haut
+      const typeClass = nomSource === 'PARTICIPATIONS' ? 'cotisation' : 'autre-cotisation';
+      const titreBandeau = nomSource === 'PARTICIPATIONS' ? 'Cotisations annuelles' : 'Autres cotisations';
+      let html = construireBandeauTotal(data, typeClass, titreBandeau);
+      html += '<div class="versements-container-accordion">';
+
       data.forEach(function(c, index) {
         const id = c.id || 'COT-' + index;
         const date = c.date || '-';
@@ -4560,54 +6040,102 @@ function chargerTableauDonnees(nomSource, tableId, tbodyId, thActionId, nomFonct
         const zone = c.zone || '-';
         const montant = c.montant || 0;
         const statut = String(c.statut || 'ATTENTE').trim().toUpperCase();
+        const isConfirme = (statut === 'VALIDE' || statut === 'CONFIRME');
 
         const montantNum = Number(montant);
-        const montantFormate = !isNaN(montantNum) && montantNum > 0 ? montantNum.toLocaleString('fr-FR') + ' FCFA' : montant + ' FCFA';
+        const montantFormate = !isNaN(montantNum) && montantNum > 0 
+          ? montantNum.toLocaleString('fr-FR') + ' FCFA' 
+          : '0 FCFA';
 
-        const isConfirme = (statut === 'VALIDE' || statut === 'CONFIRME');
+        const statutClass = isConfirme ? 'confirme' : 'en-attente';
+        const cardId = 'cotis-card-' + (id || index).toString().replace(/[^a-zA-Z0-9]/g, '_');
+
         const badgeStatut = isConfirme 
           ? '<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>CONFIRMÉ</span>'
           : '<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>ATTENTE</span>';
 
-        // Ordre des colonnes respecté : Date, Membre, Zone, Montant, Statut
-        let rowHtml = `
-          <tr>
-            <td><small class="text-muted fw-bold">${date}</small></td>
-            <td class="fw-bold">${auteur}</td>
-            <td><span class="badge bg-info text-dark">${zone}</span></td>
-            <td class="fw-bold text-primary">${montantFormate}</td>
-            <td>${badgeStatut}</td>`;
-
-        // Colonne d'action pour le Trésorier
+        // Boutons d'action (trésorier uniquement)
+        let actionsHtml = '';
         if (isTresorier) {
-          rowHtml += `<td><div class="btn-group btn-group-sm" role="group">`;
+          let boutons = '';
           
           if (isConfirme) {
-            rowHtml += `<button class="btn btn-secondary" disabled title="Déjà validé"><i class="fa-solid fa-check-double"></i></button>`;
-            rowHtml += `<button class="btn btn-outline-secondary" disabled title="Verrouillé (Confirmé)"><i class="fa-solid fa-trash"></i></button>`;
+            boutons += `<button class="btn btn-secondary btn-sm" disabled><i class="fa-solid fa-check-double"></i></button>`;
+            boutons += `<button class="btn btn-outline-secondary btn-sm" disabled><i class="fa-solid fa-trash"></i></button>`;
           } else {
-            rowHtml += `<button class="btn btn-outline-success" onclick="validateCheck('${id}')" title="Valider"><i class="fa-solid fa-check"></i></button>`;
-            rowHtml += `<button class="btn btn-outline-danger" onclick="supprimerVersement('${id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>`;
+            boutons += `<button class="btn btn-success btn-sm fw-bold" onclick="event.stopPropagation(); validateCheck('${id}')">
+              <i class="fa-solid fa-check me-1"></i>Valider
+            </button>`;
+            boutons += `<button class="btn btn-danger btn-sm fw-bold" onclick="event.stopPropagation(); supprimerVersement('${id}')">
+              <i class="fa-solid fa-trash me-1"></i>Supprimer
+            </button>`;
           }
 
-          rowHtml += `</div></td>`;
+          actionsHtml = `<div class="versement-actions admin-action">${boutons}</div>`;
         }
 
-        rowHtml += `</tr>`;
-        htmlRows += rowHtml;
+        const nomType = nomSource === 'PARTICIPATIONS' ? 'Cotisation annuelle' : 'Autre cotisation';
+
+        html += `
+          <div class="versement-item accordion-item ${statutClass}" id="${cardId}">
+            <div class="versement-header" onclick="toggleVersementCard('${cardId}')">
+              <div class="versement-header-main">
+                <p class="versement-title">
+                  <i class="fa-solid fa-receipt me-1 text-primary"></i>
+                  ${auteur}
+                </p>
+                <div class="versement-meta">
+                  <span><i class="fa fa-calendar"></i>${date}</span>
+                  <span><i class="fa fa-map-marker-alt"></i>${zone}</span>
+                </div>
+              </div>
+              <div class="versement-right">
+                <div class="versement-montant">${montantFormate}</div>
+                ${badgeStatut}
+                <i class="fa fa-chevron-down versement-chevron"></i>
+              </div>
+            </div>
+            <div class="versement-body">
+              <div class="versement-info-grid">
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-list"></i></span>
+                  <span class="info-label">Type :</span>
+                  <span class="info-value">${nomType}</span>
+                </div>
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-map-marker-alt"></i></span>
+                  <span class="info-label">Zone :</span>
+                  <span class="info-value">${zone}</span>
+                </div>
+                <div class="versement-info-row">
+                  <span class="info-icon"><i class="fa fa-hashtag"></i></span>
+                  <span class="info-label">ID :</span>
+                  <span class="info-value"><small class="text-muted">${id}</small></span>
+                </div>
+              </div>
+              ${actionsHtml}
+            </div>
+          </div>
+        `;
       });
 
-      tbody.innerHTML = htmlRows;
+      html += '</div>';
+      
+      // ✅ Insérer après la barre de recherche
+      const counter = container.querySelector('.search-results-count');
+      if (counter) {
+        counter.insertAdjacentHTML('afterend', html);
+      } else {
+        container.insertAdjacentHTML('beforeend', html);
+      }
     })
     .withFailureHandler(function(err) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="${nbColonnes}" class="text-center text-danger py-3">
-            ❌ Erreur de chargement de la source ${nomSource}.
-          </td>
-        </tr>`;
+      console.error('[chargerTableauDonnees] Erreur :', err);
+      container.innerHTML = `<div class="text-center text-danger p-3">❌ Erreur de chargement de ${nomSource}</div>`;
     })[nomFonctionBackend]();
 }
+
+window.chargerTableauDonnees = chargerTableauDonnees;
 
 
 /**
@@ -4615,53 +6143,28 @@ function chargerTableauDonnees(nomSource, tableId, tbodyId, thActionId, nomFonct
  */
 function supprimerVersement(idVersement) {
   if (!idVersement) {
-    alert("⚠️ Identifiant de versement invalide.");
+    afficherToastTemporaire("⚠️ Identifiant invalide.", "warning");
     return;
   }
 
-  if (!confirm("Voulez-vous vraiment supprimer ce versement ?")) return;
-
-  let userConnected = "";
-  if (typeof currentUser !== 'undefined' && currentUser) userConnected = currentUser;
-  else if (typeof userEmail !== 'undefined' && userEmail) userConnected = userEmail;
-  else if (window.userPermissions && window.userPermissions.email) userConnected = window.userPermissions.email;
-  else {
-    const inputEl = document.getElementById('email-input');
-    if (inputEl) userConnected = inputEl.value;
-  }
-
-  const btn = (typeof event !== 'undefined' && event) ? (event.currentTarget || event.target) : null;
-  let originalHtml = '';
-  if (btn) {
-    // Si l'élément cliqué est un enfant de l'icône (ex: le i de la poubelle), on remonte au bouton
-    const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
-    if (buttonEl) {
-      buttonEl.disabled = true;
-      originalHtml = buttonEl.innerHTML;
-      buttonEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-    }
-  }
-
-  google.script.run
-    .withSuccessHandler(function(res) {
-      alert("✅ " + (res && res.message ? res.message : "Supprimé avec succès !"));
-      // Rafraîchir l'ensemble des tableaux de l'application
-      if (typeof loadCotisations === 'function') loadCotisations();
-      if (typeof loadAutresCotisations === 'function') loadAutresCotisations();
-      if (typeof loadCheckOffs === 'function') loadCheckOffs();
-    })
-    .withFailureHandler(function(err) {
-      if (btn) {
-        const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
-        if (buttonEl) {
-          buttonEl.disabled = false;
-          buttonEl.innerHTML = originalHtml;
-        }
-      }
-      const msg = (err && err.message) ? err.message : (err || "Erreur inconnue");
-      alert("❌ Erreur : " + msg);
-    })
-    .supprimerVersementParId(idVersement, userConnected);
+  confirmerAction(
+    "Voulez-vous vraiment supprimer ce versement ?",
+    function() {
+      let userConnected = currentUser || userEmail || (window.userPermissions && window.userPermissions.email) || '';
+      google.script.run
+        .withSuccessHandler(function(res) {
+          afficherToastTemporaire("✅ " + (res && res.message ? res.message : "Supprimé !"), "success");
+          if (typeof loadCotisations === 'function') loadCotisations();
+          if (typeof loadAutresCotisations === 'function') loadAutresCotisations();
+          if (typeof loadCheckOffs === 'function') loadCheckOffs();
+        })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("❌ Erreur : " + (err.message || err), "danger");
+        })
+        .supprimerVersementParId(idVersement, userConnected);
+    },
+    { titre: 'Supprimer le versement', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-trash' }
+  );
 }
 
 // ====================================================================
@@ -4670,43 +6173,27 @@ function supprimerVersement(idVersement) {
 
 function validateCheck(idCheckOff) {
   if (!idCheckOff) {
-    alert("⚠️ Identifiant de versement invalide.");
+    afficherToastTemporaire("⚠️ Identifiant invalide.", "warning");
     return;
   }
 
-  if (!confirm("Voulez-vous vraiment confirmer ce versement ?")) return;
-
-  const btn = (typeof event !== 'undefined' && event) ? (event.currentTarget || event.target) : null;
-  let originalHtml = '';
-  if (btn) {
-    const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
-    if (buttonEl) {
-      buttonEl.disabled = true;
-      originalHtml = buttonEl.innerHTML;
-      buttonEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Validation...';
-    }
-  }
-
-  google.script.run
-    .withSuccessHandler(function(res) {
-      alert("✅ " + (res && res.message ? res.message : "Versement confirmé avec succès !"));
-      // Rafraîchir l'ensemble des tableaux de l'application
-      if (typeof loadCotisations === 'function') loadCotisations();
-      if (typeof loadAutresCotisations === 'function') loadAutresCotisations();
-      if (typeof loadCheckOffs === 'function') loadCheckOffs();
-    })
-    .withFailureHandler(function(err) {
-      if (btn) {
-        const buttonEl = btn.tagName === 'BUTTON' ? btn : btn.closest('button');
-        if (buttonEl) {
-          buttonEl.disabled = false;
-          buttonEl.innerHTML = originalHtml;
-        }
-      }
-      const msg = (err && err.message) ? err.message : (err || "Erreur inconnue");
-      alert("❌ Erreur : " + msg);
-    })
-    .validateCheckOff(idCheckOff);
+  confirmerAction(
+    "Voulez-vous vraiment confirmer ce versement ?",
+    function() {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          afficherToastTemporaire("✅ " + (res && res.message ? res.message : "Versement confirmé !"), "success");
+          if (typeof loadCotisations === 'function') loadCotisations();
+          if (typeof loadAutresCotisations === 'function') loadAutresCotisations();
+          if (typeof loadCheckOffs === 'function') loadCheckOffs();
+        })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("❌ Erreur : " + (err.message || err), "danger");
+        })
+        .validateCheckOff(idCheckOff);
+    },
+    { titre: 'Confirmer le versement', texteConfirmer: 'Confirmer', couleurConfirmer: 'success', icone: 'fa-check-circle' }
+  );
 }
 
 
@@ -5754,82 +7241,6 @@ function loadMembresDropdowns() {
     .getMembresData(emailUser);
 }
 
-
-// --- 3. Workflow de réinitialisation (Corrigé avec toutes ses accolades) ---
-function resetRapportWorkflow(apresSoumission = false) {
-  window.evaluationsDuMatch = [];
-
-  // Le superviseur n'est vidé QUE si on est après une soumission
-  const inputSup = document.getElementById('r_sup');
-  if (inputSup && apresSoumission) {
-    inputSup.value = '';
-  }
-
-  const labelSup = document.getElementById('label_r_sup');
-  if (labelSup && apresSoumission) {
-    labelSup.textContent = 'Sélectionner un superviseur...';
-  }
-
-  // Le match n'est vidé qu'après une soumission
-  const matchSelect = document.getElementById('r_match');
-  if (matchSelect && apresSoumission) {
-    matchSelect.value = '';
-  }
-
-  const qualiteSelect = document.getElementById('r_qualite_select');
-  if (qualiteSelect) qualiteSelect.value = '';
-
-  const incidentSelect = document.getElementById('r_incidents_option');
-  if (incidentSelect) incidentSelect.value = '';
-
-  const textareas = document.querySelectorAll('#formRapportComplet textarea');
-  textareas.forEach(ta => ta.value = '');
-
-  // On protège 'r_match_affiche', 'r_match' ET 'r_sup' si on n'est pas après une soumission
-  const inputs = document.querySelectorAll('#formRapportComplet input[type="text"]');
-  inputs.forEach(input => {
-    if (!apresSoumission) {
-      if (input.id !== 'r_match_affiche' && input.id !== 'r_match' && input.id !== 'r_sup') {
-        input.value = '';
-      }
-    } else {
-      input.value = '';
-    }
-  });
-
-  const checkboxes = document.querySelectorAll('#formRapportComplet input[type="checkbox"]');
-  checkboxes.forEach(cb => cb.checked = false);
-
-  const activeCard = document.getElementById('activeQualityCard');
-  if (activeCard) {
-    activeCard.style.display = 'none';
-    activeCard.classList.add('d-none');
-  }
-
-  const blocIncidents = document.getElementById('bloc-incidents-global');
-  if (blocIncidents) {
-    blocIncidents.style.display = 'none';
-    blocIncidents.classList.add('d-none');
-  }
-
-  const incidentNatureBox = document.getElementById('incident_nature_box');
-  if (incidentNatureBox) incidentNatureBox.style.display = 'none';
-
-  const btnSubmit = document.getElementById('btnSubmitAllRapports') || document.getElementById('btn_soumettre_rapport');
-  if (btnSubmit) btnSubmit.classList.add('d-none');
-
-  document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-
-  if (typeof actualiserOptionsQualite === 'function') actualiserOptionsQualite();
-  if (typeof mettreAJourInterfaceEtapes === 'function') mettreAJourInterfaceEtapes();
-
-  if (apresSoumission) {
-    if (typeof loadRecentMatches === 'function') {
-      loadRecentMatches();
-    }
-  }
-}
-
 function filtrerMembresDropdown(inputEl) {
   if (!inputEl) return;
   const query = (inputEl.value || '').toLowerCase().trim();
@@ -6331,214 +7742,180 @@ function togglePasswordVisibility(inputId, iconId) {
   }
 }
 
-
-function handleDesignationSubmit(e) {
-  if (e && e.preventDefault) e.preventDefault();
-  
-  const btn = document.getElementById('btnSaveDesignation') || document.querySelector('#formDesignation button[type="submit"]');
-
-  const getInputValue = (idOrName) => {
-    const el = document.getElementById(idOrName) || document.querySelector(`[name="${idOrName}"]`);
-    return el ? el.value.trim() : '';
-  };
-
-  // Récupération de l'ID caché pour savoir s'il s'agit d'une modification ou d'un ajout
-  const idDesignation = getInputValue('d_id_designation');
-
-  // 🛡️ Récupération de l'e-mail du membre connecté stocké côté client
-  const currentUserEmail = (window.currentUser || sessionStorage.getItem('user_email_souscra') || '').trim().toLowerCase();
-
-  const data = {
-    idDesignation: idDesignation,
-    dateMatch:   getInputValue('d_date'),
-    heureMatch:  getInputValue('d_heure'),
-    lieuStade:   getInputValue('d_lieu'),
-    equipeDom:   getInputValue('d_dom') || getInputValue('equipeDom') || getInputValue('d_equipe_dom'),
-    equipeExt:   getInputValue('d_ext') || getInputValue('equipeExt') || getInputValue('d_equipe_ext'),
-    ac:          getInputValue('d_ac'),
-    aa1:         getInputValue('d_aa1'),
-    aa2:         getInputValue('d_aa2'),
-    quatrieme:   getInputValue('d_4e') || getInputValue('4eme'),
-    superviseur: getInputValue('d_sup'),
-    etape:       getInputValue('d_etape'),
-    userEmail:   currentUserEmail // 👈 Transmission explicite de l'auteur réel
-  };
-
-  // Validation des champs obligatoires
-  if (!data.equipeDom || !data.equipeExt) {
-    alert("⚠️ Veuillez renseigner l'Équipe Domicile et l'Équipe Extérieur.");
-    return;
-  }
-
-  if (!data.ac || !data.lieuStade) {
-    alert("⚠️ Veuillez renseigner le lieu du match et l'Arbitre Central (AC).");
-    return;
-  }
-
-  const resetButton = () => {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = 'Enregistrer & Notifier';
-    }
-  };
-
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Enregistrement...';
-  }
-
-  try {
-    if (typeof google === 'undefined' || !google.script || !google.script.run) {
-      throw new Error("Environnement Google Apps Script non disponible.");
-    }
-
-    const successMessage = idDesignation ? "✅ Modification enregistrée avec succès !" : "✅ Désignation enregistrée et notifications envoyées !";
-
-    google.script.run
-      .withSuccessHandler((response) => {
-        resetButton();
-        alert(successMessage);
-         
-        const form = document.getElementById('formDesignation') || document.querySelector('form');
-        if (form && typeof form.reset === 'function') {
-          form.reset();
-        }
-
-        const idField = document.getElementById('d_id_designation');
-        if (idField) idField.value = '';
-
-        const customFields = [
-          { id: 'd_ac', label: '-- Choisir AC --' },
-          { id: 'd_aa1', label: '-- Choisir AA1 --' },
-          { id: 'd_aa2', label: '-- Choisir AA2 --' },
-          { id: 'd_4e', label: '-- Choisir 4E --' },
-          { id: 'd_sup', label: '-- Choisir Superviseur --' }
-        ];
-
-        customFields.forEach(field => {
-          const hiddenInput = document.getElementById(field.id) || document.querySelector(`input[name="${field.id}"]`);
-          if (hiddenInput) hiddenInput.value = '';
-
-          const labelSpan = document.getElementById(`label_${field.id}`);
-          if (labelSpan) {
-            labelSpan.textContent = field.label;
-            labelSpan.classList.add('text-muted');
-          }
-
-          const searchInput = document.getElementById(`search_${field.id}`);
-          if (searchInput) searchInput.value = '';
-        });
-
-        const selectEtape = document.getElementById('d_etape');
-        if (selectEtape) {
-          selectEtape.selectedIndex = 0;
-          selectEtape.value = '';
-        }
-
-        if (typeof loadDesignations === 'function') {
-          loadDesignations();
-        }
-      })
-      .withFailureHandler((err) => {
-        resetButton();
-        const msg = err && err.message ? err.message : err;
-        alert("❌ Erreur lors de l'enregistrement : " + msg);
-      })
-      .enregistrerDesignation(data);
-
-  } catch (error) {
-    resetButton();
-    console.error("Erreur lors de la soumission de la désignation :", error);
-    alert("❌ Impossible de contacter le serveur : " + error.message);
-  }
-}
-
 function loadDesignations() {
-  const tbody = document.querySelector('#tblDes tbody');
-  if (!tbody) return;
+  const container = document.getElementById('containerTblDes');
+  
+  if (!container) {
+    console.warn('[loadDesignations] containerTblDes introuvable');
+    return;
+  }
 
-  tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i>Chargement des désignations...</td></tr>';
+  container.innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-success" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+      <p class="mt-3 text-muted fw-bold">Chargement des désignations...</p>
+    </div>
+  `;
 
   google.script.run
     .withSuccessHandler(function(data) {
       const designationsArray = Array.isArray(data) ? data : (data && Array.isArray(data.data) ? data.data : []);
 
       if (designationsArray.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">Aucune désignation enregistrée.</td></tr>';
+        container.innerHTML = '<div class="text-center text-muted p-3">Aucune désignation enregistrée.</div>';
         return;
       }
 
-      // Récupération sécurisée de l'e-mail de l'utilisateur connecté
       const currentUserEmail = (window.currentUser || sessionStorage.getItem('user_email_souscra') || '').trim().toLowerCase();
-      
-      // Vérification administrateur ciblant explicitement albahrou@gmail.com
       const perms = window.userPermissions || {};
       const isAdmin = Boolean(perms.isAdmin || perms.isDesignationAdmin || currentUserEmail === 'albahrou@gmail.com');
 
-      const dataToProcess = (typeof trierDesignations === 'function') ? trierDesignations(designationsArray) : designationsArray;
+      const dataToProcess = (typeof trierDesignations === 'function') 
+        ? trierDesignations(designationsArray) 
+        : designationsArray;
 
-      tbody.innerHTML = dataToProcess.map(function(item) {
+      // ✅ Injecter la barre d'export (admin + désignateurs uniquement)
+      const barreExport = document.getElementById('exportBarreDesignations');
+      if (barreExport) {
+        barreExport.innerHTML = htmlBarreExport('designations', verifierDroitExport('designations'));
+      }
+
+      // ✅ Ajouter la barre de recherche AVANT les cartes
+      container.innerHTML = htmlBarreRecherche(
+        'search-designations', 
+        'Rechercher une désignation (équipe, lieu...)', 
+        'containerTblDes'
+      );
+
+      let html = '<div class="designations-container-accordion">';
+
+      dataToProcess.forEach(function(item, index) {
         const d = item.row || item;
 
-        const idDesignation = d[0] || ''; 
-        const rencontre = d[1] || '';
+        const idDesignation = d[0] || '';
+        const rencontre = d[1] || 'Match sans nom';
         const rawDate = d[2] || '';
         const dateMatch = rawDate ? (typeof formatDate === 'function' ? formatDate(rawDate) : String(rawDate).substring(0, 10)) : '';
         const heureMatch = d[3] || '';
         const lieu = d[4] || '';
-         
+        
         const ac = d[7] || '-';
         const aa1 = d[8] || '-';
         const aa2 = d[9] || '-';
         const e4 = d[10] || '-';
-         
+        
         const sup = d[11] || '-';
         const tour = d[12] || '-';
         const statut = d[13] || 'PROGRAMME';
-        const auteur = String(d[14] || '').trim().toLowerCase(); // Colonne O / Index 14
+        const auteur = String(d[14] || '').trim().toLowerCase();
 
-        // 🔒 Règle stricte : Match programmé ET (Administrateur OU Auteur exact)
         const isProg = String(statut).trim().toUpperCase().includes('PROG');
         const isAuthor = (auteur !== '' && auteur === currentUserEmail);
         const canEditThisRow = isProg && (isAdmin || isAuthor);
+        
+        const statutClass = isProg ? 'programme' : 'termine';
+        const cardId = 'desig-card-' + (idDesignation || index).toString().replace(/[^a-zA-Z0-9]/g, '_');
 
-        let actionsHtml = '<span class="text-muted">-</span>';
+        let badges = '';
+        if (isProg) {
+          badges += '<span class="badge bg-primary">PROGRAMME</span>';
+        } else {
+          badges += '<span class="badge bg-success">' + statut + '</span>';
+        }
+        
+        if (tour && tour !== 'Normal' && tour !== '-') {
+          badges += ' <span class="badge bg-warning text-dark">' + tour + '</span>';
+        }
+
+        let arbitresHtml = '';
+        arbitresHtml += `
+          <div class="arbitre-detail">
+            <span class="qualite-badge badge bg-danger">AC</span>
+            <span class="nom-arbitre">${ac}</span>
+          </div>
+          <div class="arbitre-detail">
+            <span class="qualite-badge badge bg-primary">AA1</span>
+            <span class="nom-arbitre">${aa1}</span>
+          </div>
+          <div class="arbitre-detail">
+            <span class="qualite-badge badge bg-primary">AA2</span>
+            <span class="nom-arbitre">${aa2}</span>
+          </div>
+          <div class="arbitre-detail">
+            <span class="qualite-badge badge bg-info text-dark">4E</span>
+            <span class="nom-arbitre">${e4}</span>
+          </div>
+          <div class="arbitre-detail">
+            <span class="qualite-badge badge bg-warning text-dark">SUP</span>
+            <span class="nom-arbitre">${sup}</span>
+          </div>
+        `;
+
+        let actionsHtml = '';
         if (canEditThisRow) {
           actionsHtml = `
-            <div class="btn-group btn-group-sm" role="group">
-              <button class="btn btn-outline-primary" onclick="prepareEditDesignation('${idDesignation}')" title="Modifier">
-                <i class="fa-solid fa-pen-to-square"></i>
+            <div class="designation-actions designation-action-protected">
+              <button class="btn btn-warning btn-sm fw-bold" 
+                      onclick="event.stopPropagation(); prepareEditDesignation('${idDesignation}')">
+                <i class="fa-solid fa-pen me-1"></i> Modifier
               </button>
-              <button class="btn btn-outline-danger" onclick="confirmDeleteDesignation('${idDesignation}')" title="Supprimer">
-                <i class="fa-solid fa-trash"></i>
+              <button class="btn btn-danger btn-sm fw-bold" 
+                      onclick="event.stopPropagation(); confirmDeleteDesignation('${idDesignation}')">
+                <i class="fa-solid fa-trash me-1"></i> Supprimer
               </button>
             </div>
           `;
         } else {
-          let motif = !isProg ? "Terminé / Verrouillé" : "Réservé à l'auteur ou l'admin";
-          actionsHtml = `<span class="badge bg-light text-dark border" title="Verrouillé (${motif})"><i class="fa-solid fa-lock text-muted"></i></span>`;
+          actionsHtml = `
+            <div class="designation-actions">
+              <span class="badge bg-light text-dark border">
+                <i class="fa-solid fa-lock me-1"></i>
+                ${!isProg ? 'Match verrouillé' : 'Lecture seule'}
+              </span>
+            </div>
+          `;
         }
 
-        return `
-          <tr data-id="${idDesignation}">
-            <td><b>${rencontre}</b></td>
-            <td>${dateMatch} ${heureMatch ? 'à ' + heureMatch : ''}</td>
-            <td>${lieu}</td>
-            <td>
-              <small>
-                <b>AC:</b> ${ac}<br>
-                <b>AA1:</b> ${aa1}<br>
-                <b>AA2:</b> ${aa2}<br>
-                <b>4E:</b> ${e4}
-              </small>
-            </td>
-            <td>${sup}</td>
-            <td>${tour}</td>
-            <td><span class="badge ${isProg ? 'bg-primary' : 'bg-success'}">${statut}</span></td>
-            <td class="text-center text-nowrap">${actionsHtml}</td>
-          </tr>
+        html += `
+          <div class="designation-item accordion-item ${statutClass}" id="${cardId}">
+            <div class="designation-header" onclick="toggleDesignationCard('${cardId}')">
+              <div class="designation-header-main">
+                <p class="designation-title">
+                  <i class="fa-solid fa-futbol me-1 text-success"></i>
+                  ${rencontre}
+                </p>
+                <div class="designation-meta">
+                  ${dateMatch ? `<span><i class="fa fa-calendar"></i>${dateMatch}${heureMatch ? ' à ' + heureMatch : ''}</span>` : ''}
+                  ${lieu ? `<span><i class="fa fa-map-marker-alt"></i>${lieu}</span>` : ''}
+                </div>
+                <div class="designation-badges">${badges}</div>
+              </div>
+              <div class="designation-right">
+                <i class="fa fa-chevron-down designation-chevron"></i>
+              </div>
+            </div>
+            <div class="designation-body">
+              <div class="designation-section">
+                <div class="designation-section-title">
+                  <i class="fa fa-users me-1"></i>Arbitres désignés
+                </div>
+                ${arbitresHtml}
+              </div>
+              ${actionsHtml}
+            </div>
+          </div>
         `;
-      }).join('');
+      });
+
+      html += '</div>';
+      
+      // ✅ Insérer après la barre de recherche
+      const counter = container.querySelector('.search-results-count');
+      if (counter) {
+        counter.insertAdjacentHTML('afterend', html);
+      } else {
+        container.insertAdjacentHTML('beforeend', html);
+      }
 
       if (typeof applyPermissions === 'function' && window.userPermissions) {
         applyPermissions(window.userPermissions);
@@ -6546,10 +7923,12 @@ function loadDesignations() {
     })
     .withFailureHandler(function(err) {
       console.error("Erreur chargement désignations :", err);
-      tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger py-3">❌ Erreur lors du chargement : ${err ? err.message : 'Inconnue'}</td></tr>`;
+      container.innerHTML = `<div class="text-center text-danger p-3">❌ Erreur : ${err ? err.message : 'Inconnue'}</div>`;
     })
     .getDesignations();
 }
+
+window.loadDesignations = loadDesignations;
 
 // ✏️ Charger les données pour modification (ou ouvrir le modal de mise à jour)
 function ouvrirModalModification(idDesignation) {
@@ -6696,22 +8075,21 @@ function prepareEditDesignation(idDesignation) {
 
 function confirmDeleteDesignation(idDesignation) {
   if (!idDesignation) return;
-
-  if (confirm("Voulez-vous vraiment supprimer cette désignation ?")) {
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
+  confirmerAction(
+    "Voulez-vous vraiment supprimer cette désignation ? Cette action est irréversible.",
+    function() {
       google.script.run
         .withSuccessHandler(function(res) {
-          alert("✅ " + (res.message || "Supprimé avec succès"));
-          if (typeof loadDesignations === 'function') {
-            loadDesignations();
-          }
+          afficherToastTemporaire("✅ " + (res.message || "Supprimé avec succès"), "success");
+          loadDesignations();
         })
         .withFailureHandler(function(err) {
-          alert("❌ " + (err.message || "Erreur lors de la suppression."));
+          afficherToastTemporaire("❌ " + (err.message || "Erreur"), "danger");
         })
         .supprimerDesignationParId(idDesignation);
-    }
-  }
+    },
+    { titre: 'Supprimer la désignation', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-trash' }
+  );
 }
 
 function handleDesignationSubmit(e) {
@@ -7073,13 +8451,16 @@ function ajouterCirculaire(event) {
 // 3. SUPPRESSION D'UNE CIRCULAIRE
 // ==========================================
 function supprimerCirculaireIndex(index) {
-  if (confirm("Voulez-vous vraiment supprimer cette circulaire ?")) {
-    google.script.run
-      .withSuccessHandler(function() {
-        chargerCirculaires();
-      })
-      .supprimerCirculaire(index);
-  }
+  confirmerAction(
+    "Voulez-vous vraiment supprimer cette circulaire ?",
+    function() {
+      google.script.run
+        .withSuccessHandler(chargerCirculaires)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .supprimerCirculaire(index);
+    },
+    { titre: 'Supprimer la circulaire', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-file-circle-xmark' }
+  );
 }
 
 // ==========================================
@@ -7362,50 +8743,34 @@ function soumettreCommentaire(postId) {
     .ajouterCommentaire(postId, texteCommentaire, emailUser);
 }
 
-
-function modifierPost(id) {
-  const texteActuel = publicationsData[id] || '';
-  const conteneur = document.getElementById('texte-' + id);
-  if (!conteneur) return;
-
-  conteneur.innerHTML =
-    '<textarea id="edit-textarea-' + id + '" class="form-control mb-2" rows="4">' + texteActuel + '</textarea>' +
-    '<div class="d-flex gap-2 justify-content-end">' +
-      '<button class="btn btn-sm btn-secondary" onclick="annulerModification(\'' + id + '\')">Annuler</button>' +
-      '<button class="btn btn-sm btn-success" onclick="sauvegarderModification(\'' + id + '\')">Enregistrer</button>' +
-    '</div>';
-}
-
 function archiverPost(postId) {
-  if (!confirm("Voulez-vous vraiment archiver cette publication ?")) return;
-
-  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
-
-  google.script.run
-    .withSuccessHandler(function() {
-      chargerPublications();
-    })
-    .withFailureHandler(function(err) {
-      alert("Erreur lors de l'archivage : " + err.message);
-    })
-    .archiverPublication(postId, emailUser);
+  confirmerAction(
+    "Voulez-vous vraiment archiver cette publication ?",
+    function() {
+      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+      google.script.run
+        .withSuccessHandler(chargerPublications)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .archiverPublication(postId, emailUser);
+    },
+    { titre: 'Archiver la publication', texteConfirmer: 'Archiver', couleurConfirmer: 'warning', icone: 'fa-box-archive' }
+  );
 }
 
 
 
 function supprimerPost(postId) {
-  if (!confirm("Voulez-vous vraiment supprimer définitivement cette publication ?")) return;
-
-  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
-
-  google.script.run
-    .withSuccessHandler(function() {
-      chargerPublications();
-    })
-    .withFailureHandler(function(err) {
-      alert("Erreur lors de la suppression : " + err.message);
-    })
-    .supprimerPublication(postId, emailUser);
+  confirmerAction(
+    "Voulez-vous vraiment supprimer définitivement cette publication ?",
+    function() {
+      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+      google.script.run
+        .withSuccessHandler(chargerPublications)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .supprimerPublication(postId, emailUser);
+    },
+    { titre: 'Supprimer la publication', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-trash' }
+  );
 }
 
 function modifierPost(id) {
@@ -7451,18 +8816,17 @@ function sauvegarderModification(id) {
 // SUPPRESSION D'UN COMMENTAIRE
 // ============================================================================
 function supprimerComm(postId, commentaireId) {
-  if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
-
-  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
-
-  google.script.run
-    .withSuccessHandler(function() {
-      chargerPublications();
-    })
-    .withFailureHandler(function(err) {
-      alert("Erreur lors de la suppression du commentaire : " + err.message);
-    })
-    .supprimerCommentaire(postId, commentaireId, emailUser);
+  confirmerAction(
+    "Voulez-vous vraiment supprimer ce commentaire ?",
+    function() {
+      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+      google.script.run
+        .withSuccessHandler(chargerPublications)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .supprimerCommentaire(postId, commentaireId, emailUser);
+    },
+    { titre: 'Supprimer le commentaire', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-trash' }
+  );
 }
 
 
@@ -7770,26 +9134,47 @@ function chargerListeDevoirs() {
 
 
 function archiverDevoirUI(id) {
-  if (!confirm('Archiver ce devoir ? Il ne sera plus faisable mais restera consultable.')) return;
+  confirmerAction(
+    "Archiver ce devoir ? Il ne sera plus faisable mais restera consultable.",
+    function() {
+      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+      google.script.run
+        .withSuccessHandler(chargerListeDevoirs)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .archiverDevoir(id, emailUser);
+    },
+    { titre: 'Archiver le devoir', texteConfirmer: 'Archiver', couleurConfirmer: 'warning', icone: 'fa-box-archive' }
+  );
+}
 
-  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
-
-  google.script.run
-    .withSuccessHandler(chargerListeDevoirs)
-    .withFailureHandler(function(err) { alert('Erreur : ' + err.message); })
-    .archiverDevoir(id, emailUser);
+function archiverDevoirUI(id) {
+  confirmerAction(
+    "Archiver ce devoir ? Il ne sera plus faisable mais restera consultable.",
+    function() {
+      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+      google.script.run
+        .withSuccessHandler(chargerListeDevoirs)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .archiverDevoir(id, emailUser);
+    },
+    { titre: 'Archiver le devoir', texteConfirmer: 'Archiver', couleurConfirmer: 'warning', icone: 'fa-box-archive' }
+  );
 }
 
 function supprimerDevoirUI(id) {
-  if (!confirm('Supprimer définitivement ce devoir ? Cette action est irréversible.')) return;
-
-  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
-
-  google.script.run
-    .withSuccessHandler(chargerListeDevoirs)
-    .withFailureHandler(function(err) { alert('Erreur : ' + err.message); })
-    .supprimerDevoir(id, emailUser);
+  confirmerAction(
+    "Supprimer définitivement ce devoir ? Cette action est irréversible.",
+    function() {
+      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+      google.script.run
+        .withSuccessHandler(chargerListeDevoirs)
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .supprimerDevoir(id, emailUser);
+    },
+    { titre: 'Supprimer le devoir', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-trash' }
+  );
 }
+
 
 function ouvrirFormCreationDevoir() {
   document.getElementById('devoirTitre').value = '';
@@ -8006,18 +9391,22 @@ function ouvrirListeRemplirDevoir() {
 }
 
 function demarrerDevoirUI(devoirId) {
-  if (!confirm("Une fois commencé, le chrono démarre et ne peut pas être mis en pause. Continuer ?")) return;
-
-  google.script.run
-    .withSuccessHandler(function(data) {
-      bootstrap.Modal.getInstance(document.getElementById('modalListeRemplir')).hide();
-      devoirEnCours = data;
-      afficherFormulaireDevoir(data);
-      new bootstrap.Modal(document.getElementById('modalFaireDevoir')).show();
-      demarrerChrono(data);
-    })
-    .withFailureHandler(function(err) { alert('Erreur : ' + err.message); })
-    .demarrerDevoir(devoirId);
+  confirmerAction(
+    "Une fois commencé, le chrono démarre et ne peut pas être mis en pause. Continuer ?",
+    function() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          bootstrap.Modal.getInstance(document.getElementById('modalListeRemplir')).hide();
+          devoirEnCours = data;
+          afficherFormulaireDevoir(data);
+          new bootstrap.Modal(document.getElementById('modalFaireDevoir')).show();
+          demarrerChrono(data);
+        })
+        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .demarrerDevoir(devoirId);
+    },
+    { titre: 'Démarrer le devoir', texteConfirmer: 'Démarrer', couleurConfirmer: 'primary', icone: 'fa-play' }
+  );
 }
 
 function afficherFormulaireDevoir(data) {
@@ -8641,6 +10030,849 @@ document.addEventListener('shown.bs.tab', function(e) {
     chargerListeCorriges();
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ============================================================================
+// CARTES MATCH DÉPLIABLES (pour loadRapportsDisplay)
+// ============================================================================
+function construireCarteMatch(match, canArchive, isExploite) {
+  const incidentsGlobalTexte = match.incidentsGlobal || 'NON';
+  const isGlobalIncident = String(incidentsGlobalTexte).toUpperCase().startsWith('OUI');
+
+  let motifIncident = '';
+  if (isGlobalIncident) {
+    motifIncident = incidentsGlobalTexte.replace(/^OUI\s*[-:–—]?\s*/i, '').trim();
+  }
+
+  // Classe CSS selon le type
+  let cardClass = 'normal';
+  if (isExploite) cardClass = 'archived';
+  else if (isGlobalIncident) cardClass = 'incident';
+
+  // ID unique pour cette carte
+  const cardId = 'match-' + (match.idDesignation || match.rencontre || Math.random().toString(36).substr(2, 9)).replace(/[^a-zA-Z0-9]/g, '_');
+
+  // Badges dans l'en-tête
+  let badges = '';
+  if (isGlobalIncident) {
+    badges += '<span class="badge bg-danger"><i class="fa fa-triangle-exclamation me-1"></i>Incident</span>';
+  }
+  if (isExploite) {
+    badges += '<span class="badge bg-secondary"><i class="fa fa-box-archive me-1"></i>Archivé</span>';
+  } else {
+    badges += '<span class="badge bg-primary">' + (match.arbitres ? match.arbitres.length : 0) + ' arbitres</span>';
+  }
+
+  // Construire les lignes arbitres
+  let arbitresHtml = '';
+  if (match.arbitres && Array.isArray(match.arbitres)) {
+    match.arbitres.forEach(function(r) {
+      let qualiteBadge = 'bg-primary';
+      if (r.qualite === 'AC') qualiteBadge = 'bg-danger';
+      else if (r.qualite === '4EME' || r.qualite === '4E') qualiteBadge = 'bg-info text-dark';
+
+      arbitresHtml += `
+        <div class="arbitre-row">
+          <span class="arbitre-qualite">
+            <span class="badge ${qualiteBadge}">${r.qualite || '-'}</span>
+          </span>
+          <span class="arbitre-nom">${r.arbitre || '-'}</span>
+          <span class="badge bg-warning text-dark">Note : ${r.note || '-'}</span>
+
+          <div class="arbitre-details">
+            <dl class="mb-0">
+              <dt>Forces techniques</dt>
+              <dd class="text-success">${r.forcesTech || '-'}</dd>
+              <dt>Faiblesses techniques</dt>
+              <dd class="text-danger">${r.faiblessesTech || '-'}</dd>
+              ${r.forcesPhys || r.faiblessesPhys ? `
+                <dt>Forces physiques</dt>
+                <dd class="text-success">${r.forcesPhys || '-'}</dd>
+                <dt>Faiblesses physiques</dt>
+                <dd class="text-danger">${r.faiblessesPhys || '-'}</dd>
+              ` : ''}
+              <dt>Commentaires</dt>
+              <dd class="text-muted fst-italic">${r.commentaires || '-'}</dd>
+            </dl>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  // Bloc incidents
+  let incidentHtml = '';
+  if (isGlobalIncident && motifIncident) {
+    incidentHtml = `
+      <div class="incident-alert">
+        <b><i class="fa fa-triangle-exclamation me-1"></i>Incident signalé :</b> ${motifIncident}
+      </div>
+    `;
+  }
+
+  // Bouton d'archivage
+  let archiveBtn = '';
+  if (canArchive && !isExploite) {
+    const rencontreSecurisee = (match.rencontre || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    archiveBtn = `
+      <button class="btn btn-sm btn-success mt-2" 
+              onclick="event.stopPropagation(); gererArchivageRapport('${match.idDesignation}', '${rencontreSecurisee}')">
+        <i class="fa fa-check me-1"></i>Archiver ce match
+      </button>
+    `;
+  }
+
+  return `
+    <div class="match-card ${cardClass}" id="${cardId}">
+      <div class="match-header" onclick="toggleMatchCard('${cardId}')">
+        <div class="match-header-main">
+          <div class="match-title">${match.rencontre || '-'}</div>
+          <div class="match-meta">
+            <span><i class="fa fa-user-tie me-1"></i>${match.superviseur || '-'}</span>
+            <span><i class="fa fa-map-marker-alt me-1"></i>${match.lieu || '-'}</span>
+            <span><i class="fa fa-clock me-1"></i>${match.dateSaisie || '-'}</span>
+          </div>
+          <div class="match-badges">${badges}</div>
+        </div>
+        <i class="fa fa-chevron-down match-chevron"></i>
+      </div>
+      <div class="match-body">
+        ${incidentHtml}
+        ${arbitresHtml}
+        ${archiveBtn}
+      </div>
+    </div>
+  `;
+}
+
+window.construireCarteMatch = construireCarteMatch;
+
+
+// ============================================================================
+// TOGGLE D'UNE CARTE MATCH (ouvrir / fermer)
+// ============================================================================
+function toggleMatchCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.toggle('expanded');
+}
+
+window.toggleMatchCard = toggleMatchCard;
+
+// ============================================================================
+// TOGGLE D'UNE CARTE DÉSIGNATION
+// ============================================================================
+function toggleDesignationCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.toggle('expanded');
+}
+
+window.toggleDesignationCard = toggleDesignationCard;
+
+// ============================================================================
+// BANDEAU RÉCAPITULATIF (Total + Montant global)
+// ============================================================================
+/**
+ * Construit un bandeau récapitulatif pour une liste de versements
+ * @param {Array} data - Tableau des versements
+ * @param {string} typeClass - Classe CSS (checkoff, cotisation, autre-cotisation)
+ * @param {string} titre - Titre du bandeau
+ */
+function construireBandeauTotal(data, typeClass, titre) {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return '';
+  }
+
+  // Calculs
+  let totalMontant = 0;
+  let totalConfirme = 0;
+  let totalEnAttente = 0;
+  let montantConfirme = 0;
+  let montantEnAttente = 0;
+
+  data.forEach(function(item) {
+    const montant = Number(item.montant) || 0;
+    const statut = String(item.statut || 'ATTENTE').trim().toUpperCase();
+    const isConfirme = (statut === 'CONFIRME' || statut === 'VALIDE');
+
+    totalMontant += montant;
+
+    if (isConfirme) {
+      totalConfirme++;
+      montantConfirme += montant;
+    } else {
+      totalEnAttente++;
+      montantEnAttente += montant;
+    }
+  });
+
+  const formatMontant = function(n) {
+    return Number(n).toLocaleString('fr-FR') + ' FCFA';
+  };
+
+  return `
+    <div class="recap-banner ${typeClass}">
+      <div class="recap-block">
+        <span class="recap-label">
+          <i class="fa fa-list me-1"></i>${titre}
+        </span>
+        <span class="recap-value">${data.length}</span>
+        <span class="recap-sub">versement(s)</span>
+      </div>
+
+      <div class="recap-block">
+        <span class="recap-label">
+          <i class="fa fa-money-bill-wave me-1"></i>Montant global
+        </span>
+        <span class="recap-value total">${formatMontant(totalMontant)}</span>
+      </div>
+
+      <div class="recap-block">
+        <span class="recap-label">
+          <i class="fa fa-check-circle me-1"></i>Confirmés
+        </span>
+        <span class="recap-value">${totalConfirme}</span>
+        <span class="recap-sub success">${formatMontant(montantConfirme)}</span>
+      </div>
+
+      <div class="recap-block">
+        <span class="recap-label">
+          <i class="fa fa-clock me-1"></i>En attente
+        </span>
+        <span class="recap-value">${totalEnAttente}</span>
+        <span class="recap-sub warning">${formatMontant(montantEnAttente)}</span>
+      </div>
+    </div>
+  `;
+}
+
+window.construireBandeauTotal = construireBandeauTotal;
+
+// ============================================================================
+// RECHERCHE UNIVERSELLE DANS LES ACCORDÉONS
+// ============================================================================
+/**
+ * Filtre les cartes d'un accordéon selon une recherche
+ * @param {string} containerId - ID du conteneur (ex: 'containerTblMembres')
+ * @param {string} searchValue - Valeur à rechercher
+ * @param {string} itemSelector - Sélecteur des items (ex: '.membre-item')
+ * @param {string} counterId - ID du compteur (ex: 'counter-membres')
+ */
+function filtrerCartes(containerId, searchValue, itemSelector, counterId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const items = container.querySelectorAll(itemSelector);
+  const query = String(searchValue || '').toLowerCase().trim();
+  let visibles = 0;
+
+  items.forEach(function(item) {
+    const texte = item.textContent.toLowerCase();
+    const match = query === '' || texte.includes(query);
+    
+    if (match) {
+      item.classList.remove('accordion-item-hidden');
+      visibles++;
+    } else {
+      item.classList.add('accordion-item-hidden');
+      // Fermer les cartes qui se cachent
+      item.classList.remove('expanded');
+    }
+  });
+
+  // Mettre à jour le compteur
+  const counter = document.getElementById(counterId);
+  if (counter) {
+    if (query === '') {
+      counter.classList.remove('visible');
+    } else {
+      counter.classList.add('visible');
+      if (visibles === 0) {
+        counter.innerHTML = `
+          <i class="fa fa-search me-1"></i>
+          Aucun résultat pour "<b>${searchValue}</b>"
+        `;
+      } else {
+        counter.innerHTML = `
+          <i class="fa fa-search me-1"></i>
+          <span class="badge bg-primary">${visibles}</span>
+          résultat(s) pour "<b>${searchValue}</b>"
+        `;
+      }
+    }
+  }
+}
+
+window.filtrerCartes = filtrerCartes;
+
+/**
+ * Efface une recherche dans un accordéon
+ */
+function effacerRecherche(inputId, containerId, itemSelector, counterId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  
+  input.value = '';
+  
+  const wrapper = input.closest('.accordion-search-wrapper');
+  if (wrapper) wrapper.classList.remove('has-value');
+  
+  filtrerCartes(containerId, '', itemSelector, counterId);
+  
+  input.focus();
+}
+
+window.effacerRecherche = effacerRecherche;
+
+/**
+ * Gère la saisie dans une barre de recherche
+ */
+function onSearchInput(inputElement, containerId, itemSelector, counterId) {
+  const wrapper = inputElement.closest('.accordion-search-wrapper');
+  if (wrapper) {
+    wrapper.classList.toggle('has-value', inputElement.value.trim() !== '');
+  }
+  filtrerCartes(containerId, inputElement.value, itemSelector, counterId);
+}
+
+window.onSearchInput = onSearchInput;
+
+/**
+ * Génère le HTML d'une barre de recherche
+ */
+function htmlBarreRecherche(inputId, placeholder, containerId) {
+  // Si containerId non fourni, on tente de le déduire (fallback)
+  const cibleContainer = containerId || inputId.replace('search-', 'container-');
+  const counterId = 'counter-' + inputId.replace('search-', '');
+  
+  return `
+    <div class="accordion-search-wrapper">
+      <i class="fa fa-search search-icon"></i>
+      <input type="text" 
+             class="search-input" 
+             id="${inputId}" 
+             placeholder="${placeholder}"
+             autocomplete="off"
+             oninput="onSearchInput(this, '${cibleContainer}', '.accordion-item', '${counterId}')">
+      <button class="search-clear" type="button" 
+              onclick="effacerRecherche('${inputId}', '${cibleContainer}', '.accordion-item', '${counterId}')">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="search-results-count" id="${counterId}"></div>
+  `;
+}
+
+window.htmlBarreRecherche = htmlBarreRecherche;
+
+// ============================================================================
+// TOGGLE D'UNE CARTE VERSEMENT (Check-Off ou Cotisation)
+// ============================================================================
+function toggleVersementCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.toggle('expanded');
+}
+
+window.toggleVersementCard = toggleVersementCard;
+
+
+function htmlBarreExport(prefixe, estAutorise) {
+  // Si pas autorisé → retourner vide (n'affiche rien)
+  if (estAutorise === false) {
+    return '';
+  }
+  return `
+    <div class="export-toolbar">
+      <button class="export-btn csv" onclick="exporterDonnees('${prefixe}', 'csv')" title="Exporter en CSV (Excel)">
+        <i class="fa-solid fa-file-csv"></i>
+        <span>CSV</span>
+      </button>
+      <button class="export-btn pdf" onclick="exporterDonnees('${prefixe}', 'pdf')" title="Exporter en PDF">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>PDF</span>
+      </button>
+      <button class="export-btn word" onclick="exporterDonnees('${prefixe}', 'word')" title="Exporter en Word">
+        <i class="fa-solid fa-file-word"></i>
+        <span>Word</span>
+      </button>
+    </div>
+  `;
+}
+
+/**
+ * Vérifie si l'utilisateur a le droit d'exporter ce type de données
+ * (Double protection : contrôle côté client ET côté action)
+ */
+// ============================================================================
+// MODULE D'EXPORT (CSV / PDF / WORD)
+// ============================================================================
+
+/**
+ * Vérifie si l'utilisateur a le droit d'exporter ce type de données
+ */
+function verifierDroitExport(prefixe) {
+  const perms = window.userPermissions || {};
+  const isAdmin = Boolean(perms.isAdmin);
+
+  switch (prefixe) {
+    case 'membres':
+      // 🔒 Admin uniquement (contient CNI, dates de naissance)
+      return isAdmin;
+
+    case 'rapports':
+      // 🔒 Admin + membres habilités à voir les rapports
+      return isAdmin 
+        || Boolean(perms.canVoirRapports) 
+        || Boolean(perms.isRapportsAllowed);
+
+    case 'designations':
+      // 🔒 Admin + désignateurs
+      return isAdmin 
+        || Boolean(perms.canSaisirDesignations) 
+        || Boolean(perms.isDesignationAdmin);
+
+    case 'checkoffs':
+    case 'cotisations':
+    case 'autres-cotisations':
+      // 🔒 Admin + trésorier
+      return isAdmin 
+        || Boolean(perms.isTresorier) 
+        || Boolean(perms.canSaisirTreso);
+
+    default:
+      return false;
+  }
+}
+
+window.verifierDroitExport = verifierDroitExport;
+
+/**
+ * Exporte un tableau de données en CSV
+ */
+function exporterCSV(data, nomFichier) {
+  if (!data || data.length === 0) {
+    afficherToastTemporaire("⚠️ Aucune donnée à exporter.", "warning");
+    return;
+  }
+
+  const colonnes = Object.keys(data[0]);
+  const lignes = [colonnes.join(';')];
+  
+  data.forEach(function(item) {
+    const ligne = colonnes.map(function(col) {
+      let val = item[col];
+      if (val === null || val === undefined) val = '';
+      val = String(val).replace(/"/g, '""');
+      if (val.includes(';') || val.includes('\n') || val.includes('"')) {
+        val = '"' + val + '"';
+      }
+      return val;
+    });
+    lignes.push(ligne.join(';'));
+  });
+
+  const contenu = '\uFEFF' + lignes.join('\n');
+  const blob = new Blob([contenu], { type: 'text/csv;charset=utf-8;' });
+  
+  telechargerBlob(blob, nomFichier + '.csv');
+  afficherToastTemporaire("📊 Export CSV effectué !", "success");
+}
+
+/**
+ * Exporte un tableau de données en PDF
+ */
+function exporterPDF(data, nomFichier, titrePDF, options) {
+  if (!data || data.length === 0) {
+    afficherToastTemporaire("⚠️ Aucune donnée à exporter.", "warning");
+    return;
+  }
+
+  if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+    afficherToastTemporaire("❌ Bibliothèque PDF en cours de chargement. Réessayez.", "warning");
+    return;
+  }
+
+  const opts = options || {};
+  const colonnes = opts.colonnes || Object.keys(data[0]);
+  const entetes = opts.entetes || colonnes;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({
+    orientation: opts.orientation || 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text(titrePDF || 'Export de données', 14, 15);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(120, 120, 120);
+  const dateExport = new Date().toLocaleString('fr-FR');
+  doc.text('Sous-CRA Koumpentoum  •  ' + dateExport + '  •  ' + data.length + ' entrée(s)', 14, 22);
+  doc.setTextColor(0, 0, 0);
+
+  const lignes = data.map(function(item) {
+    return colonnes.map(function(col) {
+      let val = item[col];
+      if (val === null || val === undefined) return '';
+      return String(val);
+    });
+  });
+
+  doc.autoTable({
+    startY: 28,
+    head: [entetes],
+    body: lignes,
+    theme: 'striped',
+    styles: {
+      fontSize: opts.fontSize || 8,
+      cellPadding: 2,
+      overflow: 'linebreak'
+    },
+    headStyles: {
+      fillColor: opts.couleurEntete || [25, 135, 84],
+      textColor: 255,
+      fontStyle: 'bold',
+      halign: 'center'
+    },
+    alternateRowStyles: {
+      fillColor: [248, 249, 250]
+    },
+    margin: { top: 28, left: 10, right: 10 }
+  });
+
+  const pages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text(
+      'Page ' + i + ' / ' + pages,
+      doc.internal.pageSize.width - 25,
+      doc.internal.pageSize.height - 8
+    );
+  }
+
+  doc.save(nomFichier + '.pdf');
+  afficherToastTemporaire("📄 Export PDF effectué !", "success");
+}
+
+/**
+ * Exporte un tableau de données en Word (.doc via HTML)
+ */
+function exporterWord(data, nomFichier, titreWord, options) {
+  if (!data || data.length === 0) {
+    afficherToastTemporaire("⚠️ Aucune donnée à exporter.", "warning");
+    return;
+  }
+
+  const opts = options || {};
+  const colonnes = opts.colonnes || Object.keys(data[0]);
+  const entetes = opts.entetes || colonnes;
+
+  let html = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:w="urn:schemas-microsoft-com:office:word"
+          xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta charset="UTF-8">
+      <title>${titreWord || 'Export'}</title>
+      <style>
+        body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; }
+        h1 { color: #198754; font-size: 16pt; margin-bottom: 4pt; }
+        .meta { color: #6c757d; font-size: 9pt; margin-bottom: 12pt; }
+        table { border-collapse: collapse; width: 100%; }
+        th { background-color: #198754; color: white; padding: 6pt; text-align: left; border: 1pt solid #198754; font-size: 10pt; }
+        td { padding: 5pt; border: 1pt solid #dee2e6; font-size: 10pt; }
+        tr:nth-child(even) td { background-color: #f8f9fa; }
+      </style>
+    </head>
+    <body>
+      <h1>${titreWord || 'Export de données'}</h1>
+      <p class="meta">Sous-CRA Koumpentoum • ${new Date().toLocaleString('fr-FR')} • ${data.length} entrée(s)</p>
+      <table>
+        <thead>
+          <tr>${entetes.map(h => `<th>${h}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+  `;
+
+  data.forEach(function(item) {
+    html += '<tr>' + colonnes.map(function(col) {
+      let val = item[col];
+      if (val === null || val === undefined) val = '';
+      val = String(val)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return '<td>' + val + '</td>';
+    }).join('') + '</tr>';
+  });
+
+  html += '</tbody></table></body></html>';
+
+  const blob = new Blob(['\uFEFF', html], { type: 'application/msword;charset=utf-8' });
+  telechargerBlob(blob, nomFichier + '.doc');
+  afficherToastTemporaire("📝 Export Word effectué !", "success");
+}
+
+/**
+ * Utilitaire de téléchargement
+ */
+function telechargerBlob(blob, nomFichier) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nomFichier;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 100);
+}
+
+/**
+ * Récupère et prépare les données d'un module pour l'export
+ */
+function preparerDonneesExport(prefixe) {
+  const dateHeure = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
+  let donnees = [];
+  let nomFichier = '';
+  let titre = '';
+  let options = {};
+
+  switch (prefixe) {
+    case 'membres':
+      donnees = (window.currentMembresData || []).map(function(m) {
+        return {
+          'Prénom': m.prenoms || '',
+          'Nom': m.nom || '',
+          'Nom complet': m.nomComplet || '',
+          'Qualité': m.qualite || '',
+          'Grade': m.grade || '',
+          'Téléphone': m.telephone || '',
+          'Email': m.email || '',
+          'Date/Lieu naissance': m.dateLieuNaiss || '-',
+          'N° CNI': m.cni || '-'
+        };
+      });
+      nomFichier = 'Membres_SousCRA_' + dateHeure;
+      titre = 'Liste des Membres — Sous-CRA Koumpentoum';
+      options = { couleurEntete: [13, 110, 253], fontSize: 8 };
+      break;
+
+    case 'designations':
+      donnees = [];
+      document.querySelectorAll('#containerTblDes .designation-item').forEach(function(card) {
+        const titreEl = card.querySelector('.designation-title');
+        const metaEls = card.querySelectorAll('.designation-meta span');
+        const badges = card.querySelectorAll('.designation-badges .badge');
+        const arbitres = card.querySelectorAll('.arbitre-detail');
+
+        let rencontre = titreEl ? titreEl.textContent.trim().replace(/^[^\w]+/, '').trim() : '';
+        let date = '', lieu = '';
+        metaEls.forEach(function(el) {
+          const txt = el.textContent.trim();
+          if (txt.includes('à') && txt.match(/\d/)) date = txt.replace(/[^\d/:\s àh]/g, '').trim();
+          else if (!lieu) lieu = txt;
+        });
+        let statut = '';
+        badges.forEach(function(b) { statut += b.textContent.trim() + ' '; });
+
+        let ac = '', aa1 = '', aa2 = '', e4 = '', sup = '';
+        arbitres.forEach(function(a) {
+          const qualite = a.querySelector('.qualite-badge');
+          const nom = a.querySelector('.nom-arbitre');
+          if (!qualite || !nom) return;
+          const q = qualite.textContent.trim();
+          const n = nom.textContent.trim();
+          if (q === 'AC') ac = n;
+          else if (q === 'AA1') aa1 = n;
+          else if (q === 'AA2') aa2 = n;
+          else if (q === '4E') e4 = n;
+          else if (q === 'SUP') sup = n;
+        });
+
+        donnees.push({
+          'Rencontre': rencontre,
+          'Date': date,
+          'Lieu': lieu,
+          'AC': ac,
+          'AA1': aa1,
+          'AA2': aa2,
+          '4E': e4,
+          'Superviseur': sup,
+          'Statut': statut.trim()
+        });
+      });
+      nomFichier = 'Designations_SousCRA_' + dateHeure;
+      titre = 'Liste des Désignations — Sous-CRA Koumpentoum';
+      options = { couleurEntete: [25, 135, 84], fontSize: 8 };
+      break;
+
+    case 'checkoffs':
+      donnees = [];
+      document.querySelectorAll('#containerCheckOffs .versement-item').forEach(function(card) {
+        const titleEl = card.querySelector('.versement-title');
+        const montantEl = card.querySelector('.versement-montant');
+        const metaEls = card.querySelectorAll('.versement-meta span');
+        const infoValues = card.querySelectorAll('.versement-info-row .info-value');
+
+        donnees.push({
+          'Auteur': titleEl ? titleEl.textContent.trim().replace(/^[^\w]+/, '').trim() : '',
+          'Date': metaEls[0] ? metaEls[0].textContent.trim() : '',
+          'Zone': metaEls[1] ? metaEls[1].textContent.trim() : '',
+          'Type': infoValues[0] ? infoValues[0].textContent.trim() : '',
+          'Nb Matchs': infoValues[1] ? infoValues[1].textContent.trim() : '',
+          'Étape': infoValues[2] ? infoValues[2].textContent.trim() : '',
+          'ID': infoValues[3] ? infoValues[3].textContent.trim() : '',
+          'Montant': montantEl ? montantEl.textContent.trim() : ''
+        });
+      });
+      nomFichier = 'CheckOffs_SousCRA_' + dateHeure;
+      titre = 'Historique des Check-Offs — Sous-CRA Koumpentoum';
+      options = { couleurEntete: [13, 202, 240], fontSize: 8 };
+      break;
+
+    case 'cotisations':
+      donnees = [];
+      document.querySelectorAll('#containerCotisations .versement-item').forEach(function(card) {
+        const titleEl = card.querySelector('.versement-title');
+        const montantEl = card.querySelector('.versement-montant');
+        const metaEls = card.querySelectorAll('.versement-meta span');
+
+        donnees.push({
+          'Membre': titleEl ? titleEl.textContent.trim().replace(/^[^\w]+/, '').trim() : '',
+          'Date': metaEls[0] ? metaEls[0].textContent.trim() : '',
+          'Zone': metaEls[1] ? metaEls[1].textContent.trim() : '',
+          'Montant': montantEl ? montantEl.textContent.trim() : ''
+        });
+      });
+      nomFichier = 'Cotisations_SousCRA_' + dateHeure;
+      titre = 'Cotisations annuelles — Sous-CRA Koumpentoum';
+      options = { couleurEntete: [13, 110, 253], fontSize: 8 };
+      break;
+
+    case 'autres-cotisations':
+      donnees = [];
+      document.querySelectorAll('#containerAutresCotisations .versement-item').forEach(function(card) {
+        const titleEl = card.querySelector('.versement-title');
+        const montantEl = card.querySelector('.versement-montant');
+        const metaEls = card.querySelectorAll('.versement-meta span');
+
+        donnees.push({
+          'Membre': titleEl ? titleEl.textContent.trim().replace(/^[^\w]+/, '').trim() : '',
+          'Date': metaEls[0] ? metaEls[0].textContent.trim() : '',
+          'Zone': metaEls[1] ? metaEls[1].textContent.trim() : '',
+          'Montant': montantEl ? montantEl.textContent.trim() : ''
+        });
+      });
+      nomFichier = 'AutresCotisations_SousCRA_' + dateHeure;
+      titre = 'Autres cotisations — Sous-CRA Koumpentoum';
+      options = { couleurEntete: [111, 66, 193], fontSize: 8 };
+      break;
+
+    case 'rapports':
+      donnees = [];
+      document.querySelectorAll('#containerTblRapports .match-card').forEach(function(card) {
+        const titleEl = card.querySelector('.match-title');
+        const metaEls = card.querySelectorAll('.match-meta span');
+        const incidentEl = card.querySelector('.incident-alert');
+
+        let superviseur = '', lieu = '', date = '';
+        if (metaEls[0]) superviseur = metaEls[0].textContent.replace(/[^\w\sÀ-ÿ.-]/g, '').trim();
+        if (metaEls[1]) lieu = metaEls[1].textContent.replace(/[^\w\sÀ-ÿ.-]/g, '').trim();
+        if (metaEls[2]) date = metaEls[2].textContent.replace(/[^\d/\s:h]/g, '').trim();
+
+        const incidentTxt = incidentEl ? incidentEl.textContent.trim() : 'NON';
+
+        card.querySelectorAll('.arbitre-row').forEach(function(row) {
+          const qualite = row.querySelector('.arbitre-qualite .badge');
+          const nom = row.querySelector('.arbitre-nom');
+          const note = row.querySelector('.badge.bg-warning');
+          const dds = row.querySelectorAll('.arbitre-details dd');
+
+          donnees.push({
+            'Superviseur': superviseur,
+            'Rencontre': titleEl ? titleEl.textContent.trim() : '',
+            'Lieu': lieu,
+            'Date': date,
+            'Qualité': qualite ? qualite.textContent.trim() : '',
+            'Arbitre': nom ? nom.textContent.trim() : '',
+            'Note': note ? note.textContent.replace('Note :', '').trim() : '',
+            'Forces Tech.': dds[0] ? dds[0].textContent.trim() : '',
+            'Faiblesses Tech.': dds[1] ? dds[1].textContent.trim() : '',
+            'Forces Phys.': dds[2] ? dds[2].textContent.trim() : '',
+            'Faiblesses Phys.': dds[3] ? dds[3].textContent.trim() : '',
+            'Commentaires': dds[4] ? dds[4].textContent.trim() : '',
+            'Incident': incidentTxt
+          });
+        });
+      });
+      nomFichier = 'Rapports_SousCRA_' + dateHeure;
+      titre = 'Rapports d\'évaluation — Sous-CRA Koumpentoum';
+      options = { couleurEntete: [253, 126, 20], fontSize: 7 };
+      break;
+
+    default:
+      return null;
+  }
+
+  return { donnees, nomFichier, titre, options };
+}
+
+/**
+ * Fonction unifiée appelée par les boutons d'export
+ */
+function exporterDonnees(prefixe, format) {
+  if (!verifierDroitExport(prefixe)) {
+    afficherToastTemporaire("🔒 Export réservé aux administrateurs.", "danger");
+    return;
+  }
+
+  const prep = preparerDonneesExport(prefixe);
+  if (!prep || !prep.donnees || prep.donnees.length === 0) {
+    afficherToastTemporaire("⚠️ Aucune donnée à exporter.", "warning");
+    return;
+  }
+
+  try {
+    if (format === 'csv') {
+      exporterCSV(prep.donnees, prep.nomFichier);
+    } else if (format === 'pdf') {
+      exporterPDF(prep.donnees, prep.nomFichier, prep.titre, prep.options);
+    } else if (format === 'word') {
+      exporterWord(prep.donnees, prep.nomFichier, prep.titre, prep.options);
+    }
+  } catch (e) {
+    console.error('[Export] Erreur :', e);
+    afficherToastTemporaire("❌ Erreur d'export : " + e.message, "danger");
+  }
+}
+
+window.exporterDonnees = exporterDonnees;
+window.exporterCSV = exporterCSV;
+window.exporterPDF = exporterPDF;
+window.exporterWord = exporterWord;
+window.preparerDonneesExport = preparerDonneesExport;
+window.telechargerBlob = telechargerBlob;
+
 
 
   </script>
