@@ -169,13 +169,82 @@
   animation: scraFadeInUp 0.25s ease-out both;
 }
 
-/* Modals */
 .modal.fade .modal-dialog {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  transform: translateY(-20px);
+  transition: opacity 0.3s ease-out;
+  transform: none !important;
 }
 .modal.show .modal-dialog {
-  transform: translateY(0);
+  transform: none !important;
+}
+
+/* ✅ Container vidéo dans les modales (sans transform) */
+
+.video-iframe {
+  width: 100%;
+  height: 360px;
+  border: none;
+  display: block;
+  border-radius: 10px;
+  background: #000;
+}
+
+.question-media-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-style: italic;
+}
+
+.question-media-label a {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.question-media-label a:hover {
+  text-decoration: underline;
+}
+
+.question-media-wrapper {
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin: 12px 0;
+  text-align: center;
+}
+
+.question-media {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 10px;
+  margin: 10px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ✅ Video native HTML5 (lecture rapide, ratio parfait) */
+.question-video {
+  width: 100%;
+  max-width: 640px;
+  max-height: 360px;
+  border-radius: 10px;
+  background: #000;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .question-video {
+    max-height: 240px;
+  }
+
+  .video-iframe {
+    height: 240px;
+  }
 }
 
 /* ============================================================
@@ -1696,7 +1765,713 @@ a:hover {
   margin-bottom: 12px;
 }
 
+/* ============================================================
+   MODULE INFOS - TESTS - ÉCHANGES (Version modernisée)
+   ============================================================ */
 
+/* ---- Cartes de publication (Forum) ---- */
+.publication-card {
+  border: 1px solid var(--scra-border);
+  border-radius: var(--scra-radius);
+  margin-bottom: 12px;
+  background: white;
+  transition: box-shadow var(--scra-transition);
+  overflow: hidden;
+}
+
+.publication-card:hover {
+  box-shadow: var(--scra-shadow-md);
+}
+
+.publication-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-bottom: 1px solid var(--scra-border);
+}
+
+.publication-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--scra-primary), var(--scra-primary-dark));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.publication-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.publication-author {
+  font-weight: 700;
+  color: var(--scra-primary-dark);
+  font-size: 0.95rem;
+  margin: 0 0 2px 0;
+}
+
+.publication-date {
+  font-size: 0.75rem;
+  color: var(--scra-text-muted);
+}
+
+.publication-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.publication-body {
+  padding: 16px;
+  font-size: 0.95rem;
+  color: var(--scra-text);
+  line-height: 1.5;
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
+.publication-footer {
+  padding: 10px 16px;
+  background: #fafbfc;
+  border-top: 1px solid var(--scra-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--scra-text-muted);
+}
+
+.publication-comments-toggle {
+  background: none;
+  border: none;
+  color: var(--scra-primary);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background var(--scra-transition);
+}
+
+.publication-comments-toggle:hover {
+  background: var(--scra-primary-light);
+}
+
+/* ---- Commentaires (bulles) ---- */
+.comments-list {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.comments-list.expanded {
+  max-height: 800px;
+  border-top: 1px solid var(--scra-border);
+}
+
+.comment-bubble {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--scra-info);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.comment-bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.82rem;
+}
+
+.comment-author {
+  font-weight: 700;
+  color: var(--scra-info-dark);
+}
+
+.comment-date {
+  color: var(--scra-text-muted);
+  font-size: 0.72rem;
+}
+
+.comment-text {
+  font-size: 0.88rem;
+  color: var(--scra-text);
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.comment-input-wrapper {
+  padding: 0 16px 14px 16px;
+  background: #f8f9fa;
+}
+
+/* ---- Cartes de devoir ---- */
+.devoir-card {
+  border: 1px solid var(--scra-border);
+  border-radius: var(--scra-radius);
+  margin-bottom: 10px;
+  background: white;
+  transition: box-shadow var(--scra-transition);
+  overflow: hidden;
+}
+
+.devoir-card:hover {
+  box-shadow: var(--scra-shadow-sm);
+}
+
+.devoir-card.ouvert {
+  border-left: 4px solid var(--scra-primary);
+}
+
+.devoir-card.cloture {
+  border-left: 4px solid var(--scra-danger);
+}
+
+.devoir-card.archive {
+  border-left: 4px solid var(--scra-text-muted);
+  opacity: 0.85;
+}
+
+.devoir-header {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  background: #fafbfc;
+}
+
+.devoir-header:hover {
+  background: #f1f3f5;
+}
+
+.devoir-title {
+  font-weight: 700;
+  color: var(--scra-text);
+  font-size: 0.95rem;
+  margin: 0 0 4px 0;
+}
+
+.devoir-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: var(--scra-text-muted);
+}
+
+.devoir-badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.devoir-actions {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 14px 16px;
+  flex-wrap: wrap;
+}
+/* Règle pour les cartes de devoirs (JS gère l'affichage) */
+.devoir-body-collapsed {
+  padding: 0 16px 14px 16px;
+  background: #fafbfc;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Rotation du chevron quand la carte est ouverte (optionnel) */
+.devoir-card.expanded .devoir-header i.fa-chevron-down {
+  transform: rotate(180deg);
+}
+
+.devoir-card .devoir-header i.fa-chevron-down {
+  transition: transform 0.25s ease;
+}
+
+/* ---- Bandeau récapitulatif des notes ---- */
+.notes-recap {
+  background: linear-gradient(135deg, #e7f0ff, #d6e4ff);
+  border-radius: var(--scra-radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-left: 4px solid var(--scra-secondary);
+}
+
+.notes-recap-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 100px;
+  flex: 1;
+}
+
+.notes-recap-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--scra-text-muted);
+  font-weight: 700;
+}
+
+.notes-recap-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--scra-secondary-dark);
+  line-height: 1.2;
+}
+
+/* ---- Barre de progression ---- */
+.progress-custom {
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress-custom-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--scra-primary), var(--scra-info));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+/* ---- Modales modules modernisés ---- */
+.modal-content-modern {
+  border-radius: var(--scra-radius-lg);
+  border: none;
+  box-shadow: var(--scra-shadow-lg);
+  overflow: hidden;
+}
+
+.modal-header-modern {
+  background: linear-gradient(135deg, var(--scra-primary), var(--scra-primary-dark));
+  color: white;
+  padding: 14px 20px;
+  border: none;
+}
+
+.modal-header-modern .modal-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.modal-header-modern .btn-close {
+  filter: invert(1);
+}
+
+/* ---- Question de devoir ---- */
+.question-card {
+  border: 1px solid var(--scra-border);
+  border-radius: var(--scra-radius-sm);
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #f8f9fa;
+  transition: border-color var(--scra-transition);
+}
+
+.question-card:hover {
+  border-color: var(--scra-info);
+}
+
+.question-enonce {
+  font-weight: 600;
+  color: var(--scra-text);
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+}
+
+.question-bareme {
+  font-size: 0.75rem;
+  color: var(--scra-text-muted);
+  font-weight: 500;
+}
+
+/* ---- Réponse de note ---- */
+.note-detail-row {
+  border-left: 3px solid var(--scra-info);
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: #f8f9fa;
+  border-radius: 0 8px 8px 0;
+}
+
+.note-detail-question {
+  font-weight: 600;
+  color: var(--scra-text);
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.note-detail-rep {
+  font-size: 0.85rem;
+  color: var(--scra-text);
+}
+
+.note-detail-attendue {
+  color: var(--scra-primary);
+  font-weight: 600;
+}
+/* ============================================================
+   MODALES DEVOIRS MODERNISEES
+   ============================================================ */
+.modal-devoir .modal-content {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modal-devoir .modal-header {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+}
+
+.modal-devoir .modal-header.modal-header-success {
+  background: linear-gradient(135deg, #198754, #157347);
+}
+
+.modal-devoir .modal-header.modal-header-warning {
+  background: linear-gradient(135deg, #fd7e14, #e8590c);
+}
+
+.modal-devoir .modal-header.modal-header-info {
+  background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+}
+
+.modal-devoir .modal-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-devoir .btn-close {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+.modal-devoir .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-devoir .modal-body {
+  padding: 20px;
+  background: #fafbfc;
+}
+
+.modal-devoir .modal-footer {
+  padding: 14px 20px;
+  background: white;
+  border-top: 1px solid #e9ecef;
+}
+
+/* ---- Chrono du devoir ---- */
+.devoir-chrono {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
+  color: white;
+}
+
+.devoir-chrono.warning {
+  background: #fd7e14;
+  animation: pulse-warning 1s infinite;
+}
+
+.devoir-chrono.danger {
+  background: #dc3545;
+  animation: pulse-danger 0.7s infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes pulse-danger {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* ---- Liste des devoirs disponibles (modale Remplir) ---- */
+.devoir-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+  gap: 12px;
+}
+
+.devoir-list-item:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
+}
+
+.devoir-list-item .devoir-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.devoir-list-item .devoir-titre-liste {
+  font-weight: 700;
+  color: #212529;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.devoir-list-item .devoir-detail {
+  font-size: 0.78rem;
+  color: #6c757d;
+}
+
+/* ---- Questions dans les modales ---- */
+.question-card-modal {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-card-modal:hover {
+  border-color: #0dcaf0;
+  box-shadow: 0 2px 8px rgba(13, 202, 240, 0.1);
+}
+
+.question-number-badge {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  color: white;
+  text-align: center;
+  line-height: 28px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* ---- Options de réponse stylisées ---- */
+.question-option {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f8f9fa;
+  border: 1.5px solid #e9ecef;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 8px;
+}
+
+.question-option:hover {
+  background: #e9f4ff;
+  border-color: #0d6efd;
+}
+
+.question-option input[type="radio"],
+.question-option input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.question-option.checked {
+  background: #e7f0ff;
+  border-color: #0d6efd;
+  font-weight: 600;
+}
+
+/* ---- Media dans les questions ---- */
+/* ---- Media dans les questions ---- */
+.question-media {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 10px;
+  margin: 10px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.question-media-wrapper {
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin: 12px 0;
+  text-align: center;
+}
+
+.question-media-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-style: italic;
+}
+
+.question-media-label a {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.question-media-label a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Vignette vidéo + bouton Lire ---- */
+@media (max-width: 768px) {
+  .video-play-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .video-play-btn span {
+    display: inline;
+  }
+
+  .video-preview {
+    max-width: 100%;
+  }
+}
+
+/* ---- Vignette vidéo cliquable ---- */
+.video-thumb-container {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.video-thumb {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  display: block;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.video-thumb-container:hover .video-thumb {
+  opacity: 1;
+}
+
+.video-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(220, 53, 69, 0.95);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 40px;
+  border: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.video-play-overlay:hover {
+  background: #dc3545;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.video-play-overlay i {
+  font-size: 1.1rem;
+}
+
+/* ✅ Modal plein écran pour la vidéo */
+#modalVideoPleinEcran .modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.video-fullscreen-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Ratio 16:9 */
+  background: #000;
+}
+
+.video-fullscreen-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .video-thumb-container {
+    max-width: 100%;
+  }
+
+  .video-play-overlay {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  #modalVideoPleinEcran .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  #modalVideoPleinEcran .modal-content {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+}
 
   </style>
 </head>
@@ -3118,33 +3893,48 @@ a:hover {
 
       <!-- SECTION DISCUSSION (FORUM) -->
       <div class="tab-pane fade show active" id="content-discussion" role="tabpanel">
-        <div class="card shadow-sm p-4 mb-4">
-          <h3 class="h5 fw-bold mb-3 text-danger">
-            <i class="fa-solid fa-comments me-2"></i>Informations et Forum d'échanges
-          </h3>
+  <div class="card shadow-sm p-4 mb-4">
+    <h3 class="h5 fw-bold mb-3 text-danger">
+      <i class="fa-solid fa-comments me-2"></i>Informations et Forum d'échanges
+    </h3>
 
-           <div class="card border-primary mb-4" id="blocFormulairePublication">
-           <div class="card-header bg-primary text-white fw-semibold">
-           Créer une nouvelle publication (Question ou Contribution)
-           </div>
-            <div class="card-body">
-              <form id="formNouvellePublication" onsubmit="publierPost(event)">
-                <div class="mb-3">
-                  <textarea id="textePublication" class="form-control" rows="4" placeholder="Exprimez votre avis ou posez votre question en texte long sans limite de mots..." required></textarea>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <small class="text-muted" id="userInfoPublication">Auteur connecté : Chargement...</small>
-                  <button type="submit" class="btn btn-primary px-4">Publier</button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div id="forumPublicationsContainer">
-            <div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>
-          </div>
-        </div>
+    <div class="card border-primary mb-4" id="blocFormulairePublication">
+      <div class="card-header bg-primary text-white fw-semibold">
+        <i class="fa-solid fa-pen-to-square me-2"></i>Créer une nouvelle publication
       </div>
+      <div class="card-body">
+        <form id="formNouvellePublication" onsubmit="publierPost(event)">
+          <div class="mb-3">
+            <textarea id="textePublication" class="form-control" rows="4" placeholder="Exprimez votre avis ou posez votre question..." required></textarea>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted" id="userInfoPublication">Auteur connecté : Chargement...</small>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-paper-plane me-1"></i>Publier
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="accordion-search-wrapper mb-3">
+      <i class="fa fa-search search-icon"></i>
+      <input type="text" 
+             class="search-input" 
+             id="search-publications" 
+             placeholder="Rechercher une publication, un auteur..."
+             autocomplete="off"
+             oninput="filtrerPublications(this.value)">
+      <button class="search-clear" type="button" onclick="document.getElementById('search-publications').value=''; filtrerPublications('');">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div id="forumPublicationsContainer">
+      <div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>
+    </div>
+  </div>
+</div>
 
 <!-- SECTION TESTS (ÉVALUATIONS) -->
 <div class="tab-pane fade" id="content-tests" role="tabpanel">
@@ -3169,19 +3959,28 @@ a:hover {
 
 <!-- SOUS-MENU DEVOIRS -->
 <div class="tab-pane fade show active" id="sub-devoirs" role="tabpanel">
-
-  <div class="d-flex gap-2 mb-4 flex-wrap">
+  <div class="d-flex gap-2 mb-3 flex-wrap">
     <button id="btnCreerDevoir" class="btn btn-primary" onclick="ouvrirFormCreationDevoir()">
-  <i class="fa-solid fa-plus me-1"></i>Créer un devoir
-  </button>
+      <i class="fa-solid fa-plus me-1"></i>Créer un devoir
+    </button>
     <button class="btn btn-success" onclick="ouvrirListeRemplirDevoir()">
       <i class="fa-solid fa-file-pen me-1"></i>Remplir un devoir
     </button>
   </div>
 
-  <h6 class="fw-bold text-secondary mb-2">
-    <i class="fa-solid fa-list me-1"></i>Liste des devoirs
-  </h6>
+  <div class="accordion-search-wrapper mb-3">
+    <i class="fa fa-search search-icon"></i>
+    <input type="text" 
+           class="search-input" 
+           id="search-devoirs" 
+           placeholder="Rechercher un devoir..."
+           autocomplete="off"
+           oninput="filtrerDevoirs(this.value)">
+    <button class="search-clear" type="button" onclick="document.getElementById('search-devoirs').value=''; filtrerDevoirs('');">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
   <div id="listeDevoirsContainer">
     <p class="text-muted text-center my-4">Chargement des devoirs...</p>
   </div>
@@ -3213,32 +4012,52 @@ a:hover {
 </div>
 
 <!-- MODAL CRÉATION DE DEVOIR -->
-<div class="modal fade" id="modalCreerDevoir" tabindex="-1">
+<!-- MODAL CRÉATION DE DEVOIR -->
+<div class="modal fade modal-devoir" id="modalCreerDevoir" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Créer un nouveau devoir</h5>
+        <h5 class="modal-title">
+          <i class="fa-solid fa-plus-circle"></i>
+          Créer un nouveau devoir
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Titre du devoir</label>
-          <input type="text" id="devoirTitre" class="form-control" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label fw-bold">Durée limite pour faire le devoir (minutes)</label>
-          <input type="number" id="devoirDuree" class="form-control" min="1" required>
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold small">
+                <i class="fa-solid fa-heading text-primary me-1"></i>Titre du devoir
+              </label>
+              <input type="text" id="devoirTitre" class="form-control" placeholder="Ex: Les lois du jeu 2026" required>
+            </div>
+            <div class="mb-0">
+              <label class="form-label fw-bold small">
+                <i class="fa-solid fa-clock text-primary me-1"></i>Durée limite (minutes)
+              </label>
+              <input type="number" id="devoirDuree" class="form-control" min="1" placeholder="Ex: 30" required>
+            </div>
+          </div>
         </div>
 
-        <hr>
-        <h6 class="fw-bold">Questions</h6>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="fw-bold mb-0">
+            <i class="fa-solid fa-list-ol text-primary me-1"></i>Questions
+          </h6>
+          <span class="badge bg-light text-dark border" id="nbQuestionsBadge">0 question</span>
+        </div>
+
         <div id="listeQuestionsBuilder"></div>
-        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="ajouterQuestionBuilder()">
+
+        <button type="button" class="btn btn-outline-primary btn-sm w-100 mt-2" onclick="ajouterQuestionBuilder()">
           <i class="fa-solid fa-plus me-1"></i>Ajouter une question
         </button>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fa-solid fa-times me-1"></i>Annuler
+        </button>
         <button type="button" class="btn btn-primary" onclick="soumettreCreationDevoir()">
           <i class="fa-solid fa-paper-plane me-1"></i>Publier le devoir
         </button>
@@ -3248,43 +4067,65 @@ a:hover {
 </div>
 
 <!-- MODAL LISTE DES DEVOIRS À FAIRE -->
-<div class="modal fade" id="modalListeRemplir" tabindex="-1">
-  <div class="modal-dialog modal-lg">
+<!-- MODAL LISTE DES DEVOIRS À FAIRE -->
+<div class="modal fade modal-devoir" id="modalListeRemplir" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Choisir un devoir à faire</h5>
+      <div class="modal-header modal-header-success">
+        <h5 class="modal-title">
+          <i class="fa-solid fa-file-pen"></i>
+          Choisir un devoir à faire
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" id="listeRemplirBody">
-        <p class="text-muted text-center my-3">Chargement...</p>
+        <p class="text-muted text-center my-3">
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          Chargement...
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- MODAL RÉALISATION D'UN DEVOIR -->
-<div class="modal fade" id="modalFaireDevoir" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+<!-- MODAL RÉALISATION D'UN DEVOIR -->
+<div class="modal fade modal-devoir" id="modalFaireDevoir" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="faireDevoirTitre">Devoir</h5>
-        <span class="badge bg-danger fs-6" id="chronoDevoir">--:--</span>
+      <div class="modal-header modal-header-warning">
+        <h5 class="modal-title" id="faireDevoirTitre">
+          <i class="fa-solid fa-pen-to-square"></i>
+          Devoir
+        </h5>
+        <div class="devoir-chrono" id="chronoDevoir">
+          <i class="fa-solid fa-stopwatch"></i>
+          <span>--:--</span>
+        </div>
       </div>
       <div class="modal-body" id="faireDevoirBody"></div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fa-solid fa-times me-1"></i>Annuler
+        </button>
         <button type="button" class="btn btn-success" onclick="soumettreDevoirUI(false)">
           <i class="fa-solid fa-paper-plane me-1"></i>Valider et envoyer
         </button>
       </div>
     </div>
   </div>
-</div>
+</div>  
+  
 <!-- MODAL CONSULTATION D'UN DEVOIR (lecture seule) -->
-<div class="modal fade" id="modalConsulterDevoir" tabindex="-1">
+<!-- MODAL CONSULTATION D'UN DEVOIR (lecture seule) -->
+<div class="modal fade modal-devoir" id="modalConsulterDevoir" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="consulterDevoirTitre">Devoir</h5>
+      <div class="modal-header modal-header-info">
+        <h5 class="modal-title" id="consulterDevoirTitre">
+          <i class="fa-solid fa-eye"></i>
+          Devoir
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" id="consulterDevoirBody"></div>
@@ -8574,17 +9415,11 @@ function afficherSection(nomSection) {
 
 
 // 1. Charger les publications et gérer l'affichage du formulaire
-var publicationsData = {};
-
 // ============================================================================
-// CHARGEMENT DES PUBLICATIONS DU FORUM
+// MODULE FORUM - VERSION NETTOYÉE
 // ============================================================================
 var publicationsData = {};
-
-// ============================================================================
-// CHARGEMENT DES PUBLICATIONS DU FORUM
-// ============================================================================
-var publicationsData = {};
+var publicationsList = [];
 
 function chargerPublications() {
   const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
@@ -8597,118 +9432,90 @@ function chargerPublications() {
       const posts = (data && Array.isArray(data.posts)) ? data.posts : (Array.isArray(data) ? data : []);
       const estAutorise = (data && typeof data.estAutorise !== 'undefined') ? data.estAutorise : false;
 
-      // 🔒 Masquage du formulaire de publication pour les non autorisés
+      publicationsList = posts;
+      publicationsData = {};
+
+      // Masquer le formulaire pour non-autorises
       const blocForm = document.getElementById('blocFormulairePublication');
       if (blocForm) {
         blocForm.classList.toggle('d-none', !estAutorise);
       }
 
-      // Affichage de l'email de l'auteur connecté
+      // Info utilisateur
       const userInfo = document.getElementById('userInfoPublication');
       if (userInfo && data && data.emailActuel) {
-        userInfo.innerText = "Auteur connecté : " + data.emailActuel;
+        userInfo.innerText = "Auteur connecte : " + data.emailActuel;
       }
 
-      // Aucune publication
       if (posts.length === 0) {
-        container.innerHTML = '<div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier à publier !</div>';
+        container.innerHTML = '<div class="text-center text-muted my-4">Aucune discussion active pour le moment. Soyez le premier a publier !</div>';
         return;
       }
 
-      // Rendu des publications
       var htmlGlobal = '';
 
       for (var i = 0; i < posts.length; i++) {
         var p = posts[i];
         publicationsData[p.id] = p.texte || '';
 
-        // ---- Commentaires ----
+        // Commentaires
         var commentairesHtml = '';
 
         if (!p.commentaires || p.commentaires.length === 0) {
-          commentairesHtml = '<p class="text-muted small italic">Aucun commentaire pour le moment.</p>';
+          commentairesHtml = '<p class="text-muted small fst-italic mb-0">Aucun commentaire pour le moment.</p>';
         } else {
           for (var j = 0; j < p.commentaires.length; j++) {
             var c = p.commentaires[j];
-
             var boutonSupprComm = '';
             if (estAutorise) {
-              boutonSupprComm = '<button class="btn btn-sm btn-link text-danger p-0 ms-2" ' +
-                'onclick="supprimerComm(\'' + p.id + '\', \'' + c.id + '\')" ' +
-                'title="Supprimer ce commentaire">' +
-                '<i class="fa-solid fa-xmark"></i>' +
-              '</button>';
+              boutonSupprComm = '<button class="btn btn-sm btn-link text-danger p-0 ms-2" onclick="supprimerComm(\'' + p.id + '\', \'' + c.id + '\')" title="Supprimer"><i class="fa-solid fa-xmark"></i></button>';
             }
 
-            commentairesHtml +=
-              '<div class="p-2 rounded mb-2 small border" style="background-color: #fff7ed !important; border-color: #ffedd5 !important;">' +
-                '<div class="d-flex justify-content-between align-items-center">' +
-                  '<div>' +
-                    '<span class="fw-bold text-dark">' + (c.auteur || 'Membre') + '</span>' +
-                    '<span class="text-muted ms-2" style="font-size: 0.75rem;">' + (c.date || '') + '</span>' +
-                  '</div>' +
-                  boutonSupprComm +
+            commentairesHtml += '<div class="p-2 rounded mb-2 small border" style="background-color: #fff7ed !important; border-color: #ffedd5 !important;">' +
+              '<div class="d-flex justify-content-between align-items-center">' +
+                '<div>' +
+                  '<span class="fw-bold text-dark">' + (c.auteur || 'Membre') + '</span>' +
+                  '<span class="text-muted ms-2" style="font-size: 0.75rem;">' + (c.date || '') + '</span>' +
                 '</div>' +
-                '<div class="mt-1 text-dark">' + (c.texte || '') + '</div>' +
-              '</div>';
+                boutonSupprComm +
+              '</div>' +
+              '<div class="mt-1 text-dark">' + (c.texte || '') + '</div>' +
+            '</div>';
           }
         }
 
-        // ---- Boutons de gestion (Modifier / Archiver / Supprimer) ----
+        // Boutons de gestion
         var boutonsGestionHtml = '';
         if (estAutorise) {
-          boutonsGestionHtml =
-            '<div class="btn-group btn-group-sm float-end">' +
-              '<button class="btn btn-outline-secondary" onclick="modifierPost(\'' + p.id + '\')" title="Modifier">' +
-                '<i class="fa-solid fa-pen"></i>' +
-              '</button>' +
-              '<button class="btn btn-outline-warning" onclick="archiverPost(\'' + p.id + '\')" title="Archiver">' +
-                '<i class="fa-solid fa-box-archive"></i>' +
-              '</button>' +
-              '<button class="btn btn-outline-danger" onclick="supprimerPost(\'' + p.id + '\')" title="Supprimer">' +
-                '<i class="fa-solid fa-trash"></i>' +
-              '</button>' +
-            '</div>';
+          boutonsGestionHtml = '<div class="btn-group btn-group-sm float-end">' +
+            '<button class="btn btn-outline-secondary" onclick="modifierPost(\'' + p.id + '\')" title="Modifier"><i class="fa-solid fa-pen"></i></button>' +
+            '<button class="btn btn-outline-warning" onclick="archiverPost(\'' + p.id + '\')" title="Archiver"><i class="fa-solid fa-box-archive"></i></button>' +
+            '<button class="btn btn-outline-danger" onclick="supprimerPost(\'' + p.id + '\')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>' +
+          '</div>';
         }
 
-        // ---- Carte de la publication ----
-        htmlGlobal +=
-          '<div class="card mb-3 shadow-sm border-0" style="background-color: #f0fdf4 !important;">' +
-            '<div class="card-body">' +
-
-              // En-tête : auteur + date + boutons de gestion
-              '<div class="d-flex justify-content-between align-items-center mb-2">' +
-                '<div>' +
-                  '<strong class="text-success">' +
-                    '<i class="fa-solid fa-user-pen me-1"></i>' + (p.auteur || 'Anonyme') +
-                  '</strong>' +
-                  '<br>' +
-                  '<small class="text-muted">' + (p.date || '') + '</small>' +
-                '</div>' +
-                boutonsGestionHtml +
+        // Carte de publication
+        htmlGlobal += '<div class="card mb-3 shadow-sm border-0" style="background-color: #f0fdf4 !important;">' +
+          '<div class="card-body">' +
+            '<div class="d-flex justify-content-between align-items-center mb-2">' +
+              '<div>' +
+                '<strong class="text-success"><i class="fa-solid fa-user-pen me-1"></i>' + (p.auteur || 'Anonyme') + '</strong>' +
+                '<br><small class="text-muted">' + (p.date || '') + '</small>' +
               '</div>' +
-
-              // Texte de la publication (TOUJOURS VISIBLE pour tous)
-              '<p class="card-text text-dark mt-2" id="texte-' + p.id + '" style="white-space: pre-line; font-size: 1rem;">' +
-                (p.texte || '') +
-              '</p>' +
-
-              '<hr class="my-3">' +
-
-              // Section commentaires
-              '<div class="comments-section ps-3 border-start border-3 border-warning mb-3">' +
-                '<h6 class="text-secondary fs-7 mb-2 fw-bold">Commentaires :</h6>' +
-                commentairesHtml +
-              '</div>' +
-
-              // Champ de commentaire (ouvert à tous)
-              '<div class="input-group input-group-sm">' +
-                '<input type="text" id="input-comm-' + p.id + '" class="form-control" placeholder="Écrire un commentaire en tant que membre...">' +
-                '<button class="btn btn-outline-success" type="button" onclick="soumettreCommentaire(\'' + p.id + '\')">Commenter</button>' +
-              '</div>' +
-
+              boutonsGestionHtml +
             '</div>' +
-          '</div>';
+            '<p class="card-text text-dark mt-2" id="texte-' + p.id + '" style="white-space: pre-line; font-size: 1rem;">' + (p.texte || '') + '</p>' +
+            '<hr class="my-3">' +
+            '<div class="comments-section ps-3 border-start border-3 border-warning mb-3">' +
+              '<h6 class="text-secondary mb-2 fw-bold" style="font-size: 0.85rem;">Commentaires :</h6>' +
+              commentairesHtml +
+            '</div>' +
+            '<div class="input-group input-group-sm">' +
+              '<input type="text" id="input-comm-' + p.id + '" class="form-control" placeholder="Ecrire un commentaire...">' +
+              '<button class="btn btn-outline-success" type="button" onclick="soumettreCommentaire(\'' + p.id + '\')">Commenter</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
       }
 
       container.innerHTML = htmlGlobal;
@@ -8716,11 +9523,15 @@ function chargerPublications() {
     .withFailureHandler(function(err) {
       const container = document.getElementById('forumPublicationsContainer');
       if (container) {
-        container.innerHTML = '<div class="text-center text-danger my-4">Erreur lors du chargement : ' + err.message + '</div>';
+        container.innerHTML = '<div class="text-center text-danger my-4">Erreur : ' + err.message + '</div>';
       }
     })
-    .recupererPublications(emailUser);   // ✅ ENVOIE L'EMAIL
+    .recupererPublications(emailUser);
 }
+
+window.chargerPublications = chargerPublications;
+
+// Les autres fonctions (modifierPost, archiverPost, supprimerPost, etc.) restent INCHANGÉES
 
 
 // 2. Publier un poste
@@ -9085,7 +9896,6 @@ function chargerListeDevoirs() {
 
   google.script.run
     .withSuccessHandler(function(data) {
-      // 🔒 Masquage du bouton "Créer un devoir" selon les droits
       const btnCreer = document.getElementById('btnCreerDevoir');
       if (btnCreer) btnCreer.classList.toggle('d-none', !data.peutCreer);
 
@@ -9093,44 +9903,114 @@ function chargerListeDevoirs() {
       if (!container) return;
 
       if (!data.devoirs || data.devoirs.length === 0) {
-        container.innerHTML = '<p class="text-muted text-center my-4">Aucun devoir pour le moment.</p>';
+        container.innerHTML = '<div class="text-center text-muted my-5">' +
+          '<i class="fa-solid fa-file-pen fa-3x mb-3" style="color: #dee2e6;"></i>' +
+          '<p>Aucun devoir pour le moment.</p></div>';
         return;
       }
 
-      let html = '<div class="table-responsive"><table class="table table-hover align-middle">' +
-        '<thead class="table-dark"><tr><th>N°</th><th>Titre</th><th>Auteur</th><th>Publié le</th><th>Clôture</th><th>Statut</th><th class="text-end">Actions</th></tr></thead><tbody>';
+      var html = '';
 
       data.devoirs.slice().reverse().forEach(function(d) {
-        const badge = d.statut === 'ouvert' ? '<span class="badge bg-success">Ouvert</span>'
-          : (d.statut === 'archive' ? '<span class="badge bg-secondary">Archivé</span>' : '<span class="badge bg-danger">Clôturé</span>');
+        var statut = d.statut || 'cloture';
 
-        let actions = '<button class="btn btn-sm btn-outline-info" onclick="consulterDevoir(\'' + d.id + '\')" title="Consulter"><i class="fa-solid fa-eye"></i></button> ';
-        if (data.peutCreer) {
-          if (d.statut !== 'archive') {
-            actions += '<button class="btn btn-sm btn-outline-warning" onclick="archiverDevoirUI(\'' + d.id + '\')" title="Archiver"><i class="fa-solid fa-box-archive"></i></button> ';
-          }
-          actions += '<button class="btn btn-sm btn-outline-danger" onclick="supprimerDevoirUI(\'' + d.id + '\')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>';
+        var statutBadge = '';
+        var statutClass = '';
+        if (statut === 'ouvert') {
+          statutBadge = '<span class="badge bg-success"><i class="fa-solid fa-lock-open me-1"></i>Ouvert</span>';
+          statutClass = 'ouvert';
+        } else if (statut === 'archive') {
+          statutBadge = '<span class="badge bg-secondary"><i class="fa-solid fa-box-archive me-1"></i>Archive</span>';
+          statutClass = 'archive';
+        } else {
+          statutBadge = '<span class="badge bg-danger"><i class="fa-solid fa-lock me-1"></i>Cloture</span>';
+          statutClass = 'cloture';
         }
 
-        html += '<tr><td>' + d.numero + '</td><td>' + d.titre + '</td><td>' + d.auteurNom + '</td>' +
-          '<td>' + new Date(d.dateSoumission).toLocaleString('fr-FR') + '</td>' +
-          '<td>' + new Date(d.dateCloture).toLocaleString('fr-FR') + '</td>' +
-          '<td>' + badge + '</td><td class="text-end">' + actions + '</td></tr>';
+        var dateSoumission = new Date(d.dateSoumission).toLocaleDateString('fr-FR');
+
+        var actions = '<button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); consulterDevoir(\'' + d.id + '\')" title="Consulter"><i class="fa-solid fa-eye"></i></button>';
+        if (data.peutCreer) {
+          if (statut !== 'archive') {
+            actions += '<button class="btn btn-sm btn-outline-warning" onclick="event.stopPropagation(); archiverDevoirUI(\'' + d.id + '\')" title="Archiver"><i class="fa-solid fa-box-archive"></i></button>';
+          }
+          actions += '<button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); supprimerDevoirUI(\'' + d.id + '\')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>';
+        }
+
+        html += '<div class="devoir-card ' + statutClass + '">' +
+          '<div class="devoir-header" onclick="toggleDevoirCard(\'devoir-' + d.id + '\')">' +
+            '<div style="flex: 1; min-width: 0;">' +
+              '<p class="devoir-title">' +
+                '<i class="fa-solid fa-file-lines me-2 text-primary"></i>' +
+                'No' + d.numero + ' - ' + d.titre +
+              '</p>' +
+              '<div class="devoir-meta">' +
+                '<span><i class="fa-solid fa-user me-1"></i>' + (d.auteurNom || '-') + '</span>' +
+                '<span><i class="fa-regular fa-calendar me-1"></i>' + dateSoumission + '</span>' +
+              '</div>' +
+              '<div class="devoir-badges mt-2">' + statutBadge + '</div>' +
+            '</div>' +
+            '<i class="fa-solid fa-chevron-down" style="color: #6c757d;"></i>' +
+          '</div>' +
+          '<div id="devoir-' + d.id + '" style="display: none;">' +
+            '<div class="devoir-actions">' + actions + '</div>' +
+          '</div>' +
+        '</div>';
       });
 
-      html += '</tbody></table></div>';
       container.innerHTML = html;
     })
     .withFailureHandler(function(err) {
-      // Prudence : masquer le bouton si on ne peut pas vérifier les droits
       const btnCreer = document.getElementById('btnCreerDevoir');
       if (btnCreer) btnCreer.classList.add('d-none');
 
       const container = document.getElementById('listeDevoirsContainer');
       if (container) container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
     })
-    .listerDevoirs(emailUser);   // ✅ ENVOIE L'EMAIL
+    .listerDevoirs(emailUser);
 }
+
+window.chargerListeDevoirs = chargerListeDevoirs;
+
+
+function toggleDevoirCard(cardId) {
+  const el = document.getElementById(cardId);
+  if (!el) return;
+
+  if (el.style.display === 'none' || el.style.display === '') {
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+window.toggleDevoirCard = toggleDevoirCard;
+
+
+function toggleDevoirCard(cardId) {
+  const el = document.getElementById(cardId);
+  if (!el) return;
+
+  if (el.style.display === 'none' || el.style.display === '') {
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+window.toggleDevoirCard = toggleDevoirCard;
+function filtrerDevoirs(query) {
+  const cards = document.querySelectorAll('.devoir-card');
+  const q = String(query || '').toLowerCase().trim();
+
+  cards.forEach(function(card) {
+    const texte = card.textContent.toLowerCase();
+    const match = q === '' || texte.includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+window.filtrerDevoirs = filtrerDevoirs;
 
 
 function archiverDevoirUI(id) {
@@ -9140,40 +10020,34 @@ function archiverDevoirUI(id) {
       const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
       google.script.run
         .withSuccessHandler(chargerListeDevoirs)
-        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("Erreur : " + err.message, "danger");
+        })
         .archiverDevoir(id, emailUser);
     },
     { titre: 'Archiver le devoir', texteConfirmer: 'Archiver', couleurConfirmer: 'warning', icone: 'fa-box-archive' }
   );
 }
 
-function archiverDevoirUI(id) {
-  confirmerAction(
-    "Archiver ce devoir ? Il ne sera plus faisable mais restera consultable.",
-    function() {
-      const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
-      google.script.run
-        .withSuccessHandler(chargerListeDevoirs)
-        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
-        .archiverDevoir(id, emailUser);
-    },
-    { titre: 'Archiver le devoir', texteConfirmer: 'Archiver', couleurConfirmer: 'warning', icone: 'fa-box-archive' }
-  );
-}
+window.archiverDevoirUI = archiverDevoirUI;
 
 function supprimerDevoirUI(id) {
   confirmerAction(
-    "Supprimer définitivement ce devoir ? Cette action est irréversible.",
+    "Supprimer definitivement ce devoir ? Cette action est irreversible.",
     function() {
       const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
       google.script.run
         .withSuccessHandler(chargerListeDevoirs)
-        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("Erreur : " + err.message, "danger");
+        })
         .supprimerDevoir(id, emailUser);
     },
     { titre: 'Supprimer le devoir', texteConfirmer: 'Supprimer', couleurConfirmer: 'danger', icone: 'fa-trash' }
   );
 }
+
+window.supprimerDevoirUI = supprimerDevoirUI;
 
 
 function ouvrirFormCreationDevoir() {
@@ -9392,7 +10266,7 @@ function ouvrirListeRemplirDevoir() {
 
 function demarrerDevoirUI(devoirId) {
   confirmerAction(
-    "Une fois commencé, le chrono démarre et ne peut pas être mis en pause. Continuer ?",
+    "Une fois commence, le chrono demarre et ne peut pas etre mis en pause. Continuer ?",
     function() {
       google.script.run
         .withSuccessHandler(function(data) {
@@ -9402,49 +10276,191 @@ function demarrerDevoirUI(devoirId) {
           new bootstrap.Modal(document.getElementById('modalFaireDevoir')).show();
           demarrerChrono(data);
         })
-        .withFailureHandler(function(err) { afficherToastTemporaire("❌ Erreur : " + err.message, "danger"); })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("Erreur : " + err.message, "danger");
+        })
         .demarrerDevoir(devoirId);
     },
-    { titre: 'Démarrer le devoir', texteConfirmer: 'Démarrer', couleurConfirmer: 'primary', icone: 'fa-play' }
+    { titre: 'Demarrer le devoir', texteConfirmer: 'Demarrer', couleurConfirmer: 'primary', icone: 'fa-play' }
   );
 }
 
+window.demarrerDevoirUI = demarrerDevoirUI;
+
 function afficherFormulaireDevoir(data) {
-  document.getElementById('faireDevoirTitre').innerText = data.titre;
-  const body = document.getElementById('faireDevoirBody');
-  let html = '';
+  document.getElementById('faireDevoirTitre').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> ' + data.titre;
+  var body = document.getElementById('faireDevoirBody');
+  var html = '';
 
   data.questions.forEach(function(q, idx) {
-    html += '<div class="card mb-3 p-3" data-question-id="' + q.id + '" data-question-type="' + q.typeReponse + '">' +
-      '<p class="fw-bold">' + (idx + 1) + '. ' + q.enonce + (q.obligatoire ? ' <span class="text-danger">*</span>' : '') + '</p>';
+    html += '<div class="question-card-modal" data-question-id="' + q.id + '" data-question-type="' + q.typeReponse + '">' +
+      '<div class="d-flex align-items-start mb-2">' +
+        '<span class="question-number-badge">' + (idx + 1) + '</span>' +
+        '<div style="flex: 1; min-width: 0;">' +
+          '<p class="question-enonce mb-0">' + q.enonce +
+            (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+          '</p>' +
+          '<small class="text-muted">(' + q.bareme + ' pt)</small>' +
+        '</div>' +
+      '</div>';
 
+    // ✅ MEDIA - Vignette + bouton pour ouvrir en grand
     if (q.mediaUrl) {
-      html += (q.mediaType === 'video')
-        ? '<video controls class="w-100 mb-2" style="max-height:300px;"><source src="' + q.mediaUrl + '"></video>'
-        : '<img src="' + q.mediaUrl + '" class="img-fluid mb-2" style="max-height:300px;">';
+      var mediaUrl = String(q.mediaUrl).trim();
+      var fileId = '';
+      var match = mediaUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) fileId = match[1];
+
+      if (fileId) {
+        html += '<div class="question-media-wrapper">';
+
+        if (q.mediaType === 'video') {
+          // ✅ Vignette + bouton pour ouvrir en grand
+          html += '<div class="video-thumb-container">' +
+            '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+              'class="video-thumb" alt="Apercu video" ' +
+              'onerror="this.style.display=\'none\'; this.parentNode.style.background=\'#000\'; this.parentNode.style.minHeight=\'180px\';">' +
+            '<button type="button" class="video-play-overlay" ' +
+              'onclick="ouvrirVideoPleinEcran(\'' + fileId + '\', \'' + (q.enonce || '').replace(/'/g, "\\'") + '\')">' +
+              '<i class="fa-solid fa-play"></i>' +
+              '<span>Lire la video</span>' +
+            '</button>' +
+          '</div>';
+          html += '<p class="question-media-label">' +
+            '<i class="fa-solid fa-video me-1"></i>Video jointe' +
+          '</p>';
+        } else {
+          html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+            'class="question-media" alt="Illustration" ' +
+            'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
+          html += '<p class="question-media-label">' +
+            '<i class="fa-solid fa-image me-1"></i>Image jointe' +
+          '</p>';
+        }
+
+        html += '</div>';
+      }
     }
 
+    // Options de réponse
     if (q.typeReponse === 'qcm_unique') {
+      html += '<div class="question-options">';
       q.options.forEach(function(opt, i) {
-        html += '<div class="form-check"><input class="form-check-input" type="radio" name="rep-' + q.id + '" value="' + i + '" id="rep-' + q.id + '-' + i + '">' +
-          '<label class="form-check-label" for="rep-' + q.id + '-' + i + '">' + opt + '</label></div>';
+        html += '<label class="question-option">' +
+          '<input type="radio" name="rep-' + q.id + '" value="' + i + '" id="rep-' + q.id + '-' + i + '">' +
+          '<span>' + opt + '</span>' +
+        '</label>';
       });
+      html += '</div>';
     } else if (q.typeReponse === 'qcm_multiple') {
+      html += '<div class="question-options">';
       q.options.forEach(function(opt, i) {
-        html += '<div class="form-check"><input class="form-check-input" type="checkbox" value="' + i + '" id="rep-' + q.id + '-' + i + '" data-question="' + q.id + '">' +
-          '<label class="form-check-label" for="rep-' + q.id + '-' + i + '">' + opt + '</label></div>';
+        html += '<label class="question-option">' +
+          '<input type="checkbox" value="' + i + '" id="rep-' + q.id + '-' + i + '" data-question="' + q.id + '">' +
+          '<span>' + opt + '</span>' +
+        '</label>';
       });
+      html += '</div>';
     } else if (q.typeReponse === 'vrai_faux') {
-      html += '<div class="form-check"><input class="form-check-input" type="radio" name="rep-' + q.id + '" value="vrai" id="rep-' + q.id + '-v"><label class="form-check-label" for="rep-' + q.id + '-v">Vrai</label></div>' +
-        '<div class="form-check"><input class="form-check-input" type="radio" name="rep-' + q.id + '" value="faux" id="rep-' + q.id + '-f"><label class="form-check-label" for="rep-' + q.id + '-f">Faux</label></div>';
+      html += '<div class="question-options">' +
+        '<label class="question-option">' +
+          '<input type="radio" name="rep-' + q.id + '" value="vrai" id="rep-' + q.id + '-v">' +
+          '<span>Vrai</span>' +
+        '</label>' +
+        '<label class="question-option">' +
+          '<input type="radio" name="rep-' + q.id + '" value="faux" id="rep-' + q.id + '-f">' +
+          '<span>Faux</span>' +
+        '</label>' +
+      '</div>';
     } else {
-      html += '<textarea class="form-control" rows="3" id="rep-' + q.id + '" placeholder="Votre réponse..."></textarea>';
+      html += '<textarea class="question-textarea" rows="3" id="rep-' + q.id + '" placeholder="Votre reponse..."></textarea>';
     }
+
     html += '</div>';
   });
 
   body.innerHTML = html;
 }
+
+window.afficherFormulaireDevoir = afficherFormulaireDevoir;
+
+// ✅ Ouvrir une video en plein écran (modale dediee)
+function ouvrirVideoPleinEcran(fileId, titre) {
+  if (!fileId) return;
+
+  // Supprimer modal précédent s'il existe
+  var ancien = document.getElementById('modalVideoPleinEcran');
+  if (ancien) ancien.remove();
+
+  var wrapper = document.createElement('div');
+  wrapper.innerHTML =
+    '<div class="modal fade" id="modalVideoPleinEcran" tabindex="-1" data-bs-backdrop="static">' +
+      '<div class="modal-dialog modal-xl modal-dialog-centered">' +
+        '<div class="modal-content" style="background: #000;">' +
+          '<div class="modal-header" style="background: #000; color: white; border-bottom: 1px solid #333;">' +
+            '<h5 class="modal-title" style="font-size: 0.95rem;">' +
+              '<i class="fa-solid fa-video me-2"></i>' + (titre || 'Video') +
+            '</h5>' +
+            '<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>' +
+          '</div>' +
+          '<div class="modal-body p-0" style="background: #000;">' +
+            '<div class="video-fullscreen-container">' +
+              '<iframe ' +
+                'src="https://drive.google.com/file/d/' + fileId + '/preview" ' +
+                'class="video-fullscreen-iframe" ' +
+                'allow="autoplay; encrypted-media; fullscreen" ' +
+                'allowfullscreen ' +
+                'loading="lazy">' +
+              '</iframe>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(wrapper.firstChild);
+
+  var modalEl = document.getElementById('modalVideoPleinEcran');
+  var modal = new bootstrap.Modal(modalEl);
+  modal.show();
+
+  modalEl.addEventListener('hidden.bs.modal', function() {
+    modalEl.remove();
+  });
+}
+
+window.ouvrirVideoPleinEcran = ouvrirVideoPleinEcran;
+
+// ✅ Fallback : si la vidéo native ne marche pas, on bascule sur iframe Drive
+function afficherFallbackVideo(videoEl, fileId) {
+  if (!videoEl || !fileId) return;
+
+  var wrapper = videoEl.parentNode;
+  if (!wrapper) return;
+
+  var fallbackHtml = '<div class="video-fallback">' +
+    '<p class="text-muted small mb-2">' +
+      '<i class="fa-solid fa-info-circle me-1"></i>' +
+      'Lecture directe indisponible. Ouverture via Drive...' +
+    '</p>' +
+    '<iframe ' +
+      'src="https://drive.google.com/file/d/' + fileId + '/preview" ' +
+      'class="video-iframe" ' +
+      'allow="autoplay; encrypted-media" ' +
+      'allowfullscreen ' +
+      'loading="lazy" ' +
+      'sandbox="allow-scripts allow-same-origin allow-presentation allow-popups">' +
+    '</iframe>' +
+  '</div>';
+
+  var tempDiv = document.createElement('div');
+  tempDiv.innerHTML = fallbackHtml;
+  var newEl = tempDiv.firstChild;
+
+  wrapper.replaceChild(newEl, videoEl);
+}
+
+window.afficherFallbackVideo = afficherFallbackVideo;
 
 function demarrerChrono(data) {
   const finMs = new Date(data.dateDebut).getTime() + Number(data.dureeLimite) * 60000;
@@ -9521,47 +10537,102 @@ function soumettreDevoirUI(automatique) {
     .withFailureHandler(function(err) { alert("Erreur lors de l'envoi : " + err.message); })
     .soumettreReponses(devoirEnCours.idReponse, reponses);
 }
+
 function consulterDevoir(devoirId) {
-  const body = document.getElementById('consulterDevoirBody');
-  body.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+  var body = document.getElementById('consulterDevoirBody');
+  body.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-info"></div></div>';
   new bootstrap.Modal(document.getElementById('modalConsulterDevoir')).show();
 
   google.script.run
     .withSuccessHandler(function(data) {
-      document.getElementById('consulterDevoirTitre').innerText = data.titre;
-      let html = '<p class="text-muted mb-3"><small>Publié le ' +
-        new Date(data.dateSoumission).toLocaleString('fr-FR') + ' — Durée : ' + data.dureeLimite + ' min</small></p>';
+      document.getElementById('consulterDevoirTitre').innerHTML = '<i class="fa-solid fa-eye"></i> ' + data.titre;
+
+      var html = '<div class="alert alert-light border small mb-3">' +
+        '<i class="fa-regular fa-calendar me-1"></i>' +
+        'Publie le ' + new Date(data.dateSoumission).toLocaleString('fr-FR') +
+        ' - Duree : ' + data.dureeLimite + ' min' +
+      '</div>';
 
       data.questions.forEach(function(q, idx) {
-        html += '<div class="card mb-3 p-3 bg-light">' +
-          '<p class="fw-bold">' + (idx + 1) + '. ' + q.enonce + (q.obligatoire ? ' <span class="text-danger">*</span>' : '') + '</p>';
+        html += '<div class="question-card-modal">' +
+          '<div class="d-flex align-items-start mb-2">' +
+            '<span class="question-number-badge">' + (idx + 1) + '</span>' +
+            '<div style="flex: 1; min-width: 0;">' +
+              '<p class="question-enonce mb-0">' + q.enonce +
+                (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+              '</p>' +
+              '<small class="text-muted">(' + q.bareme + ' pt)</small>' +
+            '</div>' +
+          '</div>';
 
+        // ✅ MEDIA - Vignette + bouton
         if (q.mediaUrl) {
-          html += (q.mediaType === 'video')
-            ? '<video controls class="w-100 mb-2" style="max-height:250px;"><source src="' + q.mediaUrl + '"></video>'
-            : '<img src="' + q.mediaUrl + '" class="img-fluid mb-2" style="max-height:250px;">';
+          var mediaUrl = String(q.mediaUrl).trim();
+          var fileId = '';
+          var match = mediaUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) fileId = match[1];
+
+          if (fileId) {
+            html += '<div class="question-media-wrapper">';
+
+            if (q.mediaType === 'video') {
+              html += '<div class="video-thumb-container">' +
+                '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+                  'class="video-thumb" alt="Apercu video" ' +
+                  'onerror="this.style.display=\'none\'; this.parentNode.style.background=\'#000\'; this.parentNode.style.minHeight=\'180px\';">' +
+                '<button type="button" class="video-play-overlay" ' +
+                  'onclick="ouvrirVideoPleinEcran(\'' + fileId + '\', \'' + (q.enonce || '').replace(/'/g, "\\'") + '\')">' +
+                  '<i class="fa-solid fa-play"></i>' +
+                  '<span>Lire la video</span>' +
+                '</button>' +
+              '</div>';
+              html += '<p class="question-media-label">' +
+                '<i class="fa-solid fa-video me-1"></i>Video jointe' +
+              '</p>';
+            } else {
+              html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+                'class="question-media" alt="Illustration" ' +
+                'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
+              html += '<p class="question-media-label">' +
+                '<i class="fa-solid fa-image me-1"></i>Image jointe' +
+              '</p>';
+            }
+
+            html += '</div>';
+          }
         }
 
+        // Options (lecture seule)
         if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
+          html += '<div class="question-options">';
           q.options.forEach(function(opt) {
-            html += '<div class="form-check"><input class="form-check-input" type="' +
-              (q.typeReponse === 'qcm_unique' ? 'radio' : 'checkbox') + '" disabled>' +
-              '<label class="form-check-label">' + opt + '</label></div>';
+            html += '<label class="question-option">' +
+              '<input type="' + (q.typeReponse === 'qcm_unique' ? 'radio' : 'checkbox') + '" disabled>' +
+              '<span>' + opt + '</span>' +
+            '</label>';
           });
+          html += '</div>';
         } else if (q.typeReponse === 'vrai_faux') {
-          html += '<div class="form-check"><input class="form-check-input" type="radio" disabled><label class="form-check-label">Vrai</label></div>' +
-            '<div class="form-check"><input class="form-check-input" type="radio" disabled><label class="form-check-label">Faux</label></div>';
+          html += '<div class="question-options">' +
+            '<label class="question-option"><input type="radio" disabled><span>Vrai</span></label>' +
+            '<label class="question-option"><input type="radio" disabled><span>Faux</span></label>' +
+          '</div>';
         } else {
-          html += '<textarea class="form-control" rows="2" disabled placeholder="Réponse libre"></textarea>';
+          html += '<textarea class="question-textarea" rows="2" disabled placeholder="Reponse libre"></textarea>';
         }
-        html += '<small class="text-muted d-block mt-1">Barème : ' + q.bareme + ' pt(s)</small></div>';
+
+        html += '</div>';
       });
 
       body.innerHTML = html;
     })
-    .withFailureHandler(function(err) { body.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>'; })
+    .withFailureHandler(function(err) {
+      body.innerHTML = '<div class="alert alert-danger">Erreur : ' + err.message + '</div>';
+    })
     .obtenirDevoirComplet(devoirId);
 }
+
+window.consulterDevoir = consulterDevoir;
 
 // ============================================================================
 // ================= MODULE NOTES =================
@@ -9571,22 +10642,21 @@ function consulterDevoir(devoirId) {
 function ouvrirNotesIndividuel() {
   const container = document.getElementById('notesContainer');
   if (!container) return;
-  container.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+  container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
 
   const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(d) {
-      let html =
-        '<div class="card p-3 mb-3 bg-light">' +
-          '<div class="row g-2">' +
-            '<div class="col-md-6">' +
-              '<label class="form-label small fw-bold">1. Devoir</label>' +
-              '<select class="form-select" id="selectDevoirIndividuel" onchange="onDevoirIndividuelChange()">' +
-                '<option value="">-- Choisir un devoir --</option>';
+      var html = '<div class="card p-3 mb-3 bg-light">' +
+        '<div class="row g-2">' +
+          '<div class="col-md-6">' +
+            '<label class="form-label small fw-bold">1. Devoir</label>' +
+            '<select class="form-select" id="selectDevoirIndividuel" onchange="onDevoirIndividuelChange()">' +
+              '<option value="">-- Choisir un devoir --</option>';
 
       (d.devoirs || []).forEach(function(dv) {
-        html += '<option value="' + dv.id + '">' + dv.titre + ' (n°' + dv.numero + ')</option>';
+        html += '<option value="' + dv.id + '">' + dv.titre + ' (no' + dv.numero + ')</option>';
       });
 
       html += '</select></div>' +
@@ -9604,8 +10674,10 @@ function ouvrirNotesIndividuel() {
     .withFailureHandler(function(err) {
       container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
     })
-    .listerDevoirsPourNotes(emailUser);   // ✅ ENVOI EMAIL
+    .listerDevoirsPourNotes(emailUser);
 }
+
+window.ouvrirNotesIndividuel = ouvrirNotesIndividuel;
 
 function onDevoirIndividuelChange() {
   const devoirId = document.getElementById('selectDevoirIndividuel').value;
@@ -9660,28 +10732,30 @@ function onDevoirIndividuelChange() {
 }
 
 function chargerNoteIndividuel(emailOverride, devoirIdOverride) {
-  const membre = emailOverride || document.getElementById('selectMembreIndividuel').value;
-  const devoirId = devoirIdOverride || document.getElementById('selectDevoirIndividuel').value;
-  const cible = document.getElementById('resultatNoteIndividuel');
+  var membre = emailOverride || document.getElementById('selectMembreIndividuel').value;
+  var devoirId = devoirIdOverride || document.getElementById('selectDevoirIndividuel').value;
+  var cible = document.getElementById('resultatNoteIndividuel');
   if (!membre || !devoirId) { cible.innerHTML = ''; return; }
 
-  cible.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+  cible.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
 
-  const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+  var emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data.trouve) {
-        cible.innerHTML = '<div class="alert alert-warning">' + data.message + '</div>';
+        cible.innerHTML = '<div class="alert alert-warning"><i class="fa-solid fa-info-circle me-2"></i>' + data.message + '</div>';
         return;
       }
       cible.innerHTML = construireAffichageNote(data);
     })
     .withFailureHandler(function(err) {
-      cible.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
+      cible.innerHTML = '<div class="alert alert-danger">Erreur : ' + err.message + '</div>';
     })
-    .obtenirNoteMembreDevoir(membre, devoirId, emailUser);   // ✅ ENVOI EMAIL
+    .obtenirNoteMembreDevoir(membre, devoirId, emailUser);
 }
+
+window.chargerNoteIndividuel = chargerNoteIndividuel;
 
 // ---------- TOUTES ----------
 function ouvrirNotesToutes() {
@@ -9717,117 +10791,231 @@ function chargerToutesNotes() {
   const cible = document.getElementById('resultatToutesNotes');
   if (!devoirId) { cible.innerHTML = ''; return; }
 
-  cible.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+  cible.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
 
   const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
       if (!data.notes || data.notes.length === 0) {
-        cible.innerHTML = '<p class="text-muted text-center my-3">Aucune note pour ce devoir.</p>';
+        cible.innerHTML = '<div class="text-center text-muted my-5">' +
+          '<i class="fa-solid fa-clipboard-list fa-3x mb-3" style="color: #dee2e6;"></i>' +
+          '<p>Aucune note pour ce devoir.</p></div>';
         return;
       }
 
-      let html = '';
-      if (data.modeRestreint) {
-        html += '<div class="alert alert-info">Vous ne pouvez visualiser que votre note.</div>';
-      }
-
-      html += '<h6 class="fw-bold mb-2 d-flex justify-content-between align-items-center">' +
-        '<span>' + data.devoirTitre + ' — ' + data.notes.length + ' note(s)</span>';
-
-      // Bouton "Voir détails" en haut → technique uniquement
-      if (data.peutVoirTousDetails) {
-        html += '<button class="btn btn-sm btn-primary" onclick="voirTousDetails(\'' + data.devoirId + '\')">' +
-          '<i class="fa-solid fa-list-check me-1"></i>Voir détails</button>';
-      }
-      html += '</h6>';
-
-      html += '<div class="table-responsive"><table class="table table-striped align-middle">' +
-        '<thead class="table-dark"><tr><th>Arbitre</th><th>Date</th><th>Note</th><th class="text-end">Actions</th></tr></thead><tbody>';
+      // Calculs statistiques
+      var totalNotes = 0;
+      var maxNote = 0;
+      var minNote = 100;
+      var nbNotes = 0;
 
       data.notes.forEach(function(n) {
-        const pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
-        const couleur = pct >= 70 ? 'success' : (pct >= 50 ? 'warning' : 'danger');
-
-        let actions = '';
-        if (data.peutVoirDetailsAutres) {
-          actions = '<button class="btn btn-sm btn-outline-info" onclick="voirDetailLigne(\'' +
-            n.arbitreEmail + '\',\'' + data.devoirId + '\')"><i class="fa-solid fa-eye me-1"></i>Détails</button>';
+        if (n.noteMax > 0) {
+          var pct = (n.noteObtenue / n.noteMax) * 100;
+          totalNotes += pct;
+          nbNotes++;
+          if (pct > maxNote) maxNote = pct;
+          if (pct < minNote) minNote = pct;
         }
-
-        html += '<tr><td>' + (n.arbitreNom || n.arbitreEmail) +
-          '<br><small class="text-muted">' + n.arbitreEmail + '</small></td>' +
-          '<td>' + (n.dateFin ? new Date(n.dateFin).toLocaleString('fr-FR') : '-') + '</td>' +
-          '<td><span class="badge bg-' + couleur + '">' + n.noteObtenue + ' / ' + n.noteMax +
-            ' (' + pct + '%)</span></td>' +
-          '<td class="text-end">' + actions + '</td></tr>';
       });
 
-      html += '</tbody></table></div>';
+      var moyenne = nbNotes > 0 ? (totalNotes / nbNotes) : 0;
+
+      var html = '';
+
+      // Bandeau récapitulatif
+      html += '<div class="notes-recap">' +
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-users me-1"></i>Participants</span>' +
+          '<span class="notes-recap-value">' + data.notes.length + '</span>' +
+        '</div>' +
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-chart-line me-1"></i>Moyenne</span>' +
+          '<span class="notes-recap-value">' + moyenne.toFixed(1) + '%</span>' +
+        '</div>' +
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-trophy me-1"></i>Meilleure</span>' +
+          '<span class="notes-recap-value text-success">' + maxNote.toFixed(1) + '%</span>' +
+        '</div>' +
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-arrow-down me-1"></i>Plus basse</span>' +
+          '<span class="notes-recap-value text-danger">' + minNote.toFixed(1) + '%</span>' +
+        '</div>' +
+      '</div>';
+
+      if (data.modeRestreint) {
+        html += '<div class="alert alert-info small"><i class="fa-solid fa-info-circle me-1"></i>Vous ne pouvez visualiser que votre note.</div>';
+      }
+
+      if (data.peutVoirTousDetails) {
+        html += '<div class="mb-3 text-end">' +
+          '<button class="btn btn-sm btn-primary" onclick="voirTousDetails(\'' + data.devoirId + '\')">' +
+            '<i class="fa-solid fa-list-check me-1"></i>Voir tous les details</button>' +
+        '</div>';
+      }
+
+      // Cartes de notes
+      html += '<div class="notes-container-accordion">';
+
+      data.notes.forEach(function(n) {
+        var pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
+        var couleur = 'danger';
+        if (pct >= 70) couleur = 'success';
+        else if (pct >= 50) couleur = 'warning';
+
+        var initiales = extraireInitiales(n.arbitreNom || n.arbitreEmail);
+
+        var actions = '';
+        if (data.peutVoirDetailsAutres) {
+          actions = '<button class="btn btn-sm btn-outline-info mt-2" onclick="voirDetailLigne(\'' +
+            n.arbitreEmail + '\', \'' + data.devoirId + '\')">' +
+            '<i class="fa-solid fa-eye me-1"></i>Voir le detail</button>';
+        }
+
+        var dateFin = n.dateFin ? new Date(n.dateFin).toLocaleString('fr-FR') : '-';
+
+        html += '<div class="membre-item arbitre">' +
+          '<div class="membre-item-header">' +
+            '<div class="membre-item-left">' +
+              '<div class="membre-avatar" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">' + initiales + '</div>' +
+              '<div class="membre-name-block">' +
+                '<p class="membre-name">' + (n.arbitreNom || n.arbitreEmail) + '</p>' +
+                '<div class="membre-qualite-line">' + n.arbitreEmail + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="membre-item-right">' +
+              '<span class="badge bg-' + couleur + '" style="font-size: 0.95rem;">' + n.noteObtenue + ' / ' + n.noteMax + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="membre-item-body" style="max-height: 200px; padding-top: 10px;">' +
+            '<div class="membre-info-grid">' +
+              '<div class="membre-info-row">' +
+                '<span class="info-icon"><i class="fa fa-chart-line"></i></span>' +
+                '<span class="info-label">Pourcentage :</span>' +
+                '<span class="info-value fw-bold">' + pct + '%</span>' +
+              '</div>' +
+              '<div class="membre-info-row">' +
+                '<span class="info-icon"><i class="fa fa-calendar"></i></span>' +
+                '<span class="info-label">Soumis le :</span>' +
+                '<span class="info-value">' + dateFin + '</span>' +
+              '</div>' +
+              '<div class="progress-custom mt-2" style="width: 100%;">' +
+                '<div class="progress-custom-bar" style="width: ' + pct + '%;"></div>' +
+              '</div>' +
+              actions +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      });
+
+      html += '</div>';
       cible.innerHTML = html;
     })
     .withFailureHandler(function(err) {
-      cible.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
+      cible.innerHTML = '<div class="alert alert-danger">Erreur : ' + err.message + '</div>';
     })
-    .obtenirToutesLesNotesDevoir(devoirId, emailUser);   // ✅ ENVOI EMAIL
+    .obtenirToutesLesNotesDevoir(devoirId, emailUser);
 }
+
+window.chargerToutesNotes = chargerToutesNotes;
 
 // ---------- AFFICHAGE D'UNE NOTE ----------
 function construireAffichageNote(data) {
-  const pct = data.noteMax > 0 ? Math.round((data.noteObtenue / data.noteMax) * 100) : 0;
-  const couleur = pct >= 70 ? 'success' : (pct >= 50 ? 'warning' : 'danger');
+  var pct = data.noteMax > 0 ? Math.round((data.noteObtenue / data.noteMax) * 100) : 0;
+  var couleur = 'danger';
+  if (pct >= 70) couleur = 'success';
+  else if (pct >= 50) couleur = 'warning';
 
-  let html = '<div class="card p-3">' +
-    '<h6 class="fw-bold">' + (data.arbitreNom || data.arbitreEmail) + '</h6>' +
-    '<p class="mb-2"><small class="text-muted">Soumis le ' +
-      (data.dateFin ? new Date(data.dateFin).toLocaleString('fr-FR') : '-') +
-      ' — Statut : ' + data.statut + '</small></p>' +
-    '<p class="fs-4"><span class="badge bg-' + couleur + '">' +
-      data.noteObtenue + ' / ' + data.noteMax + ' (' + pct + '%)</span></p>' +
-    '<div class="d-flex gap-2 flex-wrap mb-2">' +
-      '<button class="btn btn-sm btn-outline-info" onclick="toggleDetailNote(\'d-' + data.idReponse + '\')">' +
-        '<i class="fa-solid fa-eye me-1"></i>Voir le détail</button>' +
+  var initiales = extraireInitiales(data.arbitreNom || data.arbitreEmail);
+  var dateFin = data.dateFin ? new Date(data.dateFin).toLocaleString('fr-FR') : '-';
+
+  var html = '<div class="membre-item arbitre" style="margin-top: 16px;">' +
+    '<div class="membre-item-header">' +
+      '<div class="membre-item-left">' +
+        '<div class="membre-avatar" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">' + initiales + '</div>' +
+        '<div class="membre-name-block">' +
+          '<p class="membre-name">' + (data.arbitreNom || data.arbitreEmail) + '</p>' +
+          '<div class="membre-qualite-line">Soumis le ' + dateFin + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="membre-item-right">' +
+        '<span class="badge bg-' + couleur + '" style="font-size: 1.1rem; padding: 0.5em 0.8em;">' +
+          data.noteObtenue + ' / ' + data.noteMax +
+        '</span>' +
+      '</div>' +
     '</div>' +
-    '<div id="d-' + data.idReponse + '" class="mt-2" style="display:none;">' +
-      construireDetailReponses(data) + '</div>' +
-    '</div>';
+    '<div class="membre-item-body" style="max-height: 600px; padding-top: 14px;">' +
+      '<div class="membre-info-grid">' +
+        '<div class="membre-info-row">' +
+          '<span class="info-icon"><i class="fa fa-chart-line"></i></span>' +
+          '<span class="info-label">Pourcentage :</span>' +
+          '<span class="info-value fw-bold">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="progress-custom mt-2 mb-3" style="width: 100%;">' +
+          '<div class="progress-custom-bar" style="width: ' + pct + '%;"></div>' +
+        '</div>' +
+        '<button class="btn btn-sm btn-outline-info" onclick="toggleDetailNote(\'d-' + data.idReponse + '\')">' +
+          '<i class="fa-solid fa-eye me-1"></i>Voir le detail des reponses</button>' +
+        '<div id="d-' + data.idReponse + '" class="mt-3" style="display:none;">' +
+          construireDetailReponses(data) +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
   return html;
 }
 
+window.construireAffichageNote = construireAffichageNote;
+
 function construireDetailReponses(data) {
-  let html = '<hr><h6 class="fw-bold">Détail des réponses</h6>';
+  var html = '';
+
   data.questions.forEach(function(q, idx) {
-    const rep = data.reponsesUtilisateur[q.id];
-    let repTexte = '';
+    var rep = data.reponsesUtilisateur[q.id];
+    var repTexte = '';
+
     if (q.typeReponse === 'qcm_unique') {
       repTexte = (rep !== null && rep !== undefined && q.options[Number(rep)] !== undefined)
-        ? q.options[Number(rep)] : '(non répondu)';
+        ? q.options[Number(rep)] : '(non repondu)';
     } else if (q.typeReponse === 'qcm_multiple') {
       repTexte = Array.isArray(rep) && rep.length
         ? rep.map(function(i) { return q.options[i]; }).join(', ')
-        : '(non répondu)';
+        : '(non repondu)';
     } else {
-      repTexte = rep || '(non répondu)';
+      repTexte = rep || '(non repondu)';
     }
 
-    let bonneRepTexte = '';
+    var bonneRepTexte = '';
     if (Array.isArray(q.bonneReponse)) {
       bonneRepTexte = q.bonneReponse.map(function(i) { return q.options[i]; }).join(', ');
     } else if (q.bonneReponse) {
       bonneRepTexte = q.bonneReponse;
     }
 
-    html += '<div class="border-start ps-3 mb-2">' +
-      '<p class="mb-1"><strong>' + (idx + 1) + '. ' + q.enonce + '</strong> <small class="text-muted">(' + q.bareme + ' pt)</small></p>' +
-      '<p class="mb-0 small">Réponse : <span class="text-primary">' + repTexte + '</span>';
+    html += '<div class="note-detail-row">' +
+      '<p class="note-detail-question">' +
+        (idx + 1) + '. ' + q.enonce +
+        ' <span class="question-bareme">(' + q.bareme + ' pt)</span>' +
+      '</p>' +
+      '<p class="note-detail-rep mb-0">' +
+        '<strong>Reponse :</strong> <span class="text-primary">' + repTexte + '</span>' +
+      '</p>';
+
     if (bonneRepTexte) {
-      html += ' — Attendue : <span class="text-success">' + bonneRepTexte + '</span>';
+      html += '<p class="mb-0 small">' +
+        '<strong>Attendue :</strong> <span class="note-detail-attendue">' + bonneRepTexte + '</span>' +
+      '</p>';
     }
-    html += '</p></div>';
+
+    html += '</div>';
   });
+
   return html;
 }
+
+window.construireDetailReponses = construireDetailReponses;
 
 function toggleDetailNote(id) {
   const el = document.getElementById(id);
@@ -9888,10 +11076,12 @@ function afficherModalDetail(titre, contenuHtml) {
 // ============================================================================
 function chargerListeCorriges() {
   const container = document.getElementById('listeCorrigesContainer');
-  if (!container) { console.error('[CORRIGÉS] #listeCorrigesContainer introuvable'); return; }
-  container.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
+  if (!container) {
+    console.error('[CORRIGES] #listeCorrigesContainer introuvable');
+    return;
+  }
+  container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
 
-  // Vider le conteneur de résultat à chaque rechargement
   const cible = document.getElementById('corrigeContainer');
   if (cible) cible.innerHTML = '';
 
@@ -9899,41 +11089,232 @@ function chargerListeCorriges() {
 
   google.script.run
     .withSuccessHandler(function(data) {
-      console.log('[CORRIGÉS] données reçues :', data);
       if (!data.devoirs || data.devoirs.length === 0) {
-        container.innerHTML = '<p class="text-muted text-center my-4">' +
-          'Aucun corrigé disponible pour le moment.<br>' +
-          '<small>Les corrigés apparaissent une fois les devoirs clôturés ou archivés.</small></p>';
+        container.innerHTML = '<div class="text-center text-muted my-5">' +
+          '<i class="fa-solid fa-book-open fa-3x mb-3" style="color: #dee2e6;"></i>' +
+          '<p>Aucun corrige disponible pour le moment.<br>' +
+          '<small>Les corriges apparaissent une fois les devoirs clotures ou archives.</small></p></div>';
         return;
       }
 
-      let html =
-        '<div class="card p-3 mb-3 bg-light">' +
-          '<label class="form-label small fw-bold">Choisir un devoir</label>' +
-          '<select class="form-select" id="selectCorrigeDevoir" onchange="afficherCorrigeSelectionne()">' +
-            '<option value="">-- Choisir un devoir --</option>';
+      var html = '<div class="accordion-search-wrapper mb-3">' +
+        '<i class="fa fa-search search-icon"></i>' +
+        '<input type="text" class="search-input" id="search-corriges" placeholder="Rechercher un corrige..." autocomplete="off" oninput="filtrerCorriges(this.value)">' +
+        '<button class="search-clear" type="button" onclick="document.getElementById(\'search-corriges\').value=\'\'; filtrerCorriges(\'\');">' +
+          '<i class="fa fa-times"></i>' +
+        '</button>' +
+      '</div>';
+
+      html += '<div class="corriges-container-accordion">';
 
       data.devoirs.forEach(function(d) {
-        let suffixe = '';
-        if (d.statut === 'archive') suffixe = ' [Archivé]';
-        else if (d.statut === 'cloture') suffixe = ' [Clôturé]';
-        else if (d.statut === 'ouvert') suffixe = ' ⚠ En cours (accès anticipé)';
+        var statut = d.statut || 'cloture';
+        var statutBadge = '';
+        var statutClass = '';
+        if (statut === 'ouvert') {
+          statutBadge = '<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>En cours</span>';
+          statutClass = 'ouvert';
+        } else if (statut === 'archive') {
+          statutBadge = '<span class="badge bg-secondary"><i class="fa-solid fa-box-archive me-1"></i>Archive</span>';
+          statutClass = 'archive';
+        } else {
+          statutBadge = '<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Cloture</span>';
+          statutClass = 'cloture';
+        }
 
-        html += '<option value="' + d.id + '">N°' + d.numero + ' — ' + d.titre + suffixe + '</option>';
+        var dateCloture = d.dateCloture ? new Date(d.dateCloture).toLocaleDateString('fr-FR') : '-';
+
+        html += '<div class="devoir-card corrige-card ' + statutClass + '" data-titre="' + (d.titre || '').toLowerCase() + '">' +
+          '<div class="devoir-header" onclick="ouvrirCorrigeDansCarte(\'' + d.id + '\', \'corrige-body-' + d.id + '\')">' +
+            '<div style="flex: 1; min-width: 0;">' +
+              '<p class="devoir-title">' +
+                '<i class="fa-solid fa-book-open me-2 text-warning"></i>' +
+                'No' + d.numero + ' - ' + d.titre +
+              '</p>' +
+              '<div class="devoir-meta">' +
+                '<span><i class="fa-solid fa-user me-1"></i>' + (d.auteurNom || '-') + '</span>' +
+                '<span><i class="fa-regular fa-calendar me-1"></i>Cloture : ' + dateCloture + '</span>' +
+              '</div>' +
+              '<div class="devoir-badges mt-2">' + statutBadge + '</div>' +
+            '</div>' +
+            '<i class="fa-solid fa-chevron-down" style="color: #6c757d;"></i>' +
+          '</div>' +
+          '<div id="corrige-body-' + d.id + '" style="display: none;">' +
+            '<div class="corrige-loading text-center py-3">' +
+              '<div class="spinner-border spinner-border-sm text-warning"></div>' +
+              '<p class="small text-muted mt-2 mb-0">Chargement du corrige...</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
       });
 
-      html += '</select>' +
-        '<small class="text-muted mt-2">Les autres membres ne verront le corrigé qu\'après clôture.</small>' +
-        '</div>';
-
+      html += '</div>';
       container.innerHTML = html;
     })
     .withFailureHandler(function(err) {
-      console.error('[CORRIGÉS] erreur serveur :', err);
+      console.error('[CORRIGES] erreur :', err);
       container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
     })
-    .listerDevoirsCorriges(emailUser);   // ✅ ENVOI EMAIL
+    .listerDevoirsCorriges(emailUser);
 }
+
+window.chargerListeCorriges = chargerListeCorriges;
+
+function filtrerCorriges(query) {
+  var cards = document.querySelectorAll('.corrige-card');
+  var q = String(query || '').toLowerCase().trim();
+
+  cards.forEach(function(card) {
+    var titre = card.getAttribute('data-titre') || '';
+    var texte = card.textContent.toLowerCase();
+    var match = q === '' || titre.includes(q) || texte.includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+window.filtrerCorriges = filtrerCorriges;
+
+function ouvrirCorrigeDansCarte(devoirId, bodyId) {
+  var body = document.getElementById(bodyId);
+  if (!body) return;
+
+  // Fermer les autres cartes
+  document.querySelectorAll('.corrige-card > div[id^="corrige-body-"]').forEach(function(el) {
+    if (el.id !== bodyId) el.style.display = 'none';
+  });
+
+  // Toggle cette carte
+  if (body.style.display === 'none' || body.style.display === '') {
+    body.style.display = 'block';
+
+    // Charger le corrigé si pas encore chargé
+    if (body.querySelector('.corrige-loading')) {
+      chargerCorrigeDansCarte(devoirId, bodyId);
+    }
+  } else {
+    body.style.display = 'none';
+  }
+}
+
+window.ouvrirCorrigeDansCarte = ouvrirCorrigeDansCarte;
+
+function chargerCorrigeDansCarte(devoirId, bodyId) {
+  var body = document.getElementById(bodyId);
+  if (!body) return;
+
+  var emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
+
+  google.script.run
+    .withSuccessHandler(function(data) {
+      var html = '';
+
+      if (data.statut === 'ouvert') {
+        html += '<div class="alert alert-warning small mb-2">' +
+          '<i class="fa-solid fa-triangle-exclamation me-1"></i>' +
+          'Ce devoir est encore en cours. Acces anticipe.</div>';
+      }
+
+      if (!data.questions || data.questions.length === 0) {
+        html += '<p class="text-muted text-center my-3">Aucune question.</p>';
+        body.innerHTML = html;
+        return;
+      }
+
+      html += '<div class="corrige-section p-3">';
+
+      data.questions.forEach(function(q, idx) {
+        html += '<div class="question-card mb-3">' +
+          '<div class="d-flex align-items-start mb-2">' +
+            '<span class="question-number-badge">' + (idx + 1) + '</span>' +
+            '<div style="flex: 1; min-width: 0;">' +
+              '<p class="question-enonce mb-0">' + q.enonce +
+                (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+              '</p>' +
+              '<small class="text-muted">(' + q.bareme + ' pt)</small>' +
+            '</div>' +
+          '</div>';
+
+        // ✅ MEDIA
+        if (q.mediaUrl) {
+          var mediaUrl = String(q.mediaUrl).trim();
+          var fileId = '';
+          var match = mediaUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) fileId = match[1];
+
+          if (fileId) {
+            html += '<div class="question-media-wrapper">';
+
+            if (q.mediaType === 'video') {
+              html += '<div class="video-thumb-container">' +
+                '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+                  'class="video-thumb" alt="Apercu video" ' +
+                  'onerror="this.style.display=\'none\'; this.parentNode.style.background=\'#000\'; this.parentNode.style.minHeight=\'180px\';">' +
+                '<button type="button" class="video-play-overlay" ' +
+                  'onclick="ouvrirVideoPleinEcran(\'' + fileId + '\', \'' + (q.enonce || '').replace(/'/g, "\\'") + '\')">' +
+                  '<i class="fa-solid fa-play"></i>' +
+                  '<span>Lire la video</span>' +
+                '</button>' +
+              '</div>';
+              html += '<p class="question-media-label">' +
+                '<i class="fa-solid fa-video me-1"></i>Video jointe' +
+              '</p>';
+            } else {
+              html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+                'class="question-media" alt="Illustration" ' +
+                'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
+              html += '<p class="question-media-label">' +
+                '<i class="fa-solid fa-image me-1"></i>Image jointe' +
+              '</p>';
+            }
+
+            html += '</div>';
+          }
+        }
+
+        if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
+          var bonnes = Array.isArray(q.bonneReponse) ? q.bonneReponse : [];
+          html += '<div class="question-options">';
+          q.options.forEach(function(opt, i) {
+            var estBonne = bonnes.indexOf(i) !== -1;
+            html += '<label class="question-option ' + (estBonne ? 'checked' : '') + '">' +
+              '<input type="' + (q.typeReponse === 'qcm_unique' ? 'radio' : 'checkbox') + '" disabled ' +
+                (estBonne ? 'checked' : '') + '>' +
+              '<span class="' + (estBonne ? 'text-success fw-bold' : '') + '">' +
+                opt + (estBonne ? ' <i class="fa-solid fa-check ms-1"></i>' : '') +
+              '</span>' +
+            '</label>';
+          });
+          html += '</div>';
+        } else if (q.typeReponse === 'vrai_faux') {
+          var bonne = q.bonneReponse;
+          html += '<div class="question-options">' +
+            '<label class="question-option ' + (bonne === 'vrai' ? 'checked' : '') + '">' +
+              '<input type="radio" disabled ' + (bonne === 'vrai' ? 'checked' : '') + '>' +
+              '<span class="' + (bonne === 'vrai' ? 'text-success fw-bold' : '') + '">Vrai</span>' +
+            '</label>' +
+            '<label class="question-option ' + (bonne === 'faux' ? 'checked' : '') + '">' +
+              '<input type="radio" disabled ' + (bonne === 'faux' ? 'checked' : '') + '>' +
+              '<span class="' + (bonne === 'faux' ? 'text-success fw-bold' : '') + '">Faux</span>' +
+            '</label>' +
+          '</div>';
+        } else {
+          html += '<p class="text-muted small mb-0 fst-italic">Reponse libre - non notee automatiquement.</p>' +
+            (q.bonneReponse ? '<p class="mt-2 mb-0 small"><strong>Reponse attendue :</strong> ' + q.bonneReponse + '</p>' : '');
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+      body.innerHTML = html;
+    })
+    .withFailureHandler(function(err) {
+      body.innerHTML = '<div class="alert alert-danger m-3">Erreur : ' + err.message + '</div>';
+    })
+    .obtenirCorrigeDevoir(devoirId, emailUser);
+}
+
+window.chargerCorrigeDansCarte = chargerCorrigeDansCarte;
 
 function afficherCorrigeSelectionne() {
   const devoirId = document.getElementById('selectCorrigeDevoir').value;
@@ -10872,6 +12253,7 @@ window.exporterPDF = exporterPDF;
 window.exporterWord = exporterWord;
 window.preparerDonneesExport = preparerDonneesExport;
 window.telechargerBlob = telechargerBlob;
+
 
 
 
