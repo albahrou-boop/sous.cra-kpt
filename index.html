@@ -4296,6 +4296,456 @@ body, html {
   font-size: 1rem;
 }
 
+/* ============================================================
+   ACCUEIL (HOME) - VERSION MODERNE 3.0
+   ============================================================ */
+
+/* --- Bannière principale --- */
+.banner-violet {
+  position: relative;
+  background: linear-gradient(135deg, #4b0082 0%, #6a0dad 40%, #8e44ad 100%);
+  padding: 32px 20px 36px 20px;
+  border-radius: 0 0 30px 30px;
+  box-shadow: 0 12px 30px rgba(75, 0, 130, 0.4);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+/* Effet de particules / bulles décoratives */
+.banner-violet::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bannerPulse 6s ease-in-out infinite;
+}
+
+.banner-violet::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bannerPulse 8s ease-in-out infinite reverse;
+}
+
+@keyframes bannerPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.7; }
+}
+
+/* --- Salutation utilisateur --- */
+.banner-greeting {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.banner-greeting-text {
+  flex: 1;
+  min-width: 200px;
+  text-align: left;
+}
+
+.banner-greeting-text .hello {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 4px;
+}
+
+.banner-greeting-text .name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  word-wrap: break-word;
+}
+
+/* --- Logo + titre --- */
+.banner-title-block {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 16px 0 8px 0;
+}
+
+.banner-title-block .logo-img {
+  max-height: 70px;
+  width: auto;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
+.banner-title-block .logo-img:hover {
+  transform: scale(1.05) rotate(-2deg);
+}
+
+.banner-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  line-height: 1.15;
+  color: white;
+}
+
+/* --- Badge profil connecté --- */
+.user-badge-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #212529;
+  padding: 8px 14px 8px 10px;
+  border-radius: 30px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.user-badge .user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #198754, #157347);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.user-badge .user-email {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-badge .logout-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #f8d7da;
+  color: #dc3545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.user-badge .logout-btn:hover {
+  background: #dc3545;
+  color: white;
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .banner-violet {
+    padding: 20px 12px 26px 12px;
+    border-radius: 0 0 22px 22px;
+  }
+  .banner-title {
+    font-size: 1rem;
+    letter-spacing: 0.8px;
+  }
+  .banner-title-block .logo-img {
+    max-height: 50px;
+  }
+  .banner-title-block {
+    gap: 10px;
+  }
+  .banner-greeting-text .name {
+    font-size: 1rem;
+  }
+}
+
+/* --- Bandeau de statistiques rapides --- */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.quick-stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  border-top: 3px solid #198754;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.quick-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.quick-stat-card.blue { border-top-color: #0d6efd; }
+.quick-stat-card.orange { border-top-color: #fd7e14; }
+.quick-stat-card.purple { border-top-color: #6f42c1; }
+
+.quick-stat-value {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #212529;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.quick-stat-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .quick-stats {
+    gap: 8px;
+  }
+  .quick-stat-value {
+    font-size: 1.15rem;
+  }
+  .quick-stat-label {
+    font-size: 0.6rem;
+  }
+}
+
+/* --- Cartes du menu (améliorées) --- */
+.menu-card {
+  position: relative;
+  border: none !important;
+  border-radius: 20px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  padding: 20px 16px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.menu-card::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -30%;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+}
+
+.menu-card:hover::before {
+  transform: scale(1.5);
+  opacity: 0.5;
+}
+
+.menu-card:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+.menu-icon {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-icon {
+  transform: scale(1.1) rotate(-3deg);
+}
+
+.menu-card h4 {
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin: 0 0 4px 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.3px;
+}
+
+.menu-card small {
+  font-size: 0.78rem;
+  opacity: 0.9;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Badge de notification sur carte (nouveauté) */
+.menu-card .card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* --- Barre d'actions rapides --- */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 0 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.quick-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-action-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 1.5px solid #e9ecef;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.quick-action-btn:hover {
+  background: #198754;
+  color: white;
+  border-color: #198754;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(25, 135, 84, 0.25);
+}
+
+.quick-action-btn i {
+  font-size: 0.9rem;
+}
+
+/* --- Améliorations cartes thématiques --- */
+.card-membres { background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%) !important; }
+.card-designations { background: linear-gradient(135deg, #198754 0%, #157347 100%) !important; }
+.card-rapports { background: linear-gradient(135deg, #fd7e14 0%, #e8590c 100%) !important; }
+.card-checkoff { background: linear-gradient(135deg, #20c997 0%, #0ca678 100%) !important; }
+.card-analyses { background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%) !important; }
+.card-lois { background: linear-gradient(135deg, #ffc107 0%, #f0a800 100%) !important; color: #212529 !important; }
+.card-infos-tests { background: linear-gradient(135deg, #4b0082 0%, #6a0dad 100%) !important; }
+
+.card-lois h4,
+.card-lois small,
+.card-lois .menu-icon {
+  color: #212529 !important;
+  text-shadow: none !important;
+}
+
+.card-lois .card-badge {
+  background: rgba(0, 0, 0, 0.15);
+  color: #212529;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* --- Fond d'écran amélioré --- */
+#bg-image.pwa-background {
+  background: url('https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* --- Slogan animé --- */
+.slogan-fixed {
+  animation: sloganFade 4s ease-in-out infinite;
+}
+
+@keyframes sloganFade {
+  0%, 100% { opacity: 0.85; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+}
+
+/* --- Animation d'apparition en cascade --- */
+.menu-card {
+  animation: cardAppear 0.5s ease-out both;
+}
+
+.menu-card:nth-child(1) { animation-delay: 0.05s; }
+.menu-card:nth-child(2) { animation-delay: 0.10s; }
+.menu-card:nth-child(3) { animation-delay: 0.15s; }
+.menu-card:nth-child(4) { animation-delay: 0.20s; }
+.menu-card:nth-child(5) { animation-delay: 0.25s; }
+.menu-card:nth-child(6) { animation-delay: 0.30s; }
+.menu-card:nth-child(7) { animation-delay: 0.35s; }
+
+@keyframes cardAppear {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
   </style>
 </head>
@@ -4458,105 +4908,109 @@ body, html {
 <!-- Conteneur Vue Home -->
 <div id="view-home" class="app-view">
 
-  <!-- Bannière d'en-tête -->
+  <!-- Bannière moderne -->
   <div class="banner-violet text-center">
-    <div class="d-flex justify-content-center align-items-center gap-3 mb-2 flex-wrap">
-      <img src="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK" alt="Logo Sous-CRA" class="logo-img">
-      <h1 class="banner-title h2 mb-0 text-white">SOUS COMMISSION DES ARBITRES DE KOUMPENTOUM</h1>
+
+    <!-- Salutation + profil -->
+    <div class="banner-greeting">
+      <div class="banner-greeting-text">
+        <div class="hello"><i class="fa-solid fa-hand-wave me-1"></i>Bienvenue</div>
+        <div class="name" id="bannerGreetingName">Chargement...</div>
+      </div>
     </div>
-    
-    <!-- Badge Profil Utilisateur Connecté -->
-    <div class="d-inline-flex align-items-center bg-white text-dark px-3 py-1 rounded-pill shadow-sm mt-2 border">
-      <i class="fa-solid fa-circle-user text-primary me-2 fs-6"></i>
-      <span id="userConnectedEmail" class="fw-semibold small text-truncate" style="max-width: 220px;">
-        Chargement...
-      </span>
-      <button class="btn btn-sm btn-link text-danger ms-2 p-0 border-0" 
-              onclick="changerUtilisateur()" 
-              title="Changer d'utilisateur">
-        <i class="fa-solid fa-right-from-bracket small"></i>
-      </button>
+
+    <!-- Logo + Titre -->
+    <div class="banner-title-block">
+      <img src="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK" alt="Logo Sous-CRA" class="logo-img">
+      <h1 class="banner-title">Sous-CRA<br>Koumpentoum</h1>
+    </div>
+
+    <!-- Badge utilisateur connecté -->
+    <div class="user-badge-container">
+      <div class="user-badge">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-email" id="userConnectedEmail">Chargement...</span>
+        <button class="logout-btn" onclick="changerUtilisateur()" title="Se déconnecter">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
     </div>
   </div>
 
+  <!-- Slogan -->
   <div class="slogan-fixed">
     <p class="slogan-text">Arbitrage, ma passion</p>
   </div>
 
-  <!-- Grille de menu -->
-<div class="container py-3 px-2 px-md-3">
-  <div class="row g-3 g-md-4 justify-content-center">
-    
-    <!-- 1. Membres -->
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card menu-card card-membres p-3 p-md-4 text-center shadow-sm h-100" onclick="basculerVue('membres')" style="cursor: pointer;">
-        <i class="fa-solid fa-users menu-icon fa-2x mb-2 text-primary"></i>
-        <h4 class="h5 fw-bold">Membres</h4>
-        <small class="text-muted">Gestion et effectif des arbitres</small>
-      </div>
-    </div>
+  <!-- Grille de menu principale -->
+  <div class="container py-3 px-2 px-md-3">
+    <div class="row g-3 g-md-4 justify-content-center">
 
-    <!-- 2. Désignations -->
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card menu-card card-designations p-3 p-md-4 text-center shadow-sm h-100" onclick="basculerVue('designations')" style="cursor: pointer;">
-        <i class="fa-solid fa-clipboard-list menu-icon fa-2x mb-2 text-success"></i>
-        <h4 class="h5 fw-bold">Désignations</h4>
-        <small class="text-muted">Saisie et suivi des rencontres</small>
+      <!-- 1. Membres -->
+      <div class="col-6 col-lg-4">
+        <div class="card menu-card card-membres" onclick="basculerVue('membres')">
+          <i class="fa-solid fa-users menu-icon"></i>
+          <h4>Membres</h4>
+          <small>Effectif des arbitres</small>
+        </div>
       </div>
-    </div>
 
-    <!-- 3. Rapports Assesseurs -->
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card menu-card card-rapports p-3 p-md-4 text-center shadow-sm h-100" onclick="basculerVue('rapports')" style="cursor: pointer;">
-        <i class="fa-solid fa-file-signature menu-icon fa-2x mb-2 text-warning"></i>
-        <h4 class="h5 fw-bold">Rapports Assesseurs</h4>
-        <small class="text-muted">Évaluations et fiches de matchs</small>
+      <!-- 2. Désignations -->
+      <div class="col-6 col-lg-4">
+        <div class="card menu-card card-designations" onclick="basculerVue('designations')">
+          <i class="fa-solid fa-clipboard-list menu-icon"></i>
+          <h4>Désignations</h4>
+          <small>Saisie et suivi</small>
+        </div>
       </div>
-    </div>
 
-    <!-- 4. Check Off -->
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card menu-card card-checkoff p-3 p-md-4 text-center shadow-sm h-100" onclick="basculerVue('checkoff')" style="cursor: pointer;">
-        <i class="fa-solid fa-money-bill-wave menu-icon fa-2x mb-2 text-info"></i>
-        <h4 class="h5 fw-bold">Check Off</h4>
-        <small class="text-muted">Cotisations et gestion financière</small>
+      <!-- 3. Rapports -->
+      <div class="col-6 col-lg-4">
+        <div class="card menu-card card-rapports" onclick="basculerVue('rapports')">
+          <i class="fa-solid fa-file-signature menu-icon"></i>
+          <h4>Rapports</h4>
+          <small>Évaluations de matchs</small>
+        </div>
       </div>
-    </div>
 
-    <!-- 5. Analyses -->
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card menu-card card-analyses p-3 p-md-4 text-center shadow-sm h-100" onclick="basculerVue('analyses')" style="cursor: pointer;">
-        <i class="fa-solid fa-chart-pie menu-icon fa-2x mb-2 text-danger"></i>
-        <h4 class="h5 fw-bold">Analyses</h4>
-        <small class="text-muted">Synthèses, bilans et statistiques</small>
+      <!-- 4. Check-Off -->
+      <div class="col-6 col-lg-4">
+        <div class="card menu-card card-checkoff" onclick="basculerVue('checkoff')">
+          <i class="fa-solid fa-money-bill-wave menu-icon"></i>
+          <h4>Check-Off</h4>
+          <small>Gestion financière</small>
+        </div>
       </div>
-    </div>
 
-<!-- 6. Lois du Jeu -->
-<div class="col-12 col-sm-6 col-lg-4">
-  <div class="card menu-card card-lois p-3 p-md-4 text-center shadow-sm h-100 bg-warning text-white" onclick="basculerVue('lois-du-jeu')" style="cursor: pointer;">
-    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
-      <i class="fa-solid fa-futbol fa-2x" style="color: #212529;"></i>
-      <i class="fa-solid fa-whistle fa-2x" style="color: #212529;"></i>
+      <!-- 5. Analyses -->
+      <div class="col-6 col-lg-4">
+        <div class="card menu-card card-analyses" onclick="basculerVue('analyses')">
+          <i class="fa-solid fa-chart-pie menu-icon"></i>
+          <h4>Analyses</h4>
+          <small>Bilans & statistiques</small>
+        </div>
+      </div>
+
+      <!-- 6. Lois du Jeu -->
+      <div class="col-6 col-lg-4">
+        <div class="card menu-card card-lois" onclick="basculerVue('lois-du-jeu')">
+          <i class="fa-solid fa-book menu-icon"></i>
+          <h4>Lois du Jeu</h4>
+          <small>Règles & circulaires</small>
+        </div>
+      </div>
+
+      <!-- 7. Infos - Tests - Échanges -->
+      <div class="col-12 col-lg-4">
+        <div class="card menu-card card-infos-tests" onclick="basculerVue('infos-tests-echanges')">
+          <i class="fa-solid fa-comments menu-icon"></i>
+          <h4>Infos - Tests - Échanges</h4>
+          <small>Forum, devoirs et corrigés</small>
+        </div>
+      </div>
+
     </div>
-    <h4 class="h5 fw-bold text-white">Lois du Jeu</h4>
-    <small class="text-white opacity-75">Règles, modifications et circulaires</small>
   </div>
-</div>
-<!-- 7. Infos - Tests - Échanges -->
-<div class="col-12 col-sm-6 col-lg-4">
-  <div class="card menu-card card-infos-tests p-3 p-md-4 text-center shadow-sm h-100 text-white" style="background-color: #4B0082;" onclick="basculerVue('infos-tests-echanges')" role="button">
-    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
-      <i class="fa-solid fa-comments-dollar fa-2x" style="color: #fd7e14;"></i>
-      <i class="fa-solid fa-book-open fa-2x" style="color: #fd7e14;"></i>
-    </div>
-    <h4 class="h5 fw-bold text-white">Infos - Tests - Échanges</h4>
-    <small class="text-white opacity-75">Discussions, informations et évaluations</small>
-  </div>
-</div>
-  </div>
-</div>
-
 </div> <!-- Fin de #view-home -->
 
 <div class="container py-2 px-2 px-md-3">
@@ -6472,8 +6926,6 @@ body, html {
   })();
 
 
-
-
 // ========================================================
 // VARIABLES GLOBALES
 // ========================================================
@@ -6940,6 +7392,8 @@ function soumettreConnexion(event) {
 
       afficherModalConnexion(false); 
       afficherEmailDansBanniere(res.email); 
+      // 🆕 Rafraîchir l'accueil après connexion
+if (typeof initialiserAccueil === 'function') initialiserAccueil();
 
       // 🚀 Redirige proprement vers l'accueil (ce qui masquera l'en-tête et affichera la grille)
      basculerVue('home');
@@ -11854,10 +12308,15 @@ function basculerVue(nomVue) {
     });
 
     if (nomVue === 'home') {
-      if (viewHome) { viewHome.classList.remove('d-none'); viewHome.style.display = ''; }
-      if (header) header.classList.add('d-none');
-      if (bgImage) bgImage.style.opacity = '1';
-    } else {
+  if (viewHome) { viewHome.classList.remove('d-none'); viewHome.style.display = ''; }
+  if (header) header.classList.add('d-none');
+  if (bgImage) bgImage.style.opacity = '1';
+  
+  // 🆕 Initialiser l'accueil moderne
+  if (typeof initialiserAccueil === 'function') initialiserAccueil();
+  if (typeof chargerQuickStats === 'function') chargerQuickStats();
+}
+     else {
       if (header) header.classList.remove('d-none');
 
       const titresPersonnalises = {
@@ -15082,7 +15541,82 @@ function toggleCriteriaAccordion(element) {
   return false;
 }
 window.toggleCriteriaAccordion = toggleCriteriaAccordion;
+// ============================================================================
+// ACCUEIL : INITIALISATION DYNAMIQUE
+// ============================================================================
 
+/**
+ * Remplit le bandeau d'accueil : salutation, avatar, email
+ */
+function initialiserAccueil() {
+  const emailUser = window.currentUser || sessionStorage.getItem('user_email_souscra') || '';
+  const emailInput = document.getElementById('userConnectedEmail');
+  const greetingName = document.getElementById('bannerGreetingName');
+  const avatar = document.getElementById('userAvatar');
+
+  if (emailInput) emailInput.textContent = emailUser || 'Non connecté';
+
+  // Extraire le prénom depuis l'email
+  let prenom = 'Arbitre';
+  if (emailUser && emailUser.includes('@')) {
+    prenom = emailUser.split('@')[0];
+    // Capitaliser
+    prenom = prenom.charAt(0).toUpperCase() + prenom.slice(1);
+  }
+
+  if (greetingName) greetingName.textContent = 'Cher ' + prenom + ' 👋';
+  if (avatar) {
+    // Extraire les 2 premières lettres du prénom pour l'avatar
+    const initiales = prenom.substring(0, 2).toUpperCase();
+    avatar.textContent = initiales;
+  }
+}
+
+window.initialiserAccueil = initialiserAccueil;
+
+
+/**
+ * Charge les statistiques rapides de l'accueil
+ */
+function chargerQuickStats() {
+  if (typeof google === 'undefined' || !google.script || !google.script.run) return;
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res) return;
+
+      const setText = function(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+
+      // Membres
+      if (res.membres) {
+        setText('quickStatMembres', res.membres.total || '0');
+      }
+
+      // Désignations (matchs)
+      if (res.designations) {
+        setText('quickStatDesignations', res.designations.total || '0');
+      }
+
+      // Rapports
+      if (res.rapports) {
+        setText('quickStatRapports', res.rapports.total || '0');
+      }
+    })
+    .withFailureHandler(function(err) {
+      console.warn('[chargerQuickStats] Erreur :', err);
+      // Valeurs par défaut en cas d'erreur
+      ['quickStatMembres', 'quickStatDesignations', 'quickStatRapports'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '-';
+      });
+    })
+    .getStatsGlobales();
+}
+
+window.chargerQuickStats = chargerQuickStats;
 
 
   </script>
