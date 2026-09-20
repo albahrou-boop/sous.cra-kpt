@@ -4746,6 +4746,369 @@ body, html {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ============================================================
+   MODULE CHECK-OFF - ONGLETS EN PILLS MODERNES
+   ============================================================ */
+
+#checkoffSubTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 6px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: none !important;
+}
+
+#checkoffSubTabs .nav-item {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+}
+
+#checkoffSubTabs .nav-link {
+  flex: 1;
+  min-width: 130px;
+  padding: 12px 14px;
+  border-radius: 12px !important;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #6c757d;
+  background: transparent;
+  border: none !important;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#checkoffSubTabs .nav-link:hover {
+  background: #f8f9fa;
+  color: #198754;
+  transform: translateY(-1px);
+}
+
+/* Onglet ACTIF : bien visible */
+#checkoffSubTabs .nav-link.active {
+  background: linear-gradient(135deg, #198754, #20c997) !important;
+  color: white !important;
+  box-shadow: 0 6px 16px rgba(25, 135, 84, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Onglets INACTIFS : atténués pour ne pas distraire */
+#checkoffSubTabs .nav-link:not(.active) {
+  opacity: 0.65;
+}
+
+#checkoffSubTabs .nav-link:not(.active):hover {
+  opacity: 1;
+}
+
+/* Animation d'apparition des contenus */
+#subTabCheckoffContent .tab-pane {
+  animation: fadeInPane 0.25s ease-out;
+}
+
+@keyframes fadeInPane {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Sur mobile : icônes masquées, texte plus petit */
+@media (max-width: 768px) {
+  #checkoffSubTabs .nav-link {
+    min-width: 90px;
+    padding: 10px 8px;
+    font-size: 0.68rem;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
+}
+
+/* ============================================================
+   TABLEAUX ANALYSE - VERSION MODERNE
+   ============================================================ */
+
+/* Tableaux Analyse : en-têtes plus visibles */
+.analyse-table thead th {
+  background: linear-gradient(135deg, #212529, #343a40);
+  color: white;
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 14px 12px;
+  border: none;
+  position: relative;
+}
+
+.analyse-table thead th:first-child {
+  border-radius: 12px 0 0 0;
+}
+
+.analyse-table thead th:last-child {
+  border-radius: 0 12px 0 0;
+}
+
+/* Lignes avec espacement et zebra subtil */
+.analyse-table tbody tr {
+  border-bottom: 1px solid #f1f3f5;
+  transition: all 0.15s ease;
+}
+
+.analyse-table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.analyse-table tbody tr:hover {
+  background: #f0fdf4;
+  transform: scale(1.002);
+  box-shadow: 0 2px 8px rgba(25, 135, 84, 0.08);
+}
+
+/* Cellule "Membre" en évidence */
+.analyse-table tbody td:first-child {
+  background: linear-gradient(90deg, #f8f9fa, transparent);
+  border-left: 3px solid #198754;
+}
+
+/* Cellules numériques en évidence */
+.analyse-table tbody td .fw-bold.fs-6,
+.analyse-table tbody td .fw-bold.fs-5 {
+  color: #0d6efd;
+}
+
+/* Ligne TOTAL GÉNÉRAL encore plus visible */
+.analyse-table tfoot tr,
+.analyse-table tbody tr.table-secondary {
+  background: linear-gradient(135deg, #d1e7dd, #a3cfbb) !important;
+  border-top: 3px solid #198754 !important;
+  border-bottom: none !important;
+}
+
+.analyse-table tfoot td,
+.analyse-table tbody tr.table-secondary td {
+  font-weight: 800;
+  color: #0f5132;
+  padding: 16px 12px;
+  border: none;
+}
+
+/* Colonnes "Montant" en vert */
+.analyse-table .text-success {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Espacement des colonnes */
+.analyse-table tbody td {
+  padding: 14px 12px;
+  vertical-align: middle;
+}
+
+/* Scroll horizontal propre */
+.analyse-table-wrapper .table-responsive {
+  border-radius: 0 0 16px 16px;
+  overflow-x: auto;
+}
+
+/* Sur mobile : padding réduit */
+@media (max-width: 768px) {
+  .analyse-table thead th {
+    font-size: 0.65rem;
+    padding: 10px 8px;
+  }
+  .analyse-table tbody td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+  .analyse-table .text-success {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================================
+   BANDEAUX DE ZONE DANS LA LISTE DES RAPPORTS
+   ============================================================ */
+
+.zone-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 14px 0;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #198754, #20c997);
+  color: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(25, 135, 84, 0.25);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  animation: zoneFadeIn 0.3s ease-out;
+}
+
+.zone-divider:first-child {
+  margin-top: 8px;
+}
+
+.zone-divider .zone-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.zone-divider .zone-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.zone-divider .zone-count {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+}
+
+/* Variante exploitée (gris/bleu) */
+.zone-divider.exploite {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  box-shadow: 0 4px 14px rgba(108, 117, 125, 0.25);
+}
+
+/* Variante incident (rouge) */
+.zone-divider.incident {
+  background: linear-gradient(135deg, #dc3545, #b02a37);
+  box-shadow: 0 4px 14px rgba(220, 53, 69, 0.25);
+}
+
+/* Variante normal (bleu) */
+.zone-divider.normal {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  box-shadow: 0 4px 14px rgba(13, 110, 253, 0.25);
+}
+
+@keyframes zoneFadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+  .zone-divider {
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    gap: 10px;
+  }
+  .zone-divider .zone-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+  .zone-divider .zone-count {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+  }
+}
+
+/* ============================================================
+   GARANTIE D'AFFICHAGE DES BANDEAUX DE ZONE
+   ============================================================ */
+
+#containerTblDes .zone-divider,
+#containerTblRapports .zone-divider,
+.designations-container-accordion .zone-divider {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 50px;
+  max-height: none !important;
+  overflow: visible !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Force le fond et la couleur de texte */
+#containerTblDes .zone-divider {
+  background: linear-gradient(135deg, #198754, #20c997) !important;
+  color: #ffffff !important;
+}
+
+#containerTblDes .zone-divider.exploite {
+  background: linear-gradient(135deg, #6c757d, #495057) !important;
+}
+
+#containerTblDes .zone-divider.incident {
+  background: linear-gradient(135deg, #dc3545, #b02a37) !important;
+}
+
+#containerTblDes .zone-divider.normal {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;
+}
+
+/* Force l'affichage des enfants du bandeau */
+.zone-divider .zone-icon,
+.zone-divider .zone-name,
+.zone-divider .zone-count {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ============================================================
+   VIDÉOS DRIVE EN IFRAME (lecture garantie)
+   ============================================================ */
+.video-drive-container {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 10px auto;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  aspect-ratio: 16 / 9;
+}
+
+.video-drive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .video-drive-container {
+    max-width: 100%;
+  }
+}
+
+
+
+
 
   </style>
 </head>
@@ -5666,31 +6029,34 @@ body, html {
     <div class="card-body p-2 p-md-3">
       
       <ul class="nav nav-tabs mb-3" id="checkoffSubTabs" role="tablist">
-        <!-- Rôle autorisant la saisie de désignation -->
-        <li class="nav-item role-saisie-desig" role="presentation">
-          <button class="nav-link active fw-bold btn-sm" id="tab-co-saisie" data-bs-toggle="tab" data-bs-target="#c-saisie" type="button" role="tab">
-            ✏️ Saisie d'un Versement
-          </button>
-        </li>
-        <!-- Accessible à TOUS -->
-        <li class="nav-item" role="presentation">
-          <button class="nav-link fw-bold btn-sm" id="tab-co-versements" data-bs-toggle="tab" data-bs-target="#c-affichage" type="button" role="tab" onclick="loadCheckOffs()">
-            📜 Liste des Check Off
-          </button>
-        </li>
-        <!-- Accessible à TOUS -->
-        <li class="nav-item" role="presentation">
-          <button class="nav-link fw-bold btn-sm" id="tab-co-cotisations" data-bs-toggle="tab" data-bs-target="#c-cotisations" type="button" role="tab" onclick="loadCotisations()">
-            💳 Liste des Cotisations annuelles
-          </button>
-        </li>
-        <!-- NOUVEAU : Accessible à TOUS -->
-        <li class="nav-item" role="presentation">
-          <button class="nav-link fw-bold btn-sm" id="tab-co-autres-cotisations" data-bs-toggle="tab" data-bs-target="#c-autres-cotisations" type="button" role="tab" onclick="loadAutresCotisations()">
-            💰 Liste des autres Cotisations
-          </button>
-        </li>
-      </ul>
+  <!-- 1. Saisie -->
+  <li class="nav-item role-saisie-desig" role="presentation">
+    <button class="nav-link active" id="tab-co-saisie" data-bs-toggle="tab" data-bs-target="#c-saisie" type="button" role="tab">
+      ✏️ Saisir un versement
+    </button>
+  </li>
+
+  <!-- 2. Check-Offs -->
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab-co-versements" data-bs-toggle="tab" data-bs-target="#c-affichage" type="button" role="tab" onclick="loadCheckOffs()">
+      📜 Liste check-Offs
+    </button>
+  </li>
+
+  <!-- 3. Cotisations annuelles -->
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab-co-cotisations" data-bs-toggle="tab" data-bs-target="#c-cotisations" type="button" role="tab" onclick="loadCotisations()">
+      💳 Liste cotisations annuelles 
+    </button>
+  </li>
+
+  <!-- 4. Autres cotisations -->
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab-co-autres-cotisations" data-bs-toggle="tab" data-bs-target="#c-autres-cotisations" type="button" role="tab" onclick="loadAutresCotisations()">
+      💰 Liste autres cotisations
+    </button>
+  </li>
+</ul>
 
       <div class="tab-content" id="subTabCheckoffContent">
         
@@ -5712,8 +6078,8 @@ body, html {
           </label>
           <select id="c_motif" class="form-select" required onchange="gererAffichageFormulaireVersement(this.value)">
             <option value="" disabled selected>-- Sélectionner --</option>
-            <option value="CheckOff">Check-Off / Match</option>
-            <option value="Cotisation">Cotisation</option>
+            <option value="CheckOff">Check-Off</option>
+            <option value="Cotisation">Cotisation annuelle</option>
             <option value="Autre_Cotisation">Autre Cotisation</option>
           </select>
         </div>
@@ -6926,9 +7292,8 @@ body, html {
   })();
 
 
-// ========================================================
-// VARIABLES GLOBALES
-// ========================================================
+
+
 // ========================================================
 // VARIABLES GLOBALES
 // ========================================================
@@ -8451,9 +8816,71 @@ function remplirListeSuperviseursRapport() {
 // ==========================================
 
 /**
- * Charge et affiche la liste des rapports d'évaluation des arbitres.
- * Gère l'affichage responsive, le regroupement par rencontre et les accès restreints.
+ * Regroupe une liste de matchs par zone (lieu) et génère les bandeaux de zone.
  */
+function construireListeAvecZones(matchs, canArchive, isExploite) {
+  if (!matchs || matchs.length === 0) return '';
+
+  let html = '';
+  let zoneCourante = null;
+  let countZone = 0;
+  let bufferZone = '';
+
+  // Détermine la classe du bandeau selon le type de liste
+  let zoneClass = 'normal';
+  if (isExploite) {
+    zoneClass = 'exploite';
+  } else {
+    const hasIncident = matchs.some(function(m) { return m.aIncidentOui; });
+    zoneClass = hasIncident ? 'incident' : 'normal';
+  }
+
+  matchs.forEach(function(match, index) {
+    const zone = String(match.lieu || 'Zone non spécifiée').trim();
+    const isLastItem = (index === matchs.length - 1);
+
+    if (zone !== zoneCourante) {
+      // Flush du groupe précédent
+      if (zoneCourante !== null) {
+        html += construireBandeauZone(zoneCourante, countZone, zoneClass);
+        html += bufferZone;
+      }
+      zoneCourante = zone;
+      countZone = 0;
+      bufferZone = '';
+    }
+
+    bufferZone += construireCarteMatch(match, canArchive, isExploite);
+    countZone++;
+
+    if (isLastItem) {
+      html += construireBandeauZone(zoneCourante, countZone, zoneClass);
+      html += bufferZone;
+    }
+  });
+
+  return html;
+}
+
+/**
+ * Construit le bandeau d'en-tête de zone
+ */
+function construireBandeauZone(zoneName, count, variantClass) {
+  return `
+    <div class="zone-divider ${variantClass}">
+      <div class="zone-icon">
+        <i class="fa-solid fa-map-marker-alt"></i>
+      </div>
+      <div class="zone-name">${escapeHTML(zoneName)}</div>
+      <div class="zone-count">
+        <i class="fa-solid fa-futbol me-1"></i>${count} match${count > 1 ? 's' : ''}
+      </div>
+    </div>
+  `;
+}
+
+window.construireListeAvecZones = construireListeAvecZones;
+window.construireBandeauZone = construireBandeauZone;
 /**
  * Charge et affiche la liste des rapports d'évaluation des arbitres.
  * Version optimisée : affichage complet des motifs d'incidents + performance améliorée.
@@ -8518,13 +8945,13 @@ function loadRapportsDisplay() {
         else nonExploites.push(item);
       });
 
-      // Tri des non exploités : incidents d'abord, puis par lieu, puis par date
+      // Tri des non exploités : par lieu, puis incidents, puis par date
       nonExploites.sort(function(a, b) {
-        if (a.aIncidentOui && !b.aIncidentOui) return -1;
-        if (!a.aIncidentOui && b.aIncidentOui) return 1;
         const lieuA = String(a.lieu || '-').trim().toLowerCase();
         const lieuB = String(b.lieu || '-').trim().toLowerCase();
         if (lieuA !== lieuB) return lieuA.localeCompare(lieuB);
+        if (a.aIncidentOui && !b.aIncidentOui) return -1;
+        if (!a.aIncidentOui && b.aIncidentOui) return 1;
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
 
@@ -8545,9 +8972,8 @@ function loadRapportsDisplay() {
       if (nonExploites.length === 0) {
         html += '<p class="text-muted fst-italic">Aucun match en attente.</p>';
       } else {
-        nonExploites.forEach(function(match) {
-          html += construireCarteMatch(match, canUserArchive, false);
-        });
+        // ✅ Utilisation de la fonction avec bandeaux de zone
+        html += construireListeAvecZones(nonExploites, canUserArchive, false);
       }
       html += '</div>';
 
@@ -8557,9 +8983,8 @@ function loadRapportsDisplay() {
       if (exploites.length === 0) {
         html += '<p class="text-muted fst-italic">Aucun match archivé.</p>';
       } else {
-        exploites.forEach(function(match) {
-          html += construireCarteMatch(match, canUserArchive, true);
-        });
+        // ✅ Utilisation de la fonction avec bandeaux de zone
+        html += construireListeAvecZones(exploites, canUserArchive, true);
       }
       html += '</div>';
 
@@ -10085,149 +10510,145 @@ window.switchCheckAnalyseTab = switchCheckAnalyseTab;
  * @param {string} zoneCible - Nom de la zone ou 'TOUTES'
  * @param {string} situation - 'Tout', 'Payé', ou 'Recouvrer'
  */
-/**
- * Calcul de la situation pour une zone ou pour l'ensemble des zones
- * Prend en compte les barèmes spécifiques et ignore les matchs futurs (dont la date/heure n'est pas encore atteinte).
- * @param {string} zoneCible - Nom de la zone ou 'TOUTES'
- * @param {string} situation - 'Tout', 'Payé', ou 'Recouvrer'
- */
 function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, situation) {
   const toursConfig = ['Normal', 'Demi-Finale', 'Finale'];
   let statsParTour = {
-    'Normal': { matchs: 0, montant: 0 },
-    'Demi-Finale': { matchs: 0, montant: 0 },
-    'Finale': { matchs: 0, montant: 0 }
+    'Normal': { matchs: 0, montant: 0, anomalie: false },
+    'Demi-Finale': { matchs: 0, montant: 0, anomalie: false },
+    'Finale': { matchs: 0, montant: 0, anomalie: false }
   };
 
-  const isToutes = (zoneCible.toLowerCase() === 'toutes');
-  const maintenant = new Date(); // Date et heure actuelles
+  const isToutes = String(zoneCible || '').toLowerCase() === 'toutes';
+  const maintenant = new Date();
 
-  // Fonction pour déterminer le tarif unitaire selon la zone et le tour
   function getTarifUnitaire(zoneNom, tourNom) {
     const z = (zoneNom || '').toLowerCase();
     const t = (tourNom || '').toLowerCase();
     const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
-
-    if (t.includes('normal')) {
-      return estZoneSpeciale ? 1600 : 1900;
-    } else if (t.includes('demi')) {
-      return 3000;
-    } else if (t.includes('final')) {
-      return 4000;
-    }
+    if (t.includes('demi')) return 3000;
+    if (t.includes('final')) return 4000;
+    if (t.includes('normal')) return estZoneSpeciale ? 1600 : 1900;
     return 1900;
   }
 
-  // Fonction pour vérifier si un match est passé ou atteint (Date <= Maintenant)
   function estMatchPasseOuAtteint(dateMatchVal, heureMatchVal) {
-    if (!dateMatchVal) return true; // Par défaut si la date est absente, on l'inclut
-
+    if (!dateMatchVal) return true;
     try {
       let dateObj = new Date(dateMatchVal);
       if (isNaN(dateObj.getTime())) return true;
-
-      // Si une heure est fournie, on l'intègre dans l'objet Date
       if (heureMatchVal) {
-        const heureStr = String(heureMatchVal).trim();
-        const parts = heureStr.split(':');
+        const parts = String(heureMatchVal).trim().split(':');
         if (parts.length >= 2) {
           dateObj.setHours(parseInt(parts[0], 10) || 0);
           dateObj.setMinutes(parseInt(parts[1], 10) || 0);
         }
       }
-
       return dateObj <= maintenant;
     } catch (e) {
-      return true; // En cas de doute, on inclut le match
+      return true;
     }
   }
 
-  // 1. Filtrer les désignations de la zone et exclure les matchs futurs
-  const desigsFiltrees = (dataDesignations || []).filter(d => {
-    if (!d.zone) return false;
-    
-    // Vérification de la zone
-    const matchZone = isToutes ? true : (d.zone.toLowerCase() === zoneCible.toLowerCase());
-    if (!matchZone) return false;
-
-    // Exclusion des matchs futurs (date et heure non encore atteintes)
-    // On s'attend à ce que d.dateMatch et d.heureMatch soient présents dans l'objet brut
+  // 1. Filtrer les désignations (zone + match passé)
+  const desigsFiltrees = (dataDesignations || []).filter(function(d) {
+    if (!d || !d.zone) return false;
+    if (!isToutes && String(d.zone).toLowerCase() !== String(zoneCible).toLowerCase()) return false;
     return estMatchPasseOuAtteint(d.dateMatch, d.heureMatch);
   });
 
-  // 2. Filtrer les check-offs de la zone
-  const checksFiltres = (dataCheckOffs || []).filter(c => {
-    if (!c.zone) return false;
+  // 2. Filtrer les check-offs (zone)
+  const checksFiltres = (dataCheckOffs || []).filter(function(c) {
+    if (!c || !c.zone) return false;
     if (isToutes) return true;
-    return c.zone.toLowerCase() === zoneCible.toLowerCase();
+    return String(c.zone).trim().toLowerCase() === String(zoneCible).trim().toLowerCase();
   });
 
-  toursConfig.forEach(tour => {
+  // 3. Calcul par tour
+  toursConfig.forEach(function(tour) {
     const tourKeyLower = tour.toLowerCase();
 
-    // Filtrer les désignations de ce tour précis
-    const desigsTour = desigsFiltrees.filter(d => {
-      const e = (d.etape || '').toLowerCase();
-      if (tourKeyLower.includes('normal')) return e.includes('normal') || (!e.includes('demi') && !e.includes('final'));
+    const desigsTour = desigsFiltrees.filter(function(d) {
+      const e = String(d.etape || '').toLowerCase();
       if (tourKeyLower.includes('demi')) return e.includes('demi');
       if (tourKeyLower.includes('final')) return e.includes('final');
-      return false;
+      return !e.includes('demi') && !e.includes('final');
     });
 
-    // Filtrer les check-offs de ce tour précis
-    const checksTour = checksFiltres.filter(c => {
-      const e = (c.etape || '').toLowerCase();
-      if (tourKeyLower.includes('normal')) return e.includes('normal') || (!e.includes('demi') && !e.includes('final'));
+    const checksTour = checksFiltres.filter(function(c) {
+      const e = String(c.etape || 'Normal').toLowerCase();
       if (tourKeyLower.includes('demi')) return e.includes('demi');
       if (tourKeyLower.includes('final')) return e.includes('final');
-      return false;
+      return !e.includes('demi') && !e.includes('final');
     });
 
-    // --- A. TOTAL DES MATCHS (Basé sur les désignations passées/atteintes) ---
-    let totalMatchs = desigsTour.length;
-    let totalMontant = 0;
-
-    desigsTour.forEach(d => {
-      totalMontant += getTarifUnitaire(d.zone || zoneCible, tour);
+    // --- A. TOUT : désignations ---
+    const totalMatchsDesignations = desigsTour.length;
+    let totalMontantTheorique = 0;
+    desigsTour.forEach(function(d) {
+      totalMontantTheorique += getTarifUnitaire(d.zone || zoneCible, tour);
     });
 
-    if (totalMatchs === 0 && checksTour.length > 0) {
-      checksTour.forEach(c => {
-        totalMatchs += Number(c.nbMatchs) || 0;
-        totalMontant += Number(c.montant) || (Number(c.nbMatchs) * getTarifUnitaire(c.zone || zoneCible, tour));
-      });
-    }
-
-    // --- B. MATCHS PAYÉS (Statut VALIDE ou CONFIRME) ---
-    let matchPayes = 0;
+    // --- B. PAYÉ : check-offs CONFIRME/VALIDE ---
+    let matchsPayes = 0;
     let montantPaye = 0;
 
-    checksTour.forEach(c => {
-      const statut = (c.statut || '').toUpperCase();
-      if (statut === 'CONFIRME' || statut === 'VALIDE') {
-        const nb = Number(c.nbMatchs) || 0;
-        matchPayes += nb;
-        montantPaye += Number(c.montant) || (nb * getTarifUnitaire(c.zone || zoneCible, tour));
+    // --- C. RECOUVRER : check-offs ATTENTE + matchs sans check-off ---
+    let matchsAttente = 0;
+    let montantAttente = 0;
+
+    checksTour.forEach(function(c) {
+      const statut = String(c.statut || 'ATTENTE').trim().toUpperCase();
+      const isConfirme = (statut === 'CONFIRME' || statut === 'VALIDE');
+      const nb = Number(c.nbMatchs) || 0;
+      const mt = Number(c.montant) || 0;
+
+      if (isConfirme) {
+        matchsPayes += nb;
+        montantPaye += mt;
+      } else {
+        matchsAttente += nb;
+        montantAttente += mt;
       }
     });
 
-    // --- C. AFFECTATION SELON LA SITUATION CHOISIE ---
-    if (situation === 'Tout') {
-      statsParTour[tour].matchs = totalMatchs;
-      statsParTour[tour].montant = totalMontant;
+    // Matchs restants (désignations non couvertes par un check-off)
+    const totalMatchsCheckOffs = matchsPayes + matchsAttente;
+    const matchsSansCheck = Math.max(0, totalMatchsDesignations - totalMatchsCheckOffs);
 
-    } else if (situation === 'Payé') {
-      statsParTour[tour].matchs = matchPayes;
-      statsParTour[tour].montant = montantPaye;
+    let matchsRecouvrer = matchsAttente + matchsSansCheck;
+    let montantRecouvrer = montantAttente + (matchsSansCheck * getTarifUnitaire(zoneCible, tour));
 
-    } else if (situation === 'Recouvrer') {
-      statsParTour[tour].matchs = Math.max(0, totalMatchs - matchPayes);
-      statsParTour[tour].montant = Math.max(0, totalMontant - montantPaye);
+    // --- D. DÉTECTION D'ANOMALIE ---
+    // Une anomalie existe si le nombre de matchs PAYÉS dépasse le total des désignations
+    const anomalie = (matchsPayes > totalMatchsDesignations);
+
+    if (anomalie) {
+      console.warn('[CheckOff Anomalie] Zone : ' + zoneCible +
+        ' | Tour : ' + tour +
+        ' | Payés : ' + matchsPayes +
+        ' | Total désignations : ' + totalMatchsDesignations +
+        ' | Écart : ' + (matchsPayes - totalMatchsDesignations));
     }
+
+    // --- Affectation finale ---
+    if (situation === 'Tout') {
+      statsParTour[tour].matchs = totalMatchsDesignations;
+      statsParTour[tour].montant = totalMontantTheorique;
+    } else if (situation === 'Payé') {
+      statsParTour[tour].matchs = matchsPayes;
+      statsParTour[tour].montant = montantPaye;
+    } else if (situation === 'Recouvrer') {
+      statsParTour[tour].matchs = matchsRecouvrer;
+      statsParTour[tour].montant = montantRecouvrer;
+    }
+
+    // Marquer l'anomalie sur le tour
+    statsParTour[tour].anomalie = anomalie;
   });
 
   return statsParTour;
 }
+window.calculerSituationCheckOff = calculerSituationCheckOff;
 
 /**
  * Charge l'affichage pour la vue ZONES avec les sélecteurs Zone et Situation
@@ -10241,60 +10662,104 @@ function chargerCheckOffToutes() {
   if (!body) return;
 
   const situationChoisie = selectSituation ? selectSituation.value : 'Tout';
-  const zonesList = ["Koumpentoum", "Bamba", "Kahène", "Méréto", "Malème Niani", "Patoulane", "Ndame", "Kouthiaba", "Payar", "Kouthiagaydi"];
+  const zonesList = ["Koumpentoum", "Bamba", "Kahène", "Méréto", "Malème Niani",
+                     "Patoulane", "Ndame", "Kouthiaba", "Payar", "Kouthiagaydi"];
 
-  body.innerHTML = '<tr><td colspan="7" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
+  body.innerHTML = '<tr><td colspan="7"><div class="analyse-loading"><div class="spinner-border text-success"></div></div></td></tr>';
 
-  google.script.run.withSuccessHandler(function(checkOffsData) {
-    // Utilisation correcte des désignations brutes basées sur Lieu_Stade
-    google.script.run.withSuccessHandler(function(desigsData) {
-      body.innerHTML = '';
-      const fragment = document.createDocumentFragment();
+  google.script.run
+    .withSuccessHandler(function(checkOffsData) {
+      google.script.run
+        .withSuccessHandler(function(desigsData) {
+          let html = '';
+          let totGenMatchsNormal = 0, totGenMontantNormal = 0;
+          let totGenMatchsDemi = 0, totGenMontantDemi = 0;
+          let totGenMatchsFinale = 0, totGenMontantFinale = 0;
+          let anomaliesZones = [];
 
-      let totGenMatchsNormal = 0, totGenMontantNormal = 0;
-      let totGenMatchsDemi = 0, totGenMontantDemi = 0;
-      let totGenMatchsFinale = 0, totGenMontantFinale = 0;
+          zonesList.forEach(function(z) {
+            const stats = calculerSituationCheckOff(checkOffsData, desigsData, z, situationChoisie);
 
-      zonesList.forEach(z => {
-        const stats = calculerSituationCheckOff(checkOffsData, desigsData, z, situationChoisie);
+            totGenMatchsNormal += stats['Normal'].matchs;
+            totGenMontantNormal += stats['Normal'].montant;
+            totGenMatchsDemi += stats['Demi-Finale'].matchs;
+            totGenMontantDemi += stats['Demi-Finale'].montant;
+            totGenMatchsFinale += stats['Finale'].matchs;
+            totGenMontantFinale += stats['Finale'].montant;
 
-        totGenMatchsNormal += stats['Normal'].matchs;
-        totGenMontantNormal += stats['Normal'].montant;
-        totGenMatchsDemi += stats['Demi-Finale'].matchs;
-        totGenMontantDemi += stats['Demi-Finale'].montant;
-        totGenMatchsFinale += stats['Finale'].matchs;
-        totGenMontantFinale += stats['Finale'].montant;
+            // Détection anomalie pour cette zone
+            const hasAnomalie = stats['Normal'].anomalie || stats['Demi-Finale'].anomalie || stats['Finale'].anomalie;
+            if (hasAnomalie) anomaliesZones.push(z);
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${z}</strong></td>
-          <td class="text-center">${stats['Normal'].matchs}</td>
-          <td class="text-end">${stats['Normal'].montant.toLocaleString('fr-FR')} FCFA</td>
-          <td class="text-center">${stats['Demi-Finale'].matchs}</td>
-          <td class="text-end">${stats['Demi-Finale'].montant.toLocaleString('fr-FR')} FCFA</td>
-          <td class="text-center">${stats['Finale'].matchs}</td>
-          <td class="text-end">${stats['Finale'].montant.toLocaleString('fr-FR')} FCFA</td>
-        `;
-        fragment.appendChild(tr);
-      });
+            html += '<tr>';
+            html += '<td>';
+            html += '<div class="analyse-cell-name">';
+            html += '<span class="analyse-avatar ' + (hasAnomalie ? 'orange' : 'blue') + '">';
+            html += '<i class="fa-solid fa-map-marker-alt" style="font-size: 0.7rem;"></i>';
+            html += '</span>';
+            html += '<strong>' + z + '</strong>';
+            if (hasAnomalie) {
+              html += ' <i class="fa-solid fa-triangle-exclamation text-danger ms-2" ';
+              html += 'title="Anomalie : matchs payés > total désignations"></i>';
+            }
+            html += '</div>';
+            html += '</td>';
 
-      // Ligne de total général
-      const trTotal = document.createElement('tr');
-      trTotal.className = 'table-secondary fw-bold';
-      trTotal.innerHTML = `
-        <td>TOTAL GÉNÉRAL</td>
-        <td class="text-center">${totGenMatchsNormal}</td>
-        <td class="text-end text-success">${totGenMontantNormal.toLocaleString('fr-FR')} FCFA</td>
-        <td class="text-center">${totGenMatchsDemi}</td>
-        <td class="text-end text-success">${totGenMontantDemi.toLocaleString('fr-FR')} FCFA</td>
-        <td class="text-center">${totGenMatchsFinale}</td>
-        <td class="text-end text-success">${totGenMontantFinale.toLocaleString('fr-FR')} FCFA</td>
-      `;
-      fragment.appendChild(trTotal);
+            // Colonnes par tour
+            ['Normal', 'Demi-Finale', 'Finale'].forEach(function(tour) {
+              const isAnomalie = stats[tour].anomalie;
+              html += '<td class="text-center"><span class="fw-bold ' + (isAnomalie ? 'text-danger' : '') + '">' + stats[tour].matchs + '</span></td>';
+              html += '<td class="text-end"><span class="fw-bold ' + (isAnomalie ? 'text-danger' : 'text-success') + '">' + stats[tour].montant.toLocaleString('fr-FR') + ' FCFA</span></td>';
+            });
 
-      body.appendChild(fragment);
-    }).getDesignationsBrutes();
-  }).getCheckOffs();
+            html += '</tr>';
+          });
+
+          // --- Ligne TOTAL GÉNÉRAL ---
+          const totalMatchsGlobal = totGenMatchsNormal + totGenMatchsDemi + totGenMatchsFinale;
+          const totalMontantGlobal = totGenMontantNormal + totGenMontantDemi + totGenMontantFinale;
+          const hasAnomalies = anomaliesZones.length > 0;
+
+          html += '<tr class="table-secondary fw-bold">';
+          html += '<td colspan="5" class="text-end">';
+          html += '<strong><i class="fa-solid fa-calculator me-2"></i>TOTAL GÉNÉRAL</strong>';
+          if (hasAnomalies) {
+            html += ' <span class="analyse-badge danger ms-2">';
+            html += '<i class="fa-solid fa-triangle-exclamation me-1"></i>' + anomaliesZones.length + ' anomalie(s)</span>';
+          }
+          html += '</td>';
+          html += '<td class="text-center"><span class="text-primary fs-4">' + totalMatchsGlobal + '</span>';
+          html += '<div class="text-muted" style="font-size: 0.7rem;">match(s)</div></td>';
+          html += '<td class="text-end"><span class="text-success fs-5">' + totalMontantGlobal.toLocaleString('fr-FR') + ' FCFA</span></td>';
+          html += '</tr>';
+
+          // Message global d'alerte
+          if (hasAnomalies) {
+            html += '<tr>';
+            html += '<td colspan="7" class="text-center text-danger small py-3" ';
+            html += 'style="background: #f8d7da; border-radius: 8px;">';
+            html += '<i class="fa-solid fa-circle-info me-1"></i>';
+            html += '<strong>' + anomaliesZones.length + ' zone(s) présentent une anomalie :</strong> ';
+            html += anomaliesZones.join(', ') + '.';
+            html += '<br><small>Le nombre de matchs payés dépasse le nombre de désignations pour ces zones. ';
+            html += 'Vérifiez la feuille COUPURES.</small>';
+            html += '</td>';
+            html += '</tr>';
+          }
+
+          body.innerHTML = html;
+        })
+        .withFailureHandler(function(err) {
+          console.error('Erreur getDesignationsBrutes :', err);
+          body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+        })
+        .getDesignationsBrutes();
+    })
+    .withFailureHandler(function(err) {
+      console.error('Erreur getCheckOffs :', err);
+      body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+    })
+    .getCheckOffs();
 }
 
 /**
@@ -10312,55 +10777,123 @@ function chargerCheckOffParZone() {
   const situationChoisie = selectSituation ? selectSituation.value : 'Tout';
 
   if (!zoneChoisie) {
-    body.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Veuillez sélectionner une zone.</td></tr>';
+    body.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">' +
+      '<i class="fa-solid fa-hand-pointer me-2"></i>Veuillez sélectionner une zone.</td></tr>';
     if (foot) foot.innerHTML = '';
     return;
   }
 
-  body.innerHTML = '<tr><td colspan="7" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
+  body.innerHTML = '<tr><td colspan="7"><div class="analyse-loading"><div class="spinner-border text-success"></div></div></td></tr>';
 
-  // Récupération combinée des Check-Offs et des Désignations brutes
-  google.script.run.withSuccessHandler(function(checkOffsData) {
-    google.script.run.withSuccessHandler(function(desigsData) {
-      const stats = calculerSituationCheckOff(checkOffsData, desigsData, zoneChoisie, situationChoisie);
+  google.script.run
+    .withSuccessHandler(function(checkOffsData) {
+      google.script.run
+        .withSuccessHandler(function(desigsData) {
+          const stats = calculerSituationCheckOff(checkOffssData, desigsData, zoneChoisie, situationChoisie);
 
-      body.innerHTML = '';
-      let totalMatchsGlobal = 0;
-      let totalMontantGlobal = 0;
+          // Vérifier s'il y a une anomalie sur l'un des tours
+          const hasAnomalie = stats['Normal'].anomalie || stats['Demi-Finale'].anomalie || stats['Finale'].anomalie;
 
-      const tr = document.createElement('tr');
-      let htmlContent = `<td><strong>${zoneChoisie}</strong> <span class="badge bg-secondary ms-1">${situationChoisie}</span></td>`;
+          // Calcul du total global (toutes étapes confondues)
+          const totalMatchsGlobal = stats['Normal'].matchs + stats['Demi-Finale'].matchs + stats['Finale'].matchs;
+          const totalMontantGlobal = stats['Normal'].montant + stats['Demi-Finale'].montant + stats['Finale'].montant;
 
-      ['Normal', 'Demi-Finale', 'Finale'].forEach(tour => {
-        const m = stats[tour].matchs;
-        const mt = stats[tour].montant;
-        totalMatchsGlobal += m;
-        totalMontantGlobal += mt;
+          // --- Ligne zone ---
+          let html = '<tr>';
 
-        htmlContent += `
-          <td class="text-center fw-bold">${m}</td>
-          <td class="text-end text-success">${mt.toLocaleString('fr-FR')} FCFA</td>
-        `;
-      });
+          // Colonne zone avec badge d'alerte si anomalie
+          html += '<td>';
+          html += '<div class="analyse-cell-name">';
+          html += '<span class="analyse-avatar ' + (hasAnomalie ? 'orange' : 'blue') + '">';
+          html += '<i class="fa-solid fa-map-marker-alt" style="font-size: 0.7rem;"></i>';
+          html += '</span>';
+          html += '<strong>' + zoneChoisie + '</strong>';
+          html += '</div>';
+          html += '<div class="mt-1">';
+          html += '<span class="analyse-badge info">' + situationChoisie + '</span>';
+          if (hasAnomalie) {
+            html += ' <span class="analyse-badge danger" title="Le nombre de matchs payés dépasse le total des désignations !">';
+            html += '<i class="fa-solid fa-triangle-exclamation me-1"></i>Anomalie</span>';
+          }
+          html += '</div>';
+          html += '</td>';
 
-      tr.innerHTML = htmlContent;
-      body.appendChild(tr);
+          // Colonnes par tour avec alerte visuelle si anomalie sur ce tour
+          ['Normal', 'Demi-Finale', 'Finale'].forEach(function(tour) {
+            const m = stats[tour].matchs;
+            const mt = stats[tour].montant;
+            const isAnomalie = stats[tour].anomalie;
 
-      if (foot) {
-        foot.innerHTML = `
-          <tr>
-            <td><strong>TOTAL GÉNÉRAL</strong></td>
-            <td class="text-center fw-bold">${stats['Normal'].matchs}</td>
-            <td class="text-end text-success"><strong>${stats['Normal'].montant.toLocaleString('fr-FR')} FCFA</strong></td>
-            <td class="text-center fw-bold">${stats['Demi-Finale'].matchs}</td>
-            <td class="text-end text-success"><strong>${stats['Demi-Finale'].montant.toLocaleString('fr-FR')} FCFA</strong></td>
-            <td class="text-center fw-bold">${stats['Finale'].matchs}</td>
-            <td class="text-end text-success"><strong>${stats['Finale'].montant.toLocaleString('fr-FR')} FCFA</strong></td>
-          </tr>
-        `;
-      }
-    }).getDesignationsBrutes();
-  }).getCheckOffs();
+            html += '<td class="text-center">';
+            if (isAnomalie) {
+              html += '<span class="fw-bold fs-6 text-danger" title="Anomalie détectée sur ce tour">';
+              html += m + ' <i class="fa-solid fa-triangle-exclamation"></i>';
+              html += '</span>';
+            } else {
+              html += '<span class="fw-bold fs-6">' + m + '</span>';
+            }
+            html += '<div class="text-muted" style="font-size: 0.7rem;">match(s)</div>';
+            html += '</td>';
+
+            html += '<td class="text-end">';
+            if (isAnomalie) {
+              html += '<span class="fw-bold text-danger">' + mt.toLocaleString('fr-FR') + ' FCFA</span>';
+            } else {
+              html += '<span class="fw-bold text-success">' + mt.toLocaleString('fr-FR') + ' FCFA</span>';
+            }
+            html += '</td>';
+          });
+
+          html += '</tr>';
+          body.innerHTML = html;
+
+          // --- Ligne TOTAL GÉNÉRAL ---
+          if (foot) {
+            let footHtml = '<tr>';
+            footHtml += '<td colspan="5" class="text-end">';
+            footHtml += '<strong><i class="fa-solid fa-calculator me-2"></i>TOTAL GÉNÉRAL</strong>';
+            if (hasAnomalie) {
+              footHtml += ' <span class="analyse-badge danger ms-2">';
+              footHtml += '<i class="fa-solid fa-triangle-exclamation me-1"></i>Anomalie détectée</span>';
+            }
+            footHtml += '</td>';
+            footHtml += '<td class="text-center">';
+            footHtml += '<span class="fw-bold ' + (hasAnomalie ? 'text-danger' : 'text-primary') + ' fs-4">';
+            footHtml += totalMatchsGlobal + '</span>';
+            footHtml += '<div class="text-muted" style="font-size: 0.7rem;">match(s)</div>';
+            footHtml += '</td>';
+            footHtml += '<td class="text-end">';
+            footHtml += '<span class="fw-bold ' + (hasAnomalie ? 'text-danger' : 'text-success') + ' fs-5">';
+            footHtml += totalMontantGlobal.toLocaleString('fr-FR') + ' FCFA</span>';
+            footHtml += '</td>';
+            footHtml += '</tr>';
+
+            // Si anomalie, ajouter un message d'explication sous le tableau
+            if (hasAnomalie) {
+              footHtml += '<tr>';
+              footHtml += '<td colspan="7" class="text-center text-danger small py-2" ';
+              footHtml += 'style="background: #f8d7da; border-radius: 8px; margin-top: 8px;">';
+              footHtml += '<i class="fa-solid fa-circle-info me-1"></i>';
+              footHtml += '<strong>Anomalie détectée :</strong> Le nombre de matchs payés (check-offs validés) dépasse ';
+              footHtml += 'le total des désignations pour cette zone. Vérifiez la feuille COUPURES.';
+              footHtml += '</td>';
+              footHtml += '</tr>';
+            }
+
+            foot.innerHTML = footHtml;
+          }
+        })
+        .withFailureHandler(function(err) {
+          console.error('Erreur getDesignationsBrutes :', err);
+          body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+        })
+        .getDesignationsBrutes();
+    })
+    .withFailureHandler(function(err) {
+      console.error('Erreur getCheckOffs :', err);
+      body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+    })
+    .getCheckOffs();
 }
 
 /**
@@ -11551,6 +12084,202 @@ function togglePasswordVisibility(inputId, iconId) {
   }
 }
 
+/**
+ * Construit une liste de désignations avec des bandeaux de zone.
+ * Les désignations doivent déjà être triées par lieu (via trierDesignations).
+ */
+function construireListeDesignationsAvecZones(designations, currentUserEmail, isAdmin) {
+  if (!designations || designations.length === 0) return '';
+
+  let html = '';
+  let zoneCourante = null;
+  let bufferZone = '';
+  let countZone = 0;
+
+  designations.forEach(function(item, index) {
+    const d = item.row || item;
+    const lieu = String(d[4] || 'Zone non spécifiée').trim();
+    const isLastItem = (index === designations.length - 1);
+
+    // Changement de zone
+    if (lieu !== zoneCourante) {
+      if (zoneCourante !== null) {
+        html += construireBandeauZoneDesignation(zoneCourante, countZone, designations);
+        html += bufferZone;
+      }
+      zoneCourante = lieu;
+      countZone = 0;
+      bufferZone = '';
+    }
+
+    bufferZone += construireCarteDesignation(item, index, currentUserEmail, isAdmin);
+    countZone++;
+
+    if (isLastItem) {
+      html += construireBandeauZoneDesignation(zoneCourante, countZone, designations);
+      html += bufferZone;
+    }
+  });
+
+  return html;
+}
+
+/**
+ * Bandeau d'en-tête de zone pour les désignations.
+ * Bleu si la zone contient au moins un match PROGRAMME, gris sinon.
+ */
+function construireBandeauZoneDesignation(zoneName, count, designations) {
+  const designationsZone = designations.filter(function(item) {
+    const d = item.row || item;
+    return String(d[4] || 'Zone non spécifiée').trim() === zoneName;
+  });
+
+  let hasProgramme = false;
+  designationsZone.forEach(function(item) {
+    const d = item.row || item;
+    const statut = String(d[13] || 'PROGRAMME').toUpperCase();
+    if (statut.includes('PROG')) hasProgramme = true;
+  });
+
+  const variant = hasProgramme ? 'normal' : 'exploite';
+
+  return `
+    <div class="zone-divider ${variant}">
+      <div class="zone-icon">
+        <i class="fa-solid fa-futbol"></i>
+      </div>
+      <div class="zone-name">${escapeHTML(zoneName)}</div>
+      <div class="zone-count">
+        <i class="fa-solid fa-clipboard-list me-1"></i>${count} désignation${count > 1 ? 's' : ''}
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Construit une carte de désignation
+ */
+function construireCarteDesignation(item, index, currentUserEmail, isAdmin) {
+  const d = item.row || item;
+
+  const idDesignation = d[0] || '';
+  const rencontre = d[1] || 'Match sans nom';
+  const rawDate = d[2] || '';
+  const dateMatch = rawDate ? (typeof formatDate === 'function' ? formatDate(rawDate) : String(rawDate).substring(0, 10)) : '';
+  const heureMatch = d[3] || '';
+  const lieu = d[4] || '';
+
+  const ac = d[7] || '-';
+  const aa1 = d[8] || '-';
+  const aa2 = d[9] || '-';
+  const e4 = d[10] || '-';
+
+  const sup = d[11] || '-';
+  const tour = d[12] || '-';
+  const statut = d[13] || 'PROGRAMME';
+  const auteur = String(d[14] || '').trim().toLowerCase();
+
+  const isProg = String(statut).trim().toUpperCase().includes('PROG');
+  const isAuthor = (auteur !== '' && auteur === currentUserEmail);
+  const canEditThisRow = isProg && (isAdmin || isAuthor);
+
+  const statutClass = isProg ? 'programme' : 'termine';
+  const cardId = 'desig-card-' + (idDesignation || index).toString().replace(/[^a-zA-Z0-9]/g, '_');
+
+  let badges = '';
+  if (isProg) {
+    badges += '<span class="badge bg-primary">PROGRAMME</span>';
+  } else {
+    badges += '<span class="badge bg-success">' + statut + '</span>';
+  }
+
+  if (tour && tour !== 'Normal' && tour !== '-') {
+    badges += ' <span class="badge bg-warning text-dark">' + tour + '</span>';
+  }
+
+  const arbitresHtml = `
+    <div class="arbitre-detail">
+      <span class="qualite-badge badge bg-danger">AC</span>
+      <span class="nom-arbitre">${ac}</span>
+    </div>
+    <div class="arbitre-detail">
+      <span class="qualite-badge badge bg-primary">AA1</span>
+      <span class="nom-arbitre">${aa1}</span>
+    </div>
+    <div class="arbitre-detail">
+      <span class="qualite-badge badge bg-primary">AA2</span>
+      <span class="nom-arbitre">${aa2}</span>
+    </div>
+    <div class="arbitre-detail">
+      <span class="qualite-badge badge bg-info text-dark">4E</span>
+      <span class="nom-arbitre">${e4}</span>
+    </div>
+    <div class="arbitre-detail">
+      <span class="qualite-badge badge bg-warning text-dark">SUP</span>
+      <span class="nom-arbitre">${sup}</span>
+    </div>
+  `;
+
+  let actionsHtml = '';
+  if (canEditThisRow) {
+    actionsHtml = `
+      <div class="designation-actions designation-action-protected">
+        <button class="btn btn-warning btn-sm fw-bold" 
+                onclick="event.stopPropagation(); prepareEditDesignation('${idDesignation}')">
+          <i class="fa-solid fa-pen me-1"></i> Modifier
+        </button>
+        <button class="btn btn-danger btn-sm fw-bold" 
+                onclick="event.stopPropagation(); confirmDeleteDesignation('${idDesignation}')">
+          <i class="fa-solid fa-trash me-1"></i> Supprimer
+        </button>
+      </div>
+    `;
+  } else {
+    actionsHtml = `
+      <div class="designation-actions">
+        <span class="badge bg-light text-dark border">
+          <i class="fa-solid fa-lock me-1"></i>
+          ${!isProg ? 'Match verrouillé' : 'Lecture seule'}
+        </span>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="designation-item accordion-item ${statutClass}" id="${cardId}">
+      <div class="designation-header" onclick="toggleDesignationCard('${cardId}')">
+        <div class="designation-header-main">
+          <p class="designation-title">
+            <i class="fa-solid fa-futbol me-1 text-success"></i>
+            ${rencontre}
+          </p>
+          <div class="designation-meta">
+            ${dateMatch ? `<span><i class="fa fa-calendar"></i>${dateMatch}${heureMatch ? ' à ' + heureMatch : ''}</span>` : ''}
+            ${lieu ? `<span><i class="fa fa-map-marker-alt"></i>${lieu}</span>` : ''}
+          </div>
+          <div class="designation-badges">${badges}</div>
+        </div>
+        <div class="designation-right">
+          <i class="fa fa-chevron-down designation-chevron"></i>
+        </div>
+      </div>
+      <div class="designation-body">
+        <div class="designation-section">
+          <div class="designation-section-title">
+            <i class="fa fa-users me-1"></i>Arbitres désignés
+          </div>
+          ${arbitresHtml}
+        </div>
+        ${actionsHtml}
+      </div>
+    </div>
+  `;
+}
+
+window.construireListeDesignationsAvecZones = construireListeDesignationsAvecZones;
+window.construireBandeauZoneDesignation = construireBandeauZoneDesignation;
+window.construireCarteDesignation = construireCarteDesignation;
+
 function loadDesignations() {
   const container = document.getElementById('containerTblDes');
   
@@ -11583,7 +12312,7 @@ function loadDesignations() {
         ? trierDesignations(designationsArray) 
         : designationsArray;
 
-      // ✅ Injecter la barre d'export (admin + désignateurs uniquement)
+      // ✅ Injecter la barre d'export
       const barreExport = document.getElementById('exportBarreDesignations');
       if (barreExport) {
         barreExport.innerHTML = htmlBarreExport('designations', verifierDroitExport('designations'));
@@ -11596,126 +12325,9 @@ function loadDesignations() {
         'containerTblDes'
       );
 
+      // ✅ Construction avec bandeaux de zone
       let html = '<div class="designations-container-accordion">';
-
-      dataToProcess.forEach(function(item, index) {
-        const d = item.row || item;
-
-        const idDesignation = d[0] || '';
-        const rencontre = d[1] || 'Match sans nom';
-        const rawDate = d[2] || '';
-        const dateMatch = rawDate ? (typeof formatDate === 'function' ? formatDate(rawDate) : String(rawDate).substring(0, 10)) : '';
-        const heureMatch = d[3] || '';
-        const lieu = d[4] || '';
-        
-        const ac = d[7] || '-';
-        const aa1 = d[8] || '-';
-        const aa2 = d[9] || '-';
-        const e4 = d[10] || '-';
-        
-        const sup = d[11] || '-';
-        const tour = d[12] || '-';
-        const statut = d[13] || 'PROGRAMME';
-        const auteur = String(d[14] || '').trim().toLowerCase();
-
-        const isProg = String(statut).trim().toUpperCase().includes('PROG');
-        const isAuthor = (auteur !== '' && auteur === currentUserEmail);
-        const canEditThisRow = isProg && (isAdmin || isAuthor);
-        
-        const statutClass = isProg ? 'programme' : 'termine';
-        const cardId = 'desig-card-' + (idDesignation || index).toString().replace(/[^a-zA-Z0-9]/g, '_');
-
-        let badges = '';
-        if (isProg) {
-          badges += '<span class="badge bg-primary">PROGRAMME</span>';
-        } else {
-          badges += '<span class="badge bg-success">' + statut + '</span>';
-        }
-        
-        if (tour && tour !== 'Normal' && tour !== '-') {
-          badges += ' <span class="badge bg-warning text-dark">' + tour + '</span>';
-        }
-
-        let arbitresHtml = '';
-        arbitresHtml += `
-          <div class="arbitre-detail">
-            <span class="qualite-badge badge bg-danger">AC</span>
-            <span class="nom-arbitre">${ac}</span>
-          </div>
-          <div class="arbitre-detail">
-            <span class="qualite-badge badge bg-primary">AA1</span>
-            <span class="nom-arbitre">${aa1}</span>
-          </div>
-          <div class="arbitre-detail">
-            <span class="qualite-badge badge bg-primary">AA2</span>
-            <span class="nom-arbitre">${aa2}</span>
-          </div>
-          <div class="arbitre-detail">
-            <span class="qualite-badge badge bg-info text-dark">4E</span>
-            <span class="nom-arbitre">${e4}</span>
-          </div>
-          <div class="arbitre-detail">
-            <span class="qualite-badge badge bg-warning text-dark">SUP</span>
-            <span class="nom-arbitre">${sup}</span>
-          </div>
-        `;
-
-        let actionsHtml = '';
-        if (canEditThisRow) {
-          actionsHtml = `
-            <div class="designation-actions designation-action-protected">
-              <button class="btn btn-warning btn-sm fw-bold" 
-                      onclick="event.stopPropagation(); prepareEditDesignation('${idDesignation}')">
-                <i class="fa-solid fa-pen me-1"></i> Modifier
-              </button>
-              <button class="btn btn-danger btn-sm fw-bold" 
-                      onclick="event.stopPropagation(); confirmDeleteDesignation('${idDesignation}')">
-                <i class="fa-solid fa-trash me-1"></i> Supprimer
-              </button>
-            </div>
-          `;
-        } else {
-          actionsHtml = `
-            <div class="designation-actions">
-              <span class="badge bg-light text-dark border">
-                <i class="fa-solid fa-lock me-1"></i>
-                ${!isProg ? 'Match verrouillé' : 'Lecture seule'}
-              </span>
-            </div>
-          `;
-        }
-
-        html += `
-          <div class="designation-item accordion-item ${statutClass}" id="${cardId}">
-            <div class="designation-header" onclick="toggleDesignationCard('${cardId}')">
-              <div class="designation-header-main">
-                <p class="designation-title">
-                  <i class="fa-solid fa-futbol me-1 text-success"></i>
-                  ${rencontre}
-                </p>
-                <div class="designation-meta">
-                  ${dateMatch ? `<span><i class="fa fa-calendar"></i>${dateMatch}${heureMatch ? ' à ' + heureMatch : ''}</span>` : ''}
-                  ${lieu ? `<span><i class="fa fa-map-marker-alt"></i>${lieu}</span>` : ''}
-                </div>
-                <div class="designation-badges">${badges}</div>
-              </div>
-              <div class="designation-right">
-                <i class="fa fa-chevron-down designation-chevron"></i>
-              </div>
-            </div>
-            <div class="designation-body">
-              <div class="designation-section">
-                <div class="designation-section-title">
-                  <i class="fa fa-users me-1"></i>Arbitres désignés
-                </div>
-                ${arbitresHtml}
-              </div>
-              ${actionsHtml}
-            </div>
-          </div>
-        `;
-      });
-
+      html += construireListeDesignationsAvecZones(dataToProcess, currentUserEmail, isAdmin);
       html += '</div>';
       
       // ✅ Insérer après la barre de recherche
@@ -13451,7 +14063,7 @@ function afficherFormulaireDevoir(data) {
         '</div>' +
       '</div>';
 
-    // ✅ MEDIA - Vignette + bouton pour ouvrir en grand
+    // ✅ MEDIA - Vidéo en iframe Drive + Image
     if (q.mediaUrl) {
       var mediaUrl = String(q.mediaUrl).trim();
       var fileId = '';
@@ -13462,21 +14074,21 @@ function afficherFormulaireDevoir(data) {
         html += '<div class="question-media-wrapper">';
 
         if (q.mediaType === 'video') {
-          // ✅ Vignette + bouton pour ouvrir en grand
-          html += '<div class="video-thumb-container">' +
-            '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
-              'class="video-thumb" alt="Apercu video" ' +
-              'onerror="this.style.display=\'none\'; this.parentNode.style.background=\'#000\'; this.parentNode.style.minHeight=\'180px\';">' +
-            '<button type="button" class="video-play-overlay" ' +
-              'onclick="ouvrirVideoPleinEcran(\'' + fileId + '\', \'' + (q.enonce || '').replace(/'/g, "\\'") + '\')">' +
-              '<i class="fa-solid fa-play"></i>' +
-              '<span>Lire la video</span>' +
-            '</button>' +
+          // ✅ Iframe Drive intégré (lecture garantie)
+          html += '<div class="video-drive-container">' +
+            '<iframe ' +
+              'src="https://drive.google.com/file/d/' + fileId + '/preview" ' +
+              'class="video-drive-iframe" ' +
+              'allow="autoplay; encrypted-media" ' +
+              'allowfullscreen ' +
+              'loading="lazy">' +
+            '</iframe>' +
           '</div>';
           html += '<p class="question-media-label">' +
             '<i class="fa-solid fa-video me-1"></i>Video jointe' +
           '</p>';
         } else {
+          // Image
           html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
             'class="question-media" alt="Illustration" ' +
             'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
@@ -15615,8 +16227,8 @@ function chargerQuickStats() {
     })
     .getStatsGlobales();
 }
-
 window.chargerQuickStats = chargerQuickStats;
+
 
 
   </script>
