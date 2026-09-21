@@ -14605,9 +14605,19 @@ function renderCheckboxGroupWithTime(containerId, namePrefix, options) {
         '<p class="criteria-item-label">' + optEscaped + '</p>';
 
     if (!isNeant) {
+      // ✅ AMÉLIORATION : inputmode + pattern + maxlength + oninput + onkeydown
       html += '<div class="criteria-item-time">' +
         '<i class="fa-solid fa-clock"></i>' +
-        '<input type="text" id="' + timeId + '" placeholder="00" maxlength="3" onclick="event.stopPropagation()">' +
+        '<input type="text" ' +
+               'id="' + timeId + '" ' +
+               'placeholder="00" ' +
+               'inputmode="numeric" ' +        // ⬅ Clavier numérique sur mobile
+               'pattern="[0-9]*" ' +            // ⬅ N'accepte que les chiffres
+               'maxlength="3" ' +               // ⬅ Maximum 3 caractères
+               'autocomplete="off" ' +
+               'oninput="formaterMinute(this)" ' +      // ⬅ Filtre en temps réel
+               'onkeydown="verifierToucheNumerique(event)" ' +  // ⬅ Bloque les lettres
+               'onclick="event.stopPropagation()">' +
         '<span class="time-label">min</span>' +
       '</div>';
     }
@@ -14617,6 +14627,64 @@ function renderCheckboxGroupWithTime(containerId, namePrefix, options) {
 
   container.innerHTML = html;
   updateCriteriaCounter(containerId);
+}
+
+/**
+ * Filtre la saisie de la minute : uniquement les chiffres, max 3
+ */
+function formaterMinute(input) {
+  if (!input) return;
+  
+  // 1. Récupère la valeur et retire tout sauf les chiffres
+  let valeur = input.value.replace(/\D/g, '');
+  
+  // 2. Limite à 3 chiffres maximum
+  if (valeur.length > 3) {
+    valeur = valeur.substring(0, 3);
+  }
+  
+  // 3. Optionnel : bloque les valeurs absurdes (> 999 minutes)
+  // Une mi-temps dure 45min, un match 90min + temps additionnel
+  // 999 est une limite raisonnable mais on peut forcer à 120 si vous voulez
+  const valeurNum = parseInt(valeur, 10);
+  if (!isNaN(valeurNum) && valeurNum > 999) {
+    valeur = '999';
+  }
+  
+  // 4. Réassigne la valeur propre
+  input.value = valeur;
+  
+  // 5. Animation visuelle quand le champ est rempli
+  if (valeur.length === 3) {
+    input.classList.add('minute-complete');
+    setTimeout(() => input.classList.remove('minute-complete'), 300);
+  }
+}
+
+/**
+ * Bloque les touches non numériques (sur desktop avec clavier physique)
+ */
+function verifierToucheNumerique(event) {
+  if (!event) return;
+  
+  // Touches autorisées : chiffres 0-9, backspace, delete, tab, flèches, entrée
+  const touchesAutorisees = [
+    'Backspace', 'Delete', 'Tab', 'Enter',
+    'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+    'Home', 'End'
+  ];
+  
+  // Raccourcis Ctrl/Cmd (copier, coller, tout sélectionner)
+  if (event.ctrlKey || event.metaKey) return;
+  
+  // Si c'est une touche autorisée, on laisse passer
+  if (touchesAutorisees.includes(event.key)) return;
+  
+  // Si c'est un chiffre, on laisse passer
+  if (/^[0-9]$/.test(event.key)) return;
+  
+  // Sinon, on bloque
+  event.preventDefault();
 }
 
 
