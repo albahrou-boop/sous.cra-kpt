@@ -9148,6 +9148,123 @@ h3.h5.fw-bold.text-primary i {
 
 <script>
 
+   // ============================================================================
+  // CONFIGURATION
+  // ============================================================================
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbyfT6H-M-9tRH6707rAgoInIO3U9qce6LFkHDUlm1TJkgrqCBPdY3SaK1rLbcm01_wi/exec";
+
+  // ============================================================================
+  // SHIM google.script.run POUR GITHUB PAGES
+  // Simule google.script.run en utilisant fetch()
+  // ============================================================================
+  window.google = {
+    script: {
+      run: new Proxy({}, {
+        get(target, prop) {
+          const createHandlerProxy = (sHandler = null, fHandler = null) => {
+            const chainObj = {
+              withSuccessHandler(cb) { return createHandlerProxy(cb, fHandler); },
+              withFailureHandler(cb) { return createHandlerProxy(sHandler, cb); }
+            };
+            return new Proxy(chainObj, {
+              get(t, functionName) {
+                if (t[functionName]) return t[functionName];
+
+                // Fonction exécutée à la fin de la chaîne
+                return function(...args) {
+                  executeGasFetch(functionName, args, sHandler, fHandler);
+                };
+              }
+            });
+          };
+
+          if (prop === 'withSuccessHandler') {
+            return function(cb) { return createHandlerProxy(cb, null); };
+          }
+          if (prop === 'withFailureHandler') {
+            return function(cb) { return createHandlerProxy(null, cb); };
+          }
+
+          // Appel direct sans handler
+          return function(...args) {
+            executeGasFetch(prop, args, null, null);
+          };
+        }
+      })
+    }
+  };
+
+  // ============================================================================
+  // EXÉCUTION DE L'APPEL API
+  // ============================================================================
+  function executeGasFetch(functionName, args, successHandler, failureHandler) {
+    // 🆕 Récupération de l'email utilisateur (session ou localStorage)
+    const userEmail = (
+      sessionStorage.getItem('user_email_souscra') ||
+      localStorage.getItem('user_email_souscra') ||
+      window.currentUser ||
+      ''
+    ).toLowerCase().trim();
+
+    setTimeout(async () => {
+      try {
+        const response = await fetch(GAS_URL, {
+          method: 'POST',
+          // ⚠️ IMPORTANT : pas de Content-Type personnalisé pour éviter le preflight CORS
+          // Apps Script accepte le JSON brut dans e.postData.contents
+          body: JSON.stringify({
+            function: functionName,
+            args: args || [],
+            userEmail: userEmail   // ✅ ENVOI DE L'EMAIL POUR LES PERMISSIONS
+          })
+        });
+
+        // Lecture de la réponse
+        const text = await response.text();
+        let res;
+        try {
+          res = JSON.parse(text);
+        } catch (parseErr) {
+          throw new Error('Réponse serveur invalide : ' + text.substring(0, 200));
+        }
+
+        // Gestion du résultat
+        if (res.status === 'success') {
+          if (typeof successHandler === 'function') {
+            successHandler(res.data);
+          }
+        } else {
+          const err = new Error(res.error || 'Erreur inconnue');
+          if (typeof failureHandler === 'function') {
+            failureHandler(err);
+          } else {
+            console.error('[API ERROR]', functionName, err);
+          }
+        }
+      } catch (fetchErr) {
+        console.error('[FETCH ERROR]', functionName, fetchErr);
+        if (typeof failureHandler === 'function') {
+          failureHandler(fetchErr);
+        }
+      }
+    }, 0);
+  }
+
+  // ============================================================================
+  // INITIALISATION DEPUIS LES STORAGES
+  // ============================================================================
+  // Restaure l'email utilisateur au chargement
+  (function() {
+    const savedEmail = sessionStorage.getItem('user_email_souscra') 
+                    || localStorage.getItem('user_email_souscra') 
+                    || '';
+    if (savedEmail) {
+      window.currentUser = savedEmail;
+    }
+  })();
+
+
+
 // ========================================================
 // VARIABLES GLOBALES
 // ========================================================
