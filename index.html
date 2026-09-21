@@ -7057,6 +7057,158 @@ h3.h5.fw-bold.text-primary i {
   opacity: 1 !important;
 }
 
+  /* ============================================================
+   🚨 FIX FINAL : CASES À COCHER + CHAMPS MINUTES DANS LES RAPPORTS
+   Placé EN DERNIER pour gagner tous les conflits.
+   ============================================================ */
+
+/* 1. FORCER la case à cocher visible et le champ minute CACHÉ */
+.criteria-item .criteria-toggle {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  border: 2px solid #ced4da !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  flex-shrink: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  margin-top: 1px !important;
+}
+
+/* 2. LE CHAMP MINUTE EST CACHÉ PAR DÉFAUT */
+.criteria-item .criteria-item-time {
+  display: none !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 6px !important;
+  padding: 3px 8px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #198754 !important;
+  border-radius: 8px !important;
+  width: fit-content !important;
+}
+
+/* 3. LE CHAMP MINUTE APPARAÎT SEULEMENT QUAND SÉLECTIONNÉ */
+.criteria-item.selected .criteria-item-time {
+  display: inline-flex !important;
+}
+
+/* 4. CASE COCHÉE = VERT + COCHE BLANCHE */
+.criteria-item.selected .criteria-toggle {
+  background: linear-gradient(135deg, #198754, #20c997) !important;
+  border-color: #198754 !important;
+}
+
+.criteria-item.selected .criteria-toggle::after {
+  content: '✓' !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  font-size: 0.85rem !important;
+  line-height: 1 !important;
+  display: block !important;
+}
+
+/* 5. ÉTAT HOVER : indique que c'est cliquable */
+.criteria-item:hover {
+  background: #f8f9fa !important;
+}
+
+.criteria-item:hover .criteria-toggle {
+  border-color: #198754 !important;
+  transform: scale(1.05) !important;
+}
+
+/* 6. LE CONTENU DU CRITÈRE : texte à gauche, minute en dessous */
+.criteria-item-content {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.criteria-item-label {
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  color: #212529 !important;
+  margin: 0 !important;
+  line-height: 1.35 !important;
+  cursor: pointer !important;
+}
+
+.criteria-item.selected .criteria-item-label {
+  font-weight: 700 !important;
+  color: #157347 !important;
+}
+
+/* 7. LE CHAMP MINUTE INPUT : propre et lisible */
+.criteria-item-time input {
+  width: 40px !important;
+  padding: 2px 4px !important;
+  font-size: 0.8rem !important;
+  text-align: center !important;
+  font-weight: 800 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #198754 !important;
+  outline: none !important;
+}
+
+.criteria-item-time i {
+  color: #198754 !important;
+  font-size: 0.75rem !important;
+}
+
+.criteria-item-time .time-label {
+  font-size: 0.65rem !important;
+  color: #6c757d !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+/* 8. STRUCTURE GÉNÉRALE DE CHAQUE ITEM */
+.criteria-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border-bottom: 1px solid #f1f3f5 !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+  user-select: none !important;
+}
+
+.criteria-item:last-child {
+  border-bottom: none !important;
+}
+
+.criteria-item.selected {
+  background: #f0fdf4 !important;
+}
+
+/* 9. FIX POUR LE BANDEAU DE LA SECTION (Forces / Faiblesses) */
+.criteria-section {
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  border: 1.5px solid #e9ecef !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.criteria-list {
+  display: block !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+}
+
 
 </style>
 
