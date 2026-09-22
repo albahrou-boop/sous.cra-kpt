@@ -14390,12 +14390,24 @@ function loadRecentMatches(nomSuperviseurParam) {
     return;
   }
 
-  // Indicateur de chargement
+  // 🔑 RÉCUPÉRATION DE L'EMAIL DE L'UTILISATEUR CONNECTÉ
+  const emailUser = (
+    window.currentUser || 
+    sessionStorage.getItem('user_email_souscra') || 
+    localStorage.getItem('user_email_souscra') || 
+    ''
+  ).trim().toLowerCase();
+
+  if (!emailUser) {
+    selectM.innerHTML = '<option value="">❌ Utilisateur non identifié</option>';
+    console.error('[loadRecentMatches] Aucun email utilisateur trouvé');
+    return;
+  }
+
   selectM.innerHTML = '<option value="">⌛ Chargement des matchs...</option>';
 
   google.script.run
     .withSuccessHandler(function(desList) {
-      // Stocker dans la variable globale pour les autres fonctions
       globalDesignations = desList || [];
 
       // Cas 1 : aucun match trouvé
@@ -14416,7 +14428,7 @@ function loadRecentMatches(nomSuperviseurParam) {
         }
       });
 
-      // Construction du HTML des options
+      // Construction du HTML
       let optionsHTML = '<option value="">-- Sélectionner le Match --</option>';
 
       // Groupe 1 : Mes matchs assignés
@@ -14439,25 +14451,22 @@ function loadRecentMatches(nomSuperviseurParam) {
 
       selectM.innerHTML = optionsHTML;
 
-      // Toast d'alerte si des matchs orphelins existent
-      if (matchsOrphelins.length > 0) {
-        if (typeof afficherToastTemporaire === 'function') {
-          afficherToastTemporaire(
-            `⚠️ ${matchsOrphelins.length} match(s) sans superviseur nécessitent votre attention`,
-            'warning'
-          );
-        }
+      // Toast d'alerte
+      if (matchsOrphelins.length > 0 && typeof afficherToastTemporaire === 'function') {
+        afficherToastTemporaire(
+          `⚠️ ${matchsOrphelins.length} match(s) sans superviseur nécessitent votre attention`,
+          'warning'
+        );
       }
 
-      // Log de debug
-      console.log('[loadRecentMatches] ' + matchsAssignes.length + ' match(s) assigné(s), ' + 
+      console.log('[loadRecentMatches] ' + matchsAssignes.length + ' assigné(s), ' + 
                   matchsOrphelins.length + ' orphelin(s)');
     })
     .withFailureHandler(function(err) {
       console.error('[loadRecentMatches] Erreur :', err);
-      selectM.innerHTML = '<option value="">❌ Erreur de chargement des matchs</option>';
+      selectM.innerHTML = '<option value="">❌ Erreur de chargement</option>';
     })
-    .getMatchsSuperviseur(supName);
+    .getMatchsSuperviseur(supName, emailUser);   // ⬅️ 2ᵉ ARGUMENT : email utilisateur
 }
 
 function prepareQualitySection(q) {
