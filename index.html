@@ -8005,7 +8005,7 @@ h3.h5.fw-bold.text-primary i {
 
       <div class="text-center mt-3">
         <span class="small text-muted">Pas encore de compte ?</span> 
-        <a href="#" onclick="Vue('basculersignup'); return false;" class="small text-decoration-none fw-bold text-primary">Créer un compte</a>
+        <a href="#" onclick="basculerVue('signup'); return false;" class="small text-decoration-none fw-bold text-primary">Créer un compte</a>
       </div>
     </form>
   </div>
@@ -10548,6 +10548,52 @@ function getEmptyPermissionsClient() {
 // ==========================================
 // 3. SOUMISSION DE L'INSCRIPTION
 // ==========================================
+function inscrireUtilisateur(formData) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('UTILISATEURS');
+    
+    // Si la feuille n'existe pas, la créer
+    if (!sheet) {
+      sheet = ss.insertSheet('UTILISATEURS');
+      sheet.appendRow(['Prénom', 'Nom', 'Date et Lieu de Naissance', 'Commune', 'Email', 'Mot de Passe', 'DoitChangerMdp']);
+    }
+
+    var prenom = String(formData.prenom || '').trim();
+    var nom = String(formData.nom || '').trim();
+    var dateLieuNaiss = String(formData.dateLieuNaiss || '').trim();
+    var commune = String(formData.commune || '').trim();
+    var email = String(formData.email || '').trim().toLowerCase();
+    var defaultPassword = "koumpentoum2026";
+
+    // Validation
+    if (!email || !prenom || !nom || !dateLieuNaiss || !commune) {
+      return { success: false, message: "Veuillez renseigner tous les champs obligatoires." };
+    }
+
+    // Vérifier si l'email existe déjà
+    var data = sheet.getDataRange().getValues();
+    
+    for (var i = 1; i < data.length; i++) {
+      if (String(data[i][4]).trim().toLowerCase() === email) {
+        return { success: false, message: "Cet email est déjà associé à un compte." };
+      }
+    }
+
+    // Ajouter le nouvel utilisateur
+    sheet.appendRow([prenom, nom, dateLieuNaiss, commune, email, defaultPassword, "OUI"]);
+
+    return { 
+      success: true, 
+      message: "Compte créé avec succès ! Utilisez votre mot de passe temporaire (koumpentoum2026) pour votre première connexion." 
+    };
+
+  } catch (error) {
+    Logger.log("Erreur inscrireUtilisateur : " + error.toString());
+    return { success: false, message: "Erreur serveur : " + error.toString() };
+  }
+}
+
 
 function soumettreInscription(event) {
   if (event) event.preventDefault();
@@ -14365,14 +14411,6 @@ window.prepareEditDesignation = prepareEditDesignation;
 window.confirmDeleteDesignation = confirmDeleteDesignation;
 window.loadRapportsDisplay = loadRapportsDisplay;
 
-/**
- * Charge la liste des matchs récents pour un superviseur donné.
- * 
- * ⚡ RÈGLE SPÉCIALE : Les matchs sans superviseur n'apparaissent que pour
- * l'ADMIN, dans un groupe séparé avec un label d'alerte.
- * 
- * @param {string} nomSuperviseurParam - Le nom du superviseur (optionnel)
- */
 function loadRecentMatches(nomSuperviseurParam) {
   const supSelect = document.getElementById('r_sup');
   const selectM = document.getElementById('r_match');
@@ -15071,6 +15109,51 @@ function formaterNomPropre(input) {
 }
 
 // 2. Formatage automatique de la date au format jj/mm/aaaa pendant la frappe (pour signupNaiss)
+/**
+ * Formate automatiquement une date + lieu de naissance au format "JJ/MM/AAAA à Lieu"
+ * Exemple : "01/04/2001 à Koumpentoum"
+ */
+function formaterDateEtLieu(e) {
+  if (!e || !e.target) return;
+  
+  const input = e.target;
+  let valeur = input.value;
+
+  // Si l'utilisateur est en train de taper après " à ", on ne formate pas
+  if (valeur.includes(' à ')) {
+    // On ne reformate que la partie date (avant le " à ")
+    const parts = valeur.split(' à ');
+    const datePart = parts[0];
+    const lieuPart = parts.slice(1).join(' à '); // au cas où il y a plusieurs " à "
+    
+    const dateFormatee = formaterChaineDate(datePart);
+    input.value = dateFormatee + (lieuPart !== undefined ? ' à ' + lieuPart : '');
+    return;
+  }
+
+  // Sinon, on formate juste la date
+  input.value = formaterChaineDate(valeur);
+}
+
+/**
+ * Utilitaire interne : formate une chaîne de chiffres en JJ/MM/AAAA
+ */
+function formaterChaineDate(chaine) {
+  let chiffres = String(chaine || '').replace(/\D/g, '');
+  
+  if (chiffres.length > 8) {
+    chiffres = chiffres.substring(0, 8);
+  }
+
+  let resultat = '';
+  if (chiffres.length > 0) resultat = chiffres.substring(0, 2);
+  if (chiffres.length >= 3) resultat += '/' + chiffres.substring(2, 4);
+  else if (chiffres.length > 2) resultat += '/' + chiffres.substring(2);
+  if (chiffres.length >= 5) resultat += '/' + chiffres.substring(4, 8);
+  else if (chiffres.length > 4) resultat += '/' + chiffres.substring(4);
+
+  return resultat;
+}
 
 // Formatage automatique pour un champ de date seule (ex: m_dateNaissance)
 function formaterDateSeule(e) {
