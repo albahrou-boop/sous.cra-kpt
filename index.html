@@ -14365,11 +14365,24 @@ window.prepareEditDesignation = prepareEditDesignation;
 window.confirmDeleteDesignation = confirmDeleteDesignation;
 window.loadRapportsDisplay = loadRapportsDisplay;
 
+/**
+ * Charge la liste des matchs récents pour un superviseur donné.
+ * 
+ * ⚡ RÈGLE SPÉCIALE : Les matchs sans superviseur n'apparaissent que pour
+ * l'ADMIN, dans un groupe séparé avec un label d'alerte.
+ * 
+ * @param {string} nomSuperviseurParam - Le nom du superviseur (optionnel)
+ */
 function loadRecentMatches(nomSuperviseurParam) {
   const supSelect = document.getElementById('r_sup');
   const selectM = document.getElementById('r_match');
-  if (!selectM) return;
+  
+  if (!selectM) {
+    console.warn('[loadRecentMatches] Sélecteur de match introuvable');
+    return;
+  }
 
+  // Récupération du nom du superviseur
   const supName = (nomSuperviseurParam || (supSelect ? supSelect.value : '')).trim();
 
   if (!supName) {
@@ -14377,28 +14390,72 @@ function loadRecentMatches(nomSuperviseurParam) {
     return;
   }
 
+  // Indicateur de chargement
   selectM.innerHTML = '<option value="">⌛ Chargement des matchs...</option>';
 
   google.script.run
     .withSuccessHandler(function(desList) {
-      // Chaque élément de 'desList' doit idéalement contenir : { id, label, dateHeureMatch }
-      globalDesignations = desList || []; 
+      // Stocker dans la variable globale pour les autres fonctions
+      globalDesignations = desList || [];
 
+      // Cas 1 : aucun match trouvé
+      if (globalDesignations.length === 0) {
+        selectM.innerHTML = '<option value="">Aucun match programmé pour ce superviseur</option>';
+        return;
+      }
+
+      // Séparer les matchs en 2 groupes
+      const matchsAssignes = [];
+      const matchsOrphelins = [];
+
+      globalDesignations.forEach(function(d) {
+        if (d.sansSuperviseur === true) {
+          matchsOrphelins.push(d);
+        } else {
+          matchsAssignes.push(d);
+        }
+      });
+
+      // Construction du HTML des options
       let optionsHTML = '<option value="">-- Sélectionner le Match --</option>';
 
-      if (globalDesignations.length > 0) {
-        globalDesignations.forEach(function(d) {
-          optionsHTML += `<option value="${d.id}">${d.label}</option>`;
+      // Groupe 1 : Mes matchs assignés
+      if (matchsAssignes.length > 0) {
+        optionsHTML += '<optgroup label="📋 Mes matchs assignés">';
+        matchsAssignes.forEach(function(d) {
+          optionsHTML += `<option value="${d.id}">${escapeHTML(d.label)}</option>`;
         });
-      } else {
-        optionsHTML = '<option value="">Aucun match programmé pour ce superviseur</option>';
+        optionsHTML += '</optgroup>';
+      }
+
+      // Groupe 2 : Matchs sans superviseur (admin uniquement)
+      if (matchsOrphelins.length > 0) {
+        optionsHTML += '<optgroup label="⚠️ Matchs sans superviseur (à traiter)">';
+        matchsOrphelins.forEach(function(d) {
+          optionsHTML += `<option value="${d.id}" style="color: #fd7e14; font-weight: 700;">${escapeHTML(d.label)}</option>`;
+        });
+        optionsHTML += '</optgroup>';
       }
 
       selectM.innerHTML = optionsHTML;
+
+      // Toast d'alerte si des matchs orphelins existent
+      if (matchsOrphelins.length > 0) {
+        if (typeof afficherToastTemporaire === 'function') {
+          afficherToastTemporaire(
+            `⚠️ ${matchsOrphelins.length} match(s) sans superviseur nécessitent votre attention`,
+            'warning'
+          );
+        }
+      }
+
+      // Log de debug
+      console.log('[loadRecentMatches] ' + matchsAssignes.length + ' match(s) assigné(s), ' + 
+                  matchsOrphelins.length + ' orphelin(s)');
     })
     .withFailureHandler(function(err) {
-      console.error("Erreur loadRecentMatches :", err);
-      selectM.innerHTML = '<option value="">Erreur de chargement des matchs</option>';
+      console.error('[loadRecentMatches] Erreur :', err);
+      selectM.innerHTML = '<option value="">❌ Erreur de chargement des matchs</option>';
     })
     .getMatchsSuperviseur(supName);
 }
