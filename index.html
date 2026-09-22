@@ -19424,12 +19424,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
-        .then((reg) => console.log('Service Worker enregistré avec succès :', reg.scope))
-        .catch((err) => console.log('Échec de l\'enregistrement du Service Worker :', err));
+        .then((reg) => {
+          console.log('Service Worker enregistré :', reg.scope);
+          // Force la vérification de mise à jour à chaque ouverture
+          reg.update();
+        })
+        .catch((err) => console.log('Échec SW :', err));
     });
   }
-
-
 </script>
 
   <!-- Modale universelle pour la lecture des circulaires -->
