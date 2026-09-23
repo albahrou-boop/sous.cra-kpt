@@ -7953,6 +7953,494 @@ h3.h5.fw-bold.text-primary i {
     width: 55px !important;
   }
 }
+
+  /* ============================================================
+   🌟 MODULE NOTES - REFONTE MODERNE
+   ============================================================ */
+
+/* --- BANDEAU RÉCAPITULATIF --- */
+.notes-recap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 16px rgba(0, 0, 0, 0.06),
+    0 20px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+  position: relative;
+  overflow: hidden;
+}
+
+.notes-recap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #0d6efd, #20c997, #fd7e14, #dc3545);
+  border-radius: 20px 20px 0 0;
+}
+
+.notes-recap-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #f1f3f5;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 90px;
+  justify-content: center;
+}
+
+.notes-recap-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 12px 24px rgba(0, 0, 0, 0.10);
+}
+
+.notes-recap-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 4px;
+  border-radius: 0 0 6px 0;
+  background: linear-gradient(90deg, #0d6efd, transparent);
+}
+
+.notes-recap-item:nth-child(2)::before { background: linear-gradient(90deg, #20c997, transparent); }
+.notes-recap-item:nth-child(3)::before { background: linear-gradient(90deg, #fd7e14, transparent); }
+.notes-recap-item:nth-child(4)::before { background: linear-gradient(90deg, #dc3545, transparent); }
+
+.notes-recap-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 800;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.notes-recap-value {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #212529;
+  line-height: 1;
+  letter-spacing: -0.8px;
+}
+
+.notes-recap-value.text-success { color: #198754 !important; }
+.notes-recap-value.text-danger { color: #dc3545 !important; }
+
+@media (max-width: 768px) {
+  .notes-recap {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
+  .notes-recap-item {
+    padding: 12px 14px;
+    min-height: 75px;
+  }
+  .notes-recap-value {
+    font-size: 1.35rem;
+  }
+  .notes-recap-label {
+    font-size: 0.6rem;
+  }
+}
+
+/* --- CARTE DE NOTE MODERNE --- */
+.note-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e9ecef;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 6px 16px rgba(0, 0, 0, 0.05);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: noteCardFadeIn 0.4s ease-out both;
+}
+
+.note-card:nth-child(1) { animation-delay: 0.05s; }
+.note-card:nth-child(2) { animation-delay: 0.10s; }
+.note-card:nth-child(3) { animation-delay: 0.15s; }
+.note-card:nth-child(4) { animation-delay: 0.20s; }
+.note-card:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes noteCardFadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.note-card:hover {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 16px 32px rgba(0, 0, 0, 0.10);
+  transform: translateY(-3px);
+}
+
+/* Bordure de gauche colorée selon la performance */
+.note-card.excellent { border-left: 5px solid #198754; }
+.note-card.bien { border-left: 5px solid #20c997; }
+.note-card.moyen { border-left: 5px solid #fd7e14; }
+.note-card.faible { border-left: 5px solid #dc3545; }
+
+/* --- EN-TÊTE DE LA CARTE --- */
+.note-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: linear-gradient(90deg, #ffffff, #f8f9fa);
+  border-bottom: 1px solid transparent;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.note-card.expanded .note-card-header {
+  border-bottom-color: #e9ecef;
+  background: linear-gradient(90deg, #f0fdf4, #ffffff);
+}
+
+/* Avatar avec dégradé selon la performance */
+.note-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: white;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 8px 20px rgba(0, 0, 0, 0.10);
+  transition: transform 0.3s ease;
+}
+
+.note-card.excellent .note-avatar {
+  background: linear-gradient(135deg, #198754, #20c997);
+}
+.note-card.bien .note-avatar {
+  background: linear-gradient(135deg, #0d6efd, #20c997);
+}
+.note-card.moyen .note-avatar {
+  background: linear-gradient(135deg, #fd7e14, #f0a800);
+}
+.note-card.faible .note-avatar {
+  background: linear-gradient(135deg, #dc3545, #b02a37);
+}
+
+.note-card:hover .note-avatar {
+  transform: scale(1.08) rotate(-5deg);
+}
+
+.note-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.note-name {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #212529;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.3px;
+  word-wrap: break-word;
+}
+
+.note-email {
+  font-size: 0.78rem;
+  color: #6c757d;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.note-email i {
+  font-size: 0.72rem;
+}
+
+/* Badge de note circulaire */
+.note-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #e9ecef;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.note-card.excellent .note-badge {
+  border-color: #198754;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+.note-card.bien .note-badge {
+  border-color: #0d6efd;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+}
+.note-card.moyen .note-badge {
+  border-color: #fd7e14;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+}
+.note-card.faible .note-badge {
+  border-color: #dc3545;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+}
+
+.note-card:hover .note-badge {
+  transform: scale(1.05);
+}
+
+.note-badge-value {
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: #212529;
+}
+
+.note-badge-total {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #6c757d;
+  margin-top: 2px;
+}
+
+.note-card.excellent .note-badge-value { color: #198754; }
+.note-card.bien .note-badge-value { color: #0d6efd; }
+.note-card.moyen .note-badge-value { color: #fd7e14; }
+.note-card.faible .note-badge-value { color: #dc3545; }
+
+.note-card-chevron {
+  color: #adb5bd;
+  font-size: 1rem;
+  transition: transform 0.3s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.note-card.expanded .note-card-chevron {
+  transform: rotate(180deg);
+  color: #198754;
+}
+
+/* --- CORPS DE LA CARTE --- */
+.note-card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  background: #f8f9fa;
+}
+
+.note-card.expanded .note-card-body {
+  max-height: 500px;
+  padding: 18px 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Barre de progression moderne avec shimmer */
+.note-progress-wrapper {
+  margin-bottom: 16px;
+}
+
+.note-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #495057;
+}
+
+.note-progress-header .pct-value {
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.note-card.excellent .pct-value { color: #198754; }
+.note-card.bien .pct-value { color: #0d6efd; }
+.note-card.moyen .pct-value { color: #fd7e14; }
+.note-card.faible .pct-value { color: #dc3545; }
+
+.note-progress {
+  height: 12px;
+  border-radius: 12px;
+  background: #e9ecef;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.note-progress-bar {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 12px rgba(0, 0, 0, 0.15),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.note-card.excellent .note-progress-bar {
+  background: linear-gradient(90deg, #198754, #20c997, #51cf66);
+}
+.note-card.bien .note-progress-bar {
+  background: linear-gradient(90deg, #0d6efd, #4dabf7, #74c0fc);
+}
+.note-card.moyen .note-progress-bar {
+  background: linear-gradient(90deg, #fd7e14, #ffc107, #ffd43b);
+}
+.note-card.faible .note-progress-bar {
+  background: linear-gradient(90deg, #dc3545, #f06595, #ff8787);
+}
+
+.note-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: noteShimmer 2.5s infinite;
+}
+
+@keyframes noteShimmer {
+  to { left: 200%; }
+}
+
+/* Métadonnées (date de soumission) */
+.note-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+  font-size: 0.82rem;
+  color: #495057;
+  margin-bottom: 12px;
+}
+
+.note-meta i {
+  color: #198754;
+  font-size: 0.85rem;
+}
+
+.note-meta-label {
+  font-weight: 700;
+  color: #6c757d;
+}
+
+.note-meta-value {
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Bouton "Voir le détail" */
+.note-detail-btn {
+  width: 100%;
+  padding: 11px 18px;
+  border-radius: 12px;
+  border: 2px solid #0dcaf0;
+  background: linear-gradient(135deg, #ffffff, #f0fdff);
+  color: #0dcaf0;
+  font-weight: 800;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.note-detail-btn:hover {
+  background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+  color: #ffffff;
+  border-color: #0aa2c0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(13, 202, 240, 0.35);
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+  .note-card-header {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .note-avatar {
+    width: 46px;
+    height: 46px;
+    font-size: 0.95rem;
+    border-radius: 14px;
+  }
+
+  .note-name {
+    font-size: 0.92rem;
+  }
+
+  .note-email {
+    font-size: 0.7rem;
+  }
+
+  .note-badge {
+    min-width: 68px;
+    height: 68px;
+  }
+
+  .note-badge-value {
+    font-size: 1.15rem;
+  }
+
+  .note-badge-total {
+    font-size: 0.62rem;
+  }
+
+  .note-card.expanded .note-card-body {
+    padding: 14px 16px;
+  }
+}
   
 
 
