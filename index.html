@@ -11918,17 +11918,78 @@ function loadRapportsDisplay() {
 
 window.loadRapportsDisplay = loadRapportsDisplay;
 
-function gererArchivageRapport(idDesignation, rencontre) {
+function gererArchivageRapport(idDesignation, rencontre, cardId) {
   confirmerAction(
     "Voulez-vous vraiment archiver ce rapport ?",
     function() {
+      // 🎯 Trouver la carte concernée
+      const card = cardId ? document.getElementById(cardId) : null;
+      const cardParent = card ? card.parentNode : null;
+
+      // 📸 Sauvegarder l'état pour restauration en cas d'erreur
+      const etatInitial = card ? {
+        html: card.outerHTML,
+        nextSibling: card.nextSibling
+      } : null;
+
+      // 🎬 Animation douce de retrait
+      if (card) {
+        card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        card.style.transform = 'translateX(-100%)';
+        card.style.opacity = '0';
+        card.style.maxHeight = card.offsetHeight + 'px';
+
+        // Force le reflow pour que la transition démarre
+        card.offsetHeight;
+
+        setTimeout(() => {
+          card.style.maxHeight = '0';
+          card.style.marginTop = '0';
+          card.style.marginBottom = '0';
+          card.style.paddingTop = '0';
+          card.style.paddingBottom = '0';
+        }, 50);
+
+        setTimeout(() => {
+          if (card && card.parentNode) card.parentNode.removeChild(card);
+        }, 450);
+      }
+
+      // 🚀 Envoi au serveur en arrière-plan
       google.script.run
         .withSuccessHandler(function() {
-          afficherToastTemporaire("✅ Rapport exploité et archivé !", "success");
-          loadRapportsDisplay();
+          afficherToastTemporaire("✅ Rapport archivé !", "success");
+
+          // 🔢 Mettre à jour les compteurs du bandeau
+          mettreAJourCompteursRapports();
+
+          // 🧹 Si la zone devient vide, retirer le bandeau de zone
+          nettoyerZoneVideSiBesoin(cardParent);
         })
         .withFailureHandler(function(err) {
-          afficherToastTemporaire("❌ Erreur : " + err.message, "danger");
+          afficherToastTemporaire("❌ Erreur : " + (err.message || err), "danger");
+
+          // ↩️ Restaurer la carte en cas d'erreur
+          if (card && cardParent && etatInitial) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = etatInitial.html;
+            const restoredCard = tempDiv.firstChild;
+
+            if (etatInitial.nextSibling && etatInitial.nextSibling.parentNode === cardParent) {
+              cardParent.insertBefore(restoredCard, etatInitial.nextSibling);
+            } else {
+              cardParent.appendChild(restoredCard);
+            }
+
+            // Animation d'apparition
+            restoredCard.style.opacity = '0';
+            restoredCard.style.transform = 'translateX(-30px)';
+            requestAnimationFrame(() => {
+              restoredCard.style.transition = 'all 0.4s ease';
+              restoredCard.style.opacity = '1';
+              restoredCard.style.transform = 'translateX(0)';
+            });
+          }
         })
         .archiverRapport(idDesignation, rencontre);
     },
@@ -11936,8 +11997,89 @@ function gererArchivageRapport(idDesignation, rencontre) {
   );
 }
 
-window.loadRapportsDisplay = loadRapportsDisplay;
-window.gererArchivageRapport = gererArchivageRapport;
+/**
+ * Met à jour les compteurs des sections "Non exploités" et "Exploités"
+ * sans recharger toute la liste.
+ */
+function mettreAJourCompteursRapports() {
+  const container = document.getElementById('containerTblRapports');
+  if (!container) return;
+
+  // Compter les cartes encore présentes
+  const matchsNonExploites = container.querySelectorAll('.match-card.normal, .match-card.incident').length;
+  const matchsExploites = container.querySelectorAll('.match-card.archived').length;
+
+  // Mettre à jour le titre de la section non exploités
+  const titreNonExploites = container.querySelector('h5.text-primary');
+  if (titreNonExploites) {
+    titreNonExploites.innerHTML = '<i class="fa fa-folder-open me-2"></i>Matchs non exploités (' + matchsNonExploites + ')';
+  }
+
+  // Mettre à jour le titre de la section exploités
+  const titreExploites = container.querySelector('h5.text-secondary');
+  if (titreExploites) {
+    titreExploites.innerHTML = '<i class="fa fa-box-archive me-2"></i>Matchs exploités et archivés (' + matchsExploites + ')';
+  }
+
+  // Afficher un message si la section non exploités devient vide
+  const zoneNonExploites = container.querySelector('.mb-5');
+  if (zoneNonExploites && matchsNonExploites === 0) {
+    // Vérifier qu'il n'y a pas déjà un message
+    if (!zoneNonExploites.querySelector('.text-muted.fst-italic')) {
+      const p = document.createElement('p');
+      p.className = 'text-muted fst-italic';
+      p.textContent = 'Aucun match en attente.';
+      zoneNonExploites.appendChild(p);
+    }
+  }
+}
+
+/**
+ * Retire un bandeau de zone s'il n'y a plus de cartes dedans.
+ */
+function nettoyerZoneVideSiBesoin(cardParent) {
+  if (!cardParent) return;
+
+  // Si le parent est directement le container principal, ne rien faire
+  const container = document.getElementById('containerTblRapports');
+  if (!container || cardParent === container) return;
+
+  // Le parent peut être un conteneur de zone ou le container principal
+  // On vérifie le nombre de cartes restantes dans ce parent
+  const cartesRestantes = cardParent.querySelectorAll('.match-card').length;
+
+  // S'il reste des cartes, on ne touche à rien
+  if (cartesRestantes > 0) return;
+
+  // Sinon, on cherche le bandeau de zone juste avant le parent
+  let bandeau = cardParent.previousElementSibling;
+  let aSupprimer = null;
+
+  // Remonter dans le DOM pour trouver le bandeau de zone associé
+  while (bandeau) {
+    if (bandeau.classList && bandeau.classList.contains('zone-divider')) {
+      aSupprimer = bandeau;
+      break;
+    }
+    bandeau = bandeau.previousElementSibling;
+  }
+
+  if (aSupprimer) {
+    aSupprimer.style.transition = 'all 0.3s ease';
+    aSupprimer.style.opacity = '0';
+    aSupprimer.style.transform = 'translateX(-30px)';
+    setTimeout(() => {
+      if (aSupprimer.parentNode) aSupprimer.parentNode.removeChild(aSupprimer);
+    }, 300);
+  }
+
+  // Supprimer aussi le conteneur vide (le parent)
+  cardParent.style.transition = 'all 0.3s ease';
+  cardParent.style.opacity = '0';
+  setTimeout(() => {
+    if (cardParent.parentNode) cardParent.parentNode.removeChild(cardParent);
+  }, 300);
+}
 
 function selectionnerSuperviseur(nomSuperviseur) {
   const inputHidden = document.getElementById('r_sup');
@@ -18438,7 +18580,9 @@ function construireCarteMatch(match, canArchive, isExploite) {
     const rencontreSecurisee = (match.rencontre || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     archiveBtn = `
       <button class="btn btn-sm btn-success mt-2" 
-              onclick="event.stopPropagation(); gererArchivageRapport('${match.idDesignation}', '${rencontreSecurisee}')">
+              onclick="event.stopPropagation(); 
+              gererArchivageRapport('${match.idDesignation}', '${rencontreSecurisee}', '${cardId}')
+              ">
         <i class="fa fa-check me-1"></i>Archiver ce match
       </button>
     `;
