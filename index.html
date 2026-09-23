@@ -17339,6 +17339,12 @@ function demarrerDevoirUI(devoirId) {
   confirmerAction(
     "Une fois commence, le chrono demarre et ne peut pas etre mis en pause. Continuer ?",
     function() {
+      // 🔑 Récupération de l'email côté client
+      const emailUser = sessionStorage.getItem('user_email_souscra') 
+                     || localStorage.getItem('user_email_souscra') 
+                     || window.currentUser 
+                     || '';
+
       google.script.run
         .withSuccessHandler(function(data) {
           bootstrap.Modal.getInstance(document.getElementById('modalListeRemplir')).hide();
@@ -17350,13 +17356,11 @@ function demarrerDevoirUI(devoirId) {
         .withFailureHandler(function(err) {
           afficherToastTemporaire("Erreur : " + err.message, "danger");
         })
-        .demarrerDevoir(devoirId);
+        .demarrerDevoir(devoirId, emailUser);   // ⬅ 2e argument transmis
     },
     { titre: 'Demarrer le devoir', texteConfirmer: 'Demarrer', couleurConfirmer: 'primary', icone: 'fa-play' }
   );
 }
-
-window.demarrerDevoirUI = demarrerDevoirUI;
 
 function afficherFormulaireDevoir(data) {
   document.getElementById('faireDevoirTitre').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> ' + data.titre;
@@ -17599,6 +17603,12 @@ function soumettreDevoirUI(automatique) {
   const reponses = collecterReponses();
   clearInterval(chronoInterval);
 
+  // 🔑 Récupération de l'email côté client
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
   google.script.run
     .withSuccessHandler(function(res) {
       bootstrap.Modal.getInstance(document.getElementById('modalFaireDevoir')).hide();
@@ -17606,7 +17616,7 @@ function soumettreDevoirUI(automatique) {
       alert('Devoir envoyé ! Votre note : ' + res.noteObtenue + ' / ' + res.noteMax + ' (hors questions à réponse libre).');
     })
     .withFailureHandler(function(err) { alert("Erreur lors de l'envoi : " + err.message); })
-    .soumettreReponses(devoirEnCours.idReponse, reponses);
+    .soumettreReponses(devoirEnCours.idReponse, reponses, emailUser);   // ⬅ 3e argument
 }
 
 function consulterDevoir(devoirId) {
