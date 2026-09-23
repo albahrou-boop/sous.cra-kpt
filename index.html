@@ -7057,7 +7057,7 @@ h3.h5.fw-bold.text-primary i {
   opacity: 1 !important;
 }
 
-  /* ============================================================
+/* ============================================================
    🚨 FIX FINAL : CASES À COCHER + CHAMPS MINUTES DANS LES RAPPORTS
    Placé EN DERNIER pour gagner tous les conflits.
    ============================================================ */
@@ -7208,7 +7208,6 @@ h3.h5.fw-bold.text-primary i {
   padding: 0 !important;
   background: #ffffff !important;
 }
-
 /* ============================================================
    🎨 MODERNISATION DES CHAMPS DE CRITÈRES (RAPPORT SUPERVISEUR)
    Placé EN DERNIER pour gagner tous les conflits.
@@ -7627,7 +7626,7 @@ h3.h5.fw-bold.text-primary i {
     font-size: 0.8rem !important;
   }
 }
-  .criteria-item.selected {
+.criteria-item.selected {
   animation: itemGlow 2s ease-in-out infinite alternate !important;
 }
 
@@ -7636,7 +7635,7 @@ h3.h5.fw-bold.text-primary i {
   to { box-shadow: 0 2px 8px rgba(25, 135, 84, 0.25), 0 6px 20px rgba(25, 135, 84, 0.15); }
 }
 
-  /* ============================================================
+/* ============================================================
    🎨 MODERNISATION DU BOUTON "VALIDER CETTE QUALITÉ"
    Placé EN DERNIER pour gagner tous les conflits.
    ============================================================ */
@@ -7891,7 +7890,7 @@ h3.h5.fw-bold.text-primary i {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
-  /* ============================================================
+/* ============================================================
    🎨 CHAMP MINUTE : meilleure lisibilité et feedback visuel
    ============================================================ */
 
@@ -7954,7 +7953,7 @@ h3.h5.fw-bold.text-primary i {
   }
 }
 
-  /* ============================================================
+/* ============================================================
    🌟 MODULE NOTES - REFONTE MODERNE
    ============================================================ */
 
@@ -8441,7 +8440,492 @@ h3.h5.fw-bold.text-primary i {
     padding: 14px 16px;
   }
 }
-  
+
+/* ============================================
+   MODAL DEVOIR — MODERNISATION
+   ============================================ */
+
+/* Conteneur général des questions */
+#faireDevoirBody,
+#consulterDevoirBody {
+  padding: 8px 4px 16px;
+  background: #f8f9fa;
+}
+
+/* Carte de question */
+.question-card-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #0d6efd;
+  transition: all 0.2s ease;
+}
+
+.question-card-modal:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Numéro de la question */
+.question-number-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* Énoncé de la question */
+.question-enonce {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212529;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.question-bareme {
+  font-size: 0.78rem;
+  color: #6c757d;
+  font-weight: 500;
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+
+/* ============================================
+   OPTIONS DE RÉPONSE
+   ============================================ */
+
+.question-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.question-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafbfc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.question-option:hover {
+  background: #f0f4ff;
+  border-color: #b6c9ff;
+}
+
+/* Radio / checkbox personnalisé */
+.question-option input[type="radio"],
+.question-option input[type="checkbox"] {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  accent-color: #0d6efd;
+  cursor: pointer;
+}
+
+/* Option sélectionnée */
+.question-option:has(input:checked) {
+  background: #e7f0ff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.question-option:has(input:checked) span {
+  color: #0a58ca;
+  font-weight: 600;
+}
+
+/* Bonne réponse (mode corrigé) */
+.question-option.checked {
+  background: #d4edda;
+  border-color: #28a745;
+}
+
+.question-option.checked span {
+  color: #155724;
+  font-weight: 600;
+}
+
+/* ============================================
+   ZONE DE TEXTE (réponse libre)
+   ============================================ */
+
+.question-textarea {
+  width: 100%;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-top: 12px;
+  background: #fafbfc;
+  transition: border-color 0.15s ease;
+}
+
+.question-textarea:focus {
+  outline: none;
+  border-color: #0d6efd;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+/* ============================================
+   MÉDIA (image / vidéo)
+   ============================================ */
+
+.question-media-wrapper {
+  margin: 14px 0;
+  text-align: center;
+}
+
+.question-media {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  object-fit: cover;
+}
+
+.question-media-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Conteneur vidéo Drive */
+.video-drive-container {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+.video-drive-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ============================================
+   VIGNETTE VIDÉO + BOUTON PLAY (mode corrigé)
+   ============================================ */
+
+.video-thumb-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  cursor: pointer;
+}
+
+.video-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.video-play-overlay:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.video-play-overlay i {
+  font-size: 2.4rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.video-play-overlay span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   EN-TÊTE DE LA MODALE
+   ============================================ */
+
+#modalFaireDevoir .modal-header,
+#modalConsulterDevoir .modal-header {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  color: #fff;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+
+#modalFaireDevoir .modal-header .btn-close,
+#modalConsulterDevoir .modal-header .btn-close {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+#modalFaireDevoir .modal-title,
+#modalConsulterDevoir .modal-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* Chrono */
+#chronoDevoir {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   RESPONSIVE MOBILE
+   ============================================ */
+
+@media (max-width: 576px) {
+  .question-card-modal {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .question-enonce {
+    font-size: 0.95rem;
+  }
+
+  .question-option {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .question-number-badge {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 0.82rem;
+  }
+}
+
+/* ============================================================
+   CARTES DE QUESTION PLIABLES
+   ============================================================ */
+.question-card-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #0d6efd;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.question-card-modal:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.question-card-modal.expanded {
+  border-left-color: #198754;
+  box-shadow: 0 6px 20px rgba(25, 135, 84, 0.15);
+}
+
+/* En-tête cliquable */
+.question-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(90deg, #ffffff, #f8f9fa);
+  transition: background 0.2s ease;
+}
+
+.question-card-header:hover {
+  background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+}
+
+.question-card-header-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.question-card-header-enonce {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 4px 0;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.question-card-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+}
+
+.question-card-chevron {
+  color: #6c757d;
+  font-size: 1rem;
+  transition: transform 0.3s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.question-card-modal.expanded .question-card-chevron {
+  transform: rotate(180deg);
+  color: #198754;
+}
+
+/* Corps repliable */
+.question-card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.25s ease;
+  background: #ffffff;
+}
+
+.question-card-modal.expanded .question-card-body {
+  max-height: 2000px;
+  padding: 16px 18px 18px 18px;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Numéro de question */
+.question-number-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.question-card-modal.expanded .question-number-badge {
+  background: linear-gradient(135deg, #198754, #20c997);
+}
+
+/* Sur mobile */
+@media (max-width: 576px) {
+  .question-card-header {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .question-card-header-enonce {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 3;
+  }
+  .question-number-badge {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 0.82rem;
+  }
+}
+
+/* ============================================================
+   🔒 SÉCURITÉ : FORCER L'ÉTAT PLIÉ PAR DÉFAUT
+   ============================================================ */
+
+/* Par défaut, TOUTES les cartes de question sont pliées */
+.question-card-modal:not(.expanded) .question-card-body {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border-top: none !important;
+}
+
+/* Quand la carte est dépliée, afficher le corps */
+.question-card-modal.expanded .question-card-body {
+  max-height: 2000px !important;
+  overflow: visible !important;
+  padding: 16px 18px 18px 18px !important;
+  border-top: 1px solid #e9ecef !important;
+  transition: max-height 0.4s ease, padding 0.3s ease !important;
+}
+
+/* L'en-tête est TOUJOURS cliquable */
+.question-card-header {
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+/* Chevron : rotation fluide */
+.question-card-chevron {
+  transition: transform 0.3s ease, color 0.2s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.question-card-modal.expanded .question-card-chevron {
+  transform: rotate(180deg) !important;
+  color: #198754 !important;
+}
+
+/* Surbrillance au survol de l'en-tête */
+.question-card-header:hover {
+  background: linear-gradient(90deg, #f8f9fa, #e9ecef) !important;
+}
+
+/* État déplié : bordure verte + ombre */
+.question-card-modal.expanded {
+  border-left-color: #198754 !important;
+  box-shadow: 0 6px 20px rgba(25, 135, 84, 0.15) !important;
+}
+
 
 
 </style>
@@ -17794,6 +18278,12 @@ function ouvrirListeRemplirDevoir() {
   body.innerHTML = '<p class="text-muted text-center my-3">Chargement...</p>';
   new bootstrap.Modal(modalEl).show();
 
+  // 🔑 Récupération de l'email de l'utilisateur connecté
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
   google.script.run
     .withSuccessHandler(function(data) {
       const devoirs = (data && data.devoirs) || [];
@@ -17819,55 +18309,177 @@ function ouvrirListeRemplirDevoir() {
       html += '</div>';
       body.innerHTML = html;
     })
-    .withFailureHandler(function(err) { body.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>'; })
-    .listerDevoirsDisponibles();
+    .withFailureHandler(function(err) { 
+      body.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>'; 
+    })
+    .listerDevoirsDisponibles(emailUser);   // ⬅ 2e argument : email utilisateur
 }
 
 function demarrerDevoirUI(devoirId) {
   confirmerAction(
-    "Une fois commence, le chrono demarre et ne peut pas etre mis en pause. Continuer ?",
+    "Une fois commencé, le chrono démarre et ne peut pas être mis en pause. Continuer ?",
     function() {
-      // 🔑 Récupération de l'email côté client
       const emailUser = sessionStorage.getItem('user_email_souscra') 
                      || localStorage.getItem('user_email_souscra') 
                      || window.currentUser 
                      || '';
 
+      if (!emailUser) {
+        afficherToastTemporaire("❌ Utilisateur non identifié. Reconnectez-vous.", "danger");
+        return;
+      }
+
+      console.log('[demarrerDevoirUI] devoirId =', devoirId, '| emailUser =', emailUser);
+
       google.script.run
-        .withSuccessHandler(function(data) {
-          bootstrap.Modal.getInstance(document.getElementById('modalListeRemplir')).hide();
+        .withSuccessHandler(function(response) {
+          console.log('[demarrerDevoirUI] Réponse brute :', response);
+
+          // ✅ Extraire les données selon le format {status, data} ou {status, error}
+          let data = null;
+          if (response && response.status === 'success' && response.data) {
+            data = response.data;
+          } else if (response && response.status === 'error') {
+            afficherToastTemporaire("❌ " + (response.error || "Erreur serveur"), "danger");
+            return;
+          } else if (response && response.questions) {
+            // Cas où le serveur renvoie directement les données (sans wrapper)
+            data = response;
+          } else {
+            afficherToastTemporaire("❌ Réponse serveur invalide.", "danger");
+            console.error('[demarrerDevoirUI] Structure inattendue :', response);
+            return;
+          }
+
+          if (!data.questions || !Array.isArray(data.questions) || data.questions.length === 0) {
+            afficherToastTemporaire("❌ Aucune question pour ce devoir.", "danger");
+            return;
+          }
+
+          console.log('[demarrerDevoirUI] ' + data.questions.length + ' question(s) reçue(s)');
+
+          // Fermer le modal de liste
+          const modalListeEl = document.getElementById('modalListeRemplir');
+          if (modalListeEl) {
+            try {
+              const inst = bootstrap.Modal.getInstance(modalListeEl);
+              if (inst) inst.hide();
+              else {
+                modalListeEl.classList.remove('show');
+                modalListeEl.style.display = 'none';
+                document.querySelectorAll('.modal-backdrop').forEach(function(el) { el.remove(); });
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+              }
+            } catch (e) { console.warn(e); }
+          }
+
           devoirEnCours = data;
           afficherFormulaireDevoir(data);
-          new bootstrap.Modal(document.getElementById('modalFaireDevoir')).show();
-          demarrerChrono(data);
+
+          const modalFaireEl = document.getElementById('modalFaireDevoir');
+          if (!modalFaireEl) {
+            afficherToastTemporaire("❌ Modal de devoir introuvable.", "danger");
+            return;
+          }
+
+          try {
+            let modalFaire = bootstrap.Modal.getInstance(modalFaireEl);
+            if (!modalFaire) {
+              modalFaire = new bootstrap.Modal(modalFaireEl, {
+                backdrop: 'static',
+                keyboard: false
+              });
+            }
+            modalFaire.show();
+          } catch (e) {
+            afficherToastTemporaire("❌ Impossible d'ouvrir le formulaire.", "danger");
+            return;
+          }
+
+          try {
+            demarrerChrono(data);
+          } catch (e) {
+            console.warn('[demarrerDevoirUI] Erreur chrono :', e);
+          }
+
+          console.log('[demarrerDevoirUI] ✅ Formulaire ouvert');
         })
         .withFailureHandler(function(err) {
-          afficherToastTemporaire("Erreur : " + err.message, "danger");
+          console.error('[demarrerDevoirUI] Erreur backend :', err);
+          const msg = err && err.message ? err.message.replace('Error: ', '') : 'Erreur inconnue';
+          afficherToastTemporaire("❌ " + msg, "danger");
         })
-        .demarrerDevoir(devoirId, emailUser);   // ⬅ 2e argument transmis
+        .demarrerDevoir(devoirId, emailUser);
     },
-    { titre: 'Demarrer le devoir', texteConfirmer: 'Demarrer', couleurConfirmer: 'primary', icone: 'fa-play' }
+    { 
+      titre: 'Démarrer le devoir', 
+      texteConfirmer: 'Démarrer', 
+      couleurConfirmer: 'primary', 
+      icone: 'fa-play' 
+    }
   );
 }
 
 function afficherFormulaireDevoir(data) {
-  document.getElementById('faireDevoirTitre').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> ' + data.titre;
-  var body = document.getElementById('faireDevoirBody');
+  const titreEl = document.getElementById('faireDevoirTitre');
+  if (titreEl) {
+    titreEl.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> ' + (data.titre || 'Devoir');
+  }
+
+  const body = document.getElementById('faireDevoirBody');
+  if (!body) {
+    console.error('[afficherFormulaireDevoir] #faireDevoirBody introuvable dans le DOM');
+    afficherToastTemporaire("❌ Conteneur du devoir introuvable.", "danger");
+    return;
+  }
+
   var html = '';
 
   data.questions.forEach(function(q, idx) {
-    html += '<div class="question-card-modal" data-question-id="' + q.id + '" data-question-type="' + q.typeReponse + '">' +
-      '<div class="d-flex align-items-start mb-2">' +
-        '<span class="question-number-badge">' + (idx + 1) + '</span>' +
-        '<div style="flex: 1; min-width: 0;">' +
-          '<p class="question-enonce mb-0">' + q.enonce +
-            (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
-          '</p>' +
-          '<small class="text-muted">(' + q.bareme + ' pt)</small>' +
-        '</div>' +
-      '</div>';
+    const cardId = 'question-card-' + q.id;
+    
+    // Construction de l'aperçu (extrait de l'énoncé)
+    var enonceCourt = q.enonce || '';
+    if (enonceCourt.length > 80) {
+      enonceCourt = enonceCourt.substring(0, 80) + '...';
+    }
 
-    // ✅ MEDIA - Vidéo en iframe Drive + Image
+    // ============================================================
+    // CARTE PLIABLE
+    // ============================================================
+    html += '<div class="question-card-modal" id="' + cardId + '" data-question-id="' + q.id + '" data-question-type="' + q.typeReponse + '">';
+
+    // --- EN-TÊTE CLIQUABLE (toujours visible) ---
+    html += '<div class="question-card-header" onclick="toggleQuestionCard(\'' + cardId + '\')">';
+    html += '<span class="question-number-badge">' + (idx + 1) + '</span>';
+    html += '<div class="question-card-header-main">';
+    html += '<p class="question-card-header-enonce">' + enonceCourt + (q.obligatoire ? ' <span class="text-danger">*</span>' : '') + '</p>';
+    html += '<div class="question-card-header-meta">';
+    html += '<span class="question-bareme">' + q.bareme + ' pt</span>';
+    if (q.mediaUrl) {
+      html += '<span class="badge bg-info text-dark ms-1"><i class="fa-solid fa-paperclip me-1"></i>Média</span>';
+    }
+    html += '</div>';
+    html += '</div>';
+    html += '<i class="fa-solid fa-chevron-down question-card-chevron"></i>';
+    html += '</div>';
+
+    // --- CORPS REPLIABLE (masqué par défaut) ---
+    html += '<div class="question-card-body">';
+
+    // Énoncé complet
+    html += '<div class="d-flex align-items-start mb-3">';
+    html += '<span class="question-number-badge" style="visibility: hidden;">' + (idx + 1) + '</span>';
+    html += '<div style="flex: 1; min-width: 0;">';
+    html += '<p class="question-enonce">' + (q.enonce || '') +
+      (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+      ' <span class="question-bareme">' + q.bareme + ' pt</span>' +
+      '</p>';
+    html += '</div>';
+    html += '</div>';
+
+    // Média
     if (q.mediaUrl) {
       var mediaUrl = String(q.mediaUrl).trim();
       var fileId = '';
@@ -17878,27 +18490,20 @@ function afficherFormulaireDevoir(data) {
         html += '<div class="question-media-wrapper">';
 
         if (q.mediaType === 'video') {
-          // ✅ Iframe Drive intégré (lecture garantie)
           html += '<div class="video-drive-container">' +
-            '<iframe ' +
-              'src="https://drive.google.com/file/d/' + fileId + '/preview" ' +
+            '<iframe src="https://drive.google.com/file/d/' + fileId + '/preview" ' +
               'class="video-drive-iframe" ' +
-              'allow="autoplay; encrypted-media" ' +
-              'allowfullscreen ' +
-              'loading="lazy">' +
+              'allow="autoplay; encrypted-media" allowfullscreen loading="lazy">' +
             '</iframe>' +
           '</div>';
           html += '<p class="question-media-label">' +
-            '<i class="fa-solid fa-video me-1"></i>Video jointe' +
-          '</p>';
+            '<i class="fa-solid fa-video me-1"></i>Vidéo jointe</p>';
         } else {
-          // Image
           html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
             'class="question-media" alt="Illustration" ' +
             'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
           html += '<p class="question-media-label">' +
-            '<i class="fa-solid fa-image me-1"></i>Image jointe' +
-          '</p>';
+            '<i class="fa-solid fa-image me-1"></i>Image jointe</p>';
         }
 
         html += '</div>';
@@ -17915,6 +18520,7 @@ function afficherFormulaireDevoir(data) {
         '</label>';
       });
       html += '</div>';
+
     } else if (q.typeReponse === 'qcm_multiple') {
       html += '<div class="question-options">';
       q.options.forEach(function(opt, i) {
@@ -17924,6 +18530,7 @@ function afficherFormulaireDevoir(data) {
         '</label>';
       });
       html += '</div>';
+
     } else if (q.typeReponse === 'vrai_faux') {
       html += '<div class="question-options">' +
         '<label class="question-option">' +
@@ -17935,14 +18542,18 @@ function afficherFormulaireDevoir(data) {
           '<span>Faux</span>' +
         '</label>' +
       '</div>';
+
     } else {
-      html += '<textarea class="question-textarea" rows="3" id="rep-' + q.id + '" placeholder="Votre reponse..."></textarea>';
+      html += '<textarea class="question-textarea" rows="3" id="rep-' + q.id + '" ' +
+        'placeholder="Votre réponse..."></textarea>';
     }
 
-    html += '</div>';
+    html += '</div>'; // fin question-card-body
+    html += '</div>'; // fin question-card-modal
   });
 
   body.innerHTML = html;
+  console.log('[afficherFormulaireDevoir] ' + data.questions.length + ' question(s) affichée(s)');
 }
 
 window.afficherFormulaireDevoir = afficherFormulaireDevoir;
@@ -18026,8 +18637,20 @@ function afficherFallbackVideo(videoEl, fileId) {
 window.afficherFallbackVideo = afficherFallbackVideo;
 
 function demarrerChrono(data) {
-  const finMs = new Date(data.dateDebut).getTime() + Number(data.dureeLimite) * 60000;
+  // ✅ Utiliser dateDebutISO si disponible, sinon fallback
+  const debutMs = data.dateDebutISO 
+    ? new Date(data.dateDebutISO).getTime() 
+    : new Date(data.dateDebut).getTime();
+  
+  if (isNaN(debutMs)) {
+    console.error('[demarrerChrono] Date de début invalide :', data.dateDebut, data.dateDebutISO);
+    return;
+  }
+  
+  const finMs = debutMs + Number(data.dureeLimite) * 60000;
   const affichage = document.getElementById('chronoDevoir');
+  
+  if (!affichage) return;
 
   clearInterval(chronoInterval);
   chronoInterval = setInterval(function() {
@@ -18123,18 +18746,20 @@ function consulterDevoir(devoirId) {
       '</div>';
 
       data.questions.forEach(function(q, idx) {
-        html += '<div class="question-card-modal">' +
-          '<div class="d-flex align-items-start mb-2">' +
-            '<span class="question-number-badge">' + (idx + 1) + '</span>' +
-            '<div style="flex: 1; min-width: 0;">' +
-              '<p class="question-enonce mb-0">' + q.enonce +
-                (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
-              '</p>' +
-              '<small class="text-muted">(' + q.bareme + ' pt)</small>' +
-            '</div>' +
-          '</div>';
+        html += '<div class="question-card-modal">';
 
-        // ✅ MEDIA - Vignette + bouton
+        // En-tête : numéro + énoncé + barème
+        html += '<div class="d-flex align-items-start">' +
+          '<span class="question-number-badge">' + (idx + 1) + '</span>' +
+          '<div style="flex: 1; min-width: 0;">' +
+            '<p class="question-enonce">' + q.enonce +
+              (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+              ' <span class="question-bareme">' + q.bareme + ' pt</span>' +
+            '</p>' +
+          '</div>' +
+        '</div>';
+
+        // Média (image / vidéo)
         if (q.mediaUrl) {
           var mediaUrl = String(q.mediaUrl).trim();
           var fileId = '';
@@ -18156,15 +18781,13 @@ function consulterDevoir(devoirId) {
                 '</button>' +
               '</div>';
               html += '<p class="question-media-label">' +
-                '<i class="fa-solid fa-video me-1"></i>Video jointe' +
-              '</p>';
+                '<i class="fa-solid fa-video me-1"></i>Video jointe</p>';
             } else {
               html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
                 'class="question-media" alt="Illustration" ' +
                 'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
               html += '<p class="question-media-label">' +
-                '<i class="fa-solid fa-image me-1"></i>Image jointe' +
-              '</p>';
+                '<i class="fa-solid fa-image me-1"></i>Image jointe</p>';
             }
 
             html += '</div>';
@@ -18190,7 +18813,7 @@ function consulterDevoir(devoirId) {
           html += '<textarea class="question-textarea" rows="2" disabled placeholder="Reponse libre"></textarea>';
         }
 
-        html += '</div>';
+        html += '</div>'; // fin question-card-modal
       });
 
       body.innerHTML = html;
@@ -18373,44 +18996,93 @@ function chargerToutesNotes() {
         return;
       }
 
-      // Calculs statistiques
-      var totalNotes = 0;
-      var maxNote = 0;
-      var minNote = 100;
+      // ✅ Nouveaux calculs statistiques (notes ramenées sur 20)
+      var totalNotesSur20 = 0;
       var nbNotes = 0;
+      var maxNote = null;        // meilleure note sur 20
+      var minNote = null;        // plus faible note sur 20
+      var nbOntLaMoyenne = 0;    // note >= 10/20
+      var nbOnt14OuPlus = 0;     // note >= 14/20
+      var nbSousMoyenne = 0;     // note < 10/20
 
       data.notes.forEach(function(n) {
         if (n.noteMax > 0) {
-          var pct = (n.noteObtenue / n.noteMax) * 100;
-          totalNotes += pct;
+          var noteSur20 = (Number(n.noteObtenue) / Number(n.noteMax)) * 20;
+          totalNotesSur20 += noteSur20;
           nbNotes++;
-          if (pct > maxNote) maxNote = pct;
-          if (pct < minNote) minNote = pct;
+
+          if (maxNote === null || noteSur20 > maxNote) maxNote = noteSur20;
+          if (minNote === null || noteSur20 < minNote) minNote = noteSur20;
+
+          if (noteSur20 >= 10) nbOntLaMoyenne++;
+          if (noteSur20 >= 14) nbOnt14OuPlus++;
+          if (noteSur20 < 10) nbSousMoyenne++;
         }
       });
 
-      var moyenne = nbNotes > 0 ? (totalNotes / nbNotes) : 0;
+      var moyenneSur20 = nbNotes > 0 ? (totalNotesSur20 / nbNotes) : 0;
+      var meilleure = (maxNote !== null) ? maxNote.toFixed(1) : '-';
+      var plusBasse = (minNote !== null) ? minNote.toFixed(1) : '-';
 
       var html = '';
 
-      // Bandeau récapitulatif
+      // ✅ Bandeau récapitulatif (nouvelle version, 7 items)
       html += '<div class="notes-recap">' +
+
+        // 1. Participants (avec % d'arbitres)
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-users me-1"></i>Participants</span>' +
-          '<span class="notes-recap-value">' + data.notes.length + '</span>' +
+          '<span class="notes-recap-value">' + data.notes.length +
+            (data.totalArbitres ? ' <small class="text-muted">(' +
+              Math.round((data.notes.length / data.totalArbitres) * 100) + '%)</small>' : '') +
+          '</span>' +
         '</div>' +
+
+        // 2. Moyenne sur 20
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-chart-line me-1"></i>Moyenne</span>' +
-          '<span class="notes-recap-value">' + moyenne.toFixed(1) + '%</span>' +
+          '<span class="notes-recap-value">' + moyenneSur20.toFixed(1) + ' / 20</span>' +
         '</div>' +
+
+        // 3. Meilleure note
         '<div class="notes-recap-item">' +
-          '<span class="notes-recap-label"><i class="fa-solid fa-trophy me-1"></i>Meilleure</span>' +
-          '<span class="notes-recap-value text-success">' + maxNote.toFixed(1) + '%</span>' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-trophy me-1"></i>Meilleure note</span>' +
+          '<span class="notes-recap-value text-success">' + meilleure + ' / 20</span>' +
         '</div>' +
+
+        // 4. Plus basse note
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-arrow-down me-1"></i>Plus basse</span>' +
-          '<span class="notes-recap-value text-danger">' + minNote.toFixed(1) + '%</span>' +
+          '<span class="notes-recap-value text-danger">' + plusBasse + ' / 20</span>' +
         '</div>' +
+
+        // 5. Ont au moins la moyenne (>= 10)
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-check-circle me-1 text-success"></i>≥ 10/20</span>' +
+          '<span class="notes-recap-value text-success">' + nbOntLaMoyenne +
+            (data.notes.length ? ' <small class="text-muted">(' +
+              Math.round((nbOntLaMoyenne / data.notes.length) * 100) + '%)</small>' : '') +
+          '</span>' +
+        '</div>' +
+
+        // 6. Ont au moins 14
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-star me-1 text-warning"></i>≥ 14/20</span>' +
+          '<span class="notes-recap-value text-warning">' + nbOnt14OuPlus +
+            (data.notes.length ? ' <small class="text-muted">(' +
+              Math.round((nbOnt14OuPlus / data.notes.length) * 100) + '%)</small>' : '') +
+          '</span>' +
+        '</div>' +
+
+        // 7. Sous la moyenne (< 10)
+        '<div class="notes-recap-item">' +
+          '<span class="notes-recap-label"><i class="fa-solid fa-triangle-exclamation me-1 text-danger"></i>&lt; 10/20</span>' +
+          '<span class="notes-recap-value text-danger">' + nbSousMoyenne +
+            (data.notes.length ? ' <small class="text-muted">(' +
+              Math.round((nbSousMoyenne / data.notes.length) * 100) + '%)</small>' : '') +
+          '</span>' +
+        '</div>' +
+
       '</div>';
 
       if (data.modeRestreint) {
@@ -18428,70 +19100,70 @@ function chargerToutesNotes() {
       html += '<div class="notes-container-accordion">';
 
       data.notes.forEach(function(n) {
-  const pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
-  
-  // Déterminer la catégorie de performance
-  let perfClass = 'faible';
-  if (pct >= 70) perfClass = 'excellent';
-  else if (pct >= 50) perfClass = 'bien';
-  else if (pct >= 35) perfClass = 'moyen';
+        const pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
 
-  // Nom d'affichage robuste
-  const nomAffichage = n.arbitreNom || n.arbitreEmail || 'Membre inconnu';
-  const initiales = extraireInitiales(nomAffichage);
-  const dateFin = n.dateFin ? new Date(n.dateFin).toLocaleString('fr-FR') : '-';
-  const noteAffichage = (n.noteObtenue !== undefined && n.noteObtenue !== null) 
-    ? n.noteObtenue : '0';
+        // Déterminer la catégorie de performance
+        let perfClass = 'faible';
+        if (pct >= 70) perfClass = 'excellent';
+        else if (pct >= 50) perfClass = 'bien';
+        else if (pct >= 35) perfClass = 'moyen';
 
-  // Bouton détail
-  let actions = '';
-  if (data.peutVoirDetailsAutres) {
-    actions = '<button class="note-detail-btn" onclick="voirDetailLigne(\'' +
-      n.arbitreEmail + '\', \'' + data.devoirId + '\')">' +
-      '<i class="fa-solid fa-eye"></i>Voir le détail</button>';
-  }
+        // Nom d'affichage robuste
+        const nomAffichage = n.arbitreNom || n.arbitreEmail || 'Membre inconnu';
+        const initiales = extraireInitiales(nomAffichage);
+        const dateFin = n.dateFin || '-';
+        const noteAffichage = (n.noteObtenue !== undefined && n.noteObtenue !== null)
+          ? n.noteObtenue : '0';
 
-  html += '<div class="note-card ' + perfClass + '" id="note-card-' + (n.idReponse || Math.random().toString(36).substr(2, 9)) + '">' +
-    
-    // En-tête cliquable
-    '<div class="note-card-header" onclick="this.parentNode.classList.toggle(\'expanded\')">' +
-      '<div class="note-avatar">' + initiales + '</div>' +
-      '<div class="note-info">' +
-        '<p class="note-name">' + nomAffichage + '</p>' +
-        '<div class="note-email">' +
-          '<i class="fa-solid fa-envelope"></i>' + 
-          (n.arbitreEmail || 'Email non disponible') +
-        '</div>' +
-      '</div>' +
-      '<div class="note-badge">' +
-        '<div class="note-badge-value">' + noteAffichage + '</div>' +
-        '<div class="note-badge-total">sur ' + n.noteMax + '</div>' +
-      '</div>' +
-      '<i class="fa-solid fa-chevron-down note-card-chevron"></i>' +
-    '</div>' +
-    
-    // Corps dépliable
-    '<div class="note-card-body">' +
-      '<div class="note-progress-wrapper">' +
-        '<div class="note-progress-header">' +
-          '<span><i class="fa-solid fa-chart-line me-1"></i>Performance</span>' +
-          '<span class="pct-value">' + pct + '%</span>' +
-        '</div>' +
-        '<div class="note-progress">' +
-          '<div class="note-progress-bar" style="width: ' + pct + '%"></div>' +
-        '</div>' +
-      '</div>' +
-      
-      '<div class="note-meta">' +
-        '<i class="fa-regular fa-clock"></i>' +
-        '<span class="note-meta-label">Soumis le :</span>' +
-        '<span class="note-meta-value">' + dateFin + '</span>' +
-      '</div>' +
-      
-      actions +
-    '</div>' +
-  '</div>';
-});
+        // Bouton détail
+        let actions = '';
+        if (data.peutVoirDetailsAutres) {
+          actions = '<button class="note-detail-btn" onclick="voirDetailLigne(\'' +
+            n.arbitreEmail + '\', \'' + data.devoirId + '\')">' +
+            '<i class="fa-solid fa-eye"></i>Voir le détail</button>';
+        }
+
+        html += '<div class="note-card ' + perfClass + '" id="note-card-' + (n.idReponse || Math.random().toString(36).substr(2, 9)) + '">' +
+
+          // En-tête cliquable
+          '<div class="note-card-header" onclick="this.parentNode.classList.toggle(\'expanded\')">' +
+            '<div class="note-avatar">' + initiales + '</div>' +
+            '<div class="note-info">' +
+              '<p class="note-name">' + nomAffichage + '</p>' +
+              '<div class="note-email">' +
+                '<i class="fa-solid fa-envelope"></i>' +
+                (n.arbitreEmail || 'Email non disponible') +
+              '</div>' +
+            '</div>' +
+            '<div class="note-badge">' +
+              '<div class="note-badge-value">' + noteAffichage + '</div>' +
+              '<div class="note-badge-total">sur ' + n.noteMax + '</div>' +
+            '</div>' +
+            '<i class="fa-solid fa-chevron-down note-card-chevron"></i>' +
+          '</div>' +
+
+          // Corps dépliable
+          '<div class="note-card-body">' +
+            '<div class="note-progress-wrapper">' +
+              '<div class="note-progress-header">' +
+                '<span><i class="fa-solid fa-chart-line me-1"></i>Performance</span>' +
+                '<span class="pct-value">' + pct + '%</span>' +
+              '</div>' +
+              '<div class="note-progress">' +
+                '<div class="note-progress-bar" style="width: ' + pct + '%"></div>' +
+              '</div>' +
+            '</div>' +
+
+            '<div class="note-meta">' +
+              '<i class="fa-regular fa-clock"></i>' +
+              '<span class="note-meta-label">Soumis le :</span>' +
+              '<span class="note-meta-value">' + dateFin + '</span>' +
+            '</div>' +
+
+            actions +
+          '</div>' +
+        '</div>';
+      });
 
       html += '</div>';
       cible.innerHTML = html;
@@ -18600,6 +19272,13 @@ function construireDetailReponses(data) {
 }
 
 window.construireDetailReponses = construireDetailReponses;
+
+function toggleQuestionCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.toggle('expanded');
+}
+window.toggleQuestionCard = toggleQuestionCard;
 
 function toggleDetailNote(id) {
   const el = document.getElementById(id);
@@ -18807,18 +19486,20 @@ function chargerCorrigeDansCarte(devoirId, bodyId) {
       html += '<div class="corrige-section p-3">';
 
       data.questions.forEach(function(q, idx) {
-        html += '<div class="question-card mb-3">' +
-          '<div class="d-flex align-items-start mb-2">' +
-            '<span class="question-number-badge">' + (idx + 1) + '</span>' +
-            '<div style="flex: 1; min-width: 0;">' +
-              '<p class="question-enonce mb-0">' + q.enonce +
-                (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
-              '</p>' +
-              '<small class="text-muted">(' + q.bareme + ' pt)</small>' +
-            '</div>' +
-          '</div>';
+        html += '<div class="question-card-modal">';
 
-        // ✅ MEDIA
+        // En-tête : numéro + énoncé + barème
+        html += '<div class="d-flex align-items-start">' +
+          '<span class="question-number-badge">' + (idx + 1) + '</span>' +
+          '<div style="flex: 1; min-width: 0;">' +
+            '<p class="question-enonce">' + q.enonce +
+              (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+              ' <span class="question-bareme">' + q.bareme + ' pt</span>' +
+            '</p>' +
+          '</div>' +
+        '</div>';
+
+        // Média (image / vidéo)
         if (q.mediaUrl) {
           var mediaUrl = String(q.mediaUrl).trim();
           var fileId = '';
@@ -18840,21 +19521,20 @@ function chargerCorrigeDansCarte(devoirId, bodyId) {
                 '</button>' +
               '</div>';
               html += '<p class="question-media-label">' +
-                '<i class="fa-solid fa-video me-1"></i>Video jointe' +
-              '</p>';
+                '<i class="fa-solid fa-video me-1"></i>Video jointe</p>';
             } else {
               html += '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
                 'class="question-media" alt="Illustration" ' +
                 'onerror="this.src=\'https://via.placeholder.com/300x200?text=Image+non+disponible\'; this.onerror=null;">';
               html += '<p class="question-media-label">' +
-                '<i class="fa-solid fa-image me-1"></i>Image jointe' +
-              '</p>';
+                '<i class="fa-solid fa-image me-1"></i>Image jointe</p>';
             }
 
             html += '</div>';
           }
         }
 
+        // Options avec bonnes réponses surlignées
         if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
           var bonnes = Array.isArray(q.bonneReponse) ? q.bonneReponse : [];
           html += '<div class="question-options">';
@@ -18886,10 +19566,10 @@ function chargerCorrigeDansCarte(devoirId, bodyId) {
             (q.bonneReponse ? '<p class="mt-2 mb-0 small"><strong>Reponse attendue :</strong> ' + q.bonneReponse + '</p>' : '');
         }
 
-        html += '</div>';
+        html += '</div>'; // fin question-card-modal
       });
 
-      html += '</div>';
+      html += '</div>'; // fin corrige-section
       body.innerHTML = html;
     })
     .withFailureHandler(function(err) {
@@ -18911,7 +19591,6 @@ function afficherCorrigeSelectionne() {
 
   google.script.run
     .withSuccessHandler(function(data) {
-      // Bandeau spécial si le devoir est encore en cours
       let bandeau = '';
       if (data.statut === 'ouvert') {
         bandeau = '<div class="alert alert-warning">' +
@@ -18939,43 +19618,59 @@ function afficherCorrigeSelectionne() {
       }
 
       data.questions.forEach(function(q, idx) {
-        html += '<div class="card mb-3 p-3 bg-light">' +
-          '<p class="fw-bold mb-2">' + (idx + 1) + '. ' + q.enonce +
-            (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
-            ' <small class="text-muted">(' + q.bareme + ' pt)</small></p>';
+        html += '<div class="question-card-modal">';
 
+        // En-tête
+        html += '<div class="d-flex align-items-start">' +
+          '<span class="question-number-badge">' + (idx + 1) + '</span>' +
+          '<div style="flex: 1; min-width: 0;">' +
+            '<p class="question-enonce">' + q.enonce +
+              (q.obligatoire ? ' <span class="text-danger">*</span>' : '') +
+              ' <span class="question-bareme">' + q.bareme + ' pt</span>' +
+            '</p>' +
+          '</div>' +
+        '</div>';
+
+        // Média
         if (q.mediaUrl) {
           html += (q.mediaType === 'video')
-            ? '<video controls class="w-100 mb-2" style="max-height:250px;"><source src="' + q.mediaUrl + '"></video>'
-            : '<img src="' + q.mediaUrl + '" class="img-fluid mb-2" style="max-height:250px;">';
+            ? '<video controls class="w-100 mb-2" style="max-height:250px; border-radius:10px;"><source src="' + q.mediaUrl + '"></video>'
+            : '<img src="' + q.mediaUrl + '" class="question-media mb-2" alt="Illustration">';
         }
 
+        // Options
         if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
           const bonnes = Array.isArray(q.bonneReponse) ? q.bonneReponse : [];
+          html += '<div class="question-options">';
           q.options.forEach(function(opt, i) {
             const estBonne = bonnes.indexOf(i) !== -1;
-            html += '<div class="form-check">' +
-              '<input class="form-check-input" type="' +
-                (q.typeReponse === 'qcm_unique' ? 'radio' : 'checkbox') + '" disabled ' +
+            html += '<label class="question-option ' + (estBonne ? 'checked' : '') + '">' +
+              '<input type="' + (q.typeReponse === 'qcm_unique' ? 'radio' : 'checkbox') + '" disabled ' +
                 (estBonne ? 'checked' : '') + '>' +
-              '<label class="form-check-label ' + (estBonne ? 'text-success fw-bold' : '') + '">' +
+              '<span class="' + (estBonne ? 'text-success fw-bold' : '') + '">' +
                 opt + (estBonne ? ' <i class="fa-solid fa-check ms-1"></i>' : '') +
-              '</label></div>';
+              '</span>' +
+            '</label>';
           });
+          html += '</div>';
         } else if (q.typeReponse === 'vrai_faux') {
           const bonne = q.bonneReponse;
-          html += '<div class="form-check">' +
-            '<input class="form-check-input" type="radio" disabled ' + (bonne === 'vrai' ? 'checked' : '') + '>' +
-            '<label class="form-check-label ' + (bonne === 'vrai' ? 'text-success fw-bold' : '') + '">Vrai</label></div>' +
-            '<div class="form-check">' +
-            '<input class="form-check-input" type="radio" disabled ' + (bonne === 'faux' ? 'checked' : '') + '>' +
-            '<label class="form-check-label ' + (bonne === 'faux' ? 'text-success fw-bold' : '') + '">Faux</label></div>';
+          html += '<div class="question-options">' +
+            '<label class="question-option ' + (bonne === 'vrai' ? 'checked' : '') + '">' +
+              '<input type="radio" disabled ' + (bonne === 'vrai' ? 'checked' : '') + '>' +
+              '<span class="' + (bonne === 'vrai' ? 'text-success fw-bold' : '') + '">Vrai</span>' +
+            '</label>' +
+            '<label class="question-option ' + (bonne === 'faux' ? 'checked' : '') + '">' +
+              '<input type="radio" disabled ' + (bonne === 'faux' ? 'checked' : '') + '>' +
+              '<span class="' + (bonne === 'faux' ? 'text-success fw-bold' : '') + '">Faux</span>' +
+            '</label>' +
+          '</div>';
         } else {
           html += '<p class="text-muted small mb-0"><em>Réponse libre — non notée automatiquement.</em></p>' +
             (q.bonneReponse ? '<p class="mt-2 mb-0"><strong>Réponse attendue :</strong> ' + q.bonneReponse + '</p>' : '');
         }
 
-        html += '</div>';
+        html += '</div>'; // fin question-card-modal
       });
 
       html += '</div>';
@@ -18984,7 +19679,7 @@ function afficherCorrigeSelectionne() {
     .withFailureHandler(function(err) {
       cible.innerHTML = '<div class="alert alert-danger">' + err.message + '</div>';
     })
-    .obtenirCorrigeDevoir(devoirId, emailUser);   // ✅ ENVOI EMAIL
+    .obtenirCorrigeDevoir(devoirId, emailUser);
 }
 
 // Déclenche le chargement des corrigés à l'ouverture du sous-onglet
@@ -20074,6 +20769,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 800);
   }
 });
+
+function toggleQuestionCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.toggle('expanded');
+}
+window.toggleQuestionCard = toggleQuestionCard;
 
 </script>
 
