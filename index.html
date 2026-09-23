@@ -17940,55 +17940,70 @@ function chargerToutesNotes() {
       html += '<div class="notes-container-accordion">';
 
       data.notes.forEach(function(n) {
-        var pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
-        var couleur = 'danger';
-        if (pct >= 70) couleur = 'success';
-        else if (pct >= 50) couleur = 'warning';
+  const pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
+  
+  // Déterminer la catégorie de performance
+  let perfClass = 'faible';
+  if (pct >= 70) perfClass = 'excellent';
+  else if (pct >= 50) perfClass = 'bien';
+  else if (pct >= 35) perfClass = 'moyen';
 
-        var initiales = extraireInitiales(n.arbitreNom || n.arbitreEmail);
+  // Nom d'affichage robuste
+  const nomAffichage = n.arbitreNom || n.arbitreEmail || 'Membre inconnu';
+  const initiales = extraireInitiales(nomAffichage);
+  const dateFin = n.dateFin ? new Date(n.dateFin).toLocaleString('fr-FR') : '-';
+  const noteAffichage = (n.noteObtenue !== undefined && n.noteObtenue !== null) 
+    ? n.noteObtenue : '0';
 
-        var actions = '';
-        if (data.peutVoirDetailsAutres) {
-          actions = '<button class="btn btn-sm btn-outline-info mt-2" onclick="voirDetailLigne(\'' +
-            n.arbitreEmail + '\', \'' + data.devoirId + '\')">' +
-            '<i class="fa-solid fa-eye me-1"></i>Voir le detail</button>';
-        }
+  // Bouton détail
+  let actions = '';
+  if (data.peutVoirDetailsAutres) {
+    actions = '<button class="note-detail-btn" onclick="voirDetailLigne(\'' +
+      n.arbitreEmail + '\', \'' + data.devoirId + '\')">' +
+      '<i class="fa-solid fa-eye"></i>Voir le détail</button>';
+  }
 
-        var dateFin = n.dateFin ? new Date(n.dateFin).toLocaleString('fr-FR') : '-';
-
-        html += '<div class="membre-item arbitre">' +
-          '<div class="membre-item-header">' +
-            '<div class="membre-item-left">' +
-              '<div class="membre-avatar" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">' + initiales + '</div>' +
-              '<div class="membre-name-block">' +
-                '<p class="membre-name">' + (n.arbitreNom || n.arbitreEmail) + '</p>' +
-                '<div class="membre-qualite-line">' + n.arbitreEmail + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div class="membre-item-right">' +
-              '<span class="badge bg-' + couleur + '" style="font-size: 0.95rem;">' + n.noteObtenue + ' / ' + n.noteMax + '</span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="membre-item-body" style="max-height: 200px; padding-top: 10px;">' +
-            '<div class="membre-info-grid">' +
-              '<div class="membre-info-row">' +
-                '<span class="info-icon"><i class="fa fa-chart-line"></i></span>' +
-                '<span class="info-label">Pourcentage :</span>' +
-                '<span class="info-value fw-bold">' + pct + '%</span>' +
-              '</div>' +
-              '<div class="membre-info-row">' +
-                '<span class="info-icon"><i class="fa fa-calendar"></i></span>' +
-                '<span class="info-label">Soumis le :</span>' +
-                '<span class="info-value">' + dateFin + '</span>' +
-              '</div>' +
-              '<div class="progress-custom mt-2" style="width: 100%;">' +
-                '<div class="progress-custom-bar" style="width: ' + pct + '%;"></div>' +
-              '</div>' +
-              actions +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      });
+  html += '<div class="note-card ' + perfClass + '" id="note-card-' + (n.idReponse || Math.random().toString(36).substr(2, 9)) + '">' +
+    
+    // En-tête cliquable
+    '<div class="note-card-header" onclick="this.parentNode.classList.toggle(\'expanded\')">' +
+      '<div class="note-avatar">' + initiales + '</div>' +
+      '<div class="note-info">' +
+        '<p class="note-name">' + nomAffichage + '</p>' +
+        '<div class="note-email">' +
+          '<i class="fa-solid fa-envelope"></i>' + 
+          (n.arbitreEmail || 'Email non disponible') +
+        '</div>' +
+      '</div>' +
+      '<div class="note-badge">' +
+        '<div class="note-badge-value">' + noteAffichage + '</div>' +
+        '<div class="note-badge-total">sur ' + n.noteMax + '</div>' +
+      '</div>' +
+      '<i class="fa-solid fa-chevron-down note-card-chevron"></i>' +
+    '</div>' +
+    
+    // Corps dépliable
+    '<div class="note-card-body">' +
+      '<div class="note-progress-wrapper">' +
+        '<div class="note-progress-header">' +
+          '<span><i class="fa-solid fa-chart-line me-1"></i>Performance</span>' +
+          '<span class="pct-value">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="note-progress">' +
+          '<div class="note-progress-bar" style="width: ' + pct + '%"></div>' +
+        '</div>' +
+      '</div>' +
+      
+      '<div class="note-meta">' +
+        '<i class="fa-regular fa-clock"></i>' +
+        '<span class="note-meta-label">Soumis le :</span>' +
+        '<span class="note-meta-value">' + dateFin + '</span>' +
+      '</div>' +
+      
+      actions +
+    '</div>' +
+  '</div>';
+});
 
       html += '</div>';
       cible.innerHTML = html;
