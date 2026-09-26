@@ -19951,6 +19951,21 @@ function chargerToutesNotes() {
       }
 
       // ═══════════════════════════════════════════════════════
+      // ✅ TRI DÉCROISSANT : meilleure note en premier
+      //    Niveau 1 : pourcentage décroissant
+      //    Niveau 2 : note brute décroissante (si égalité)
+      // ═══════════════════════════════════════════════════════
+      data.notes.sort(function(a, b) {
+        const pctA = a.noteMax > 0 ? (Number(a.noteObtenue) / Number(a.noteMax)) : 0;
+        const pctB = b.noteMax > 0 ? (Number(b.noteObtenue) / Number(b.noteMax)) : 0;
+
+        if (pctB !== pctA) return pctB - pctA;
+
+        // Égalité de pourcentage → départage par note brute
+        return (Number(b.noteObtenue) || 0) - (Number(a.noteObtenue) || 0);
+      });
+
+      // ═══════════════════════════════════════════════════════
       // STATISTIQUES (notes ramenées sur 20)
       // ═══════════════════════════════════════════════════════
       var totalNotesSur20 = 0;
@@ -20058,7 +20073,6 @@ function chargerToutesNotes() {
           '<i class="fa-solid fa-list-check me-1"></i>Voir tous les détails</button>';
       }
 
-      // ✅ Bouton PDF : visible pour ceux qui peuvent voir toutes les notes
       if (data.peutVoirDetailsAutres === true || data.peutVoirTousDetails === true) {
         boutonsAction += '<button class="btn btn-sm btn-danger" onclick="exporterNotesPdf(\'' + data.devoirId + '\')">' +
           '<i class="fa-solid fa-file-pdf me-1"></i>Exporter en PDF</button>';
@@ -20069,11 +20083,11 @@ function chargerToutesNotes() {
       }
 
       // ═══════════════════════════════════════════════════════
-      // CARTES DE NOTES
+      // CARTES DE NOTES (triées + médailles top 3)
       // ═══════════════════════════════════════════════════════
       html += '<div class="notes-container-accordion">';
 
-      data.notes.forEach(function(n) {
+      data.notes.forEach(function(n, rang) {
         const pct = n.noteMax > 0 ? Math.round((n.noteObtenue / n.noteMax) * 100) : 0;
 
         // Déterminer la catégorie de performance
@@ -20089,6 +20103,20 @@ function chargerToutesNotes() {
         const noteAffichage = (n.noteObtenue !== undefined && n.noteObtenue !== null)
           ? n.noteObtenue : '0';
 
+        // ✅ Médailles top 3 + rang pour les autres
+        let rangHtml = '';
+        if (rang === 0) {
+          rangHtml = '<span style="font-size:1.3rem;margin-left:6px;" title="1ère place">🥇</span>';
+        } else if (rang === 1) {
+          rangHtml = '<span style="font-size:1.3rem;margin-left:6px;" title="2ème place">🥈</span>';
+        } else if (rang === 2) {
+          rangHtml = '<span style="font-size:1.3rem;margin-left:6px;" title="3ème place">🥉</span>';
+        } else {
+          rangHtml = '<span style="display:inline-block;margin-left:6px;padding:2px 8px;' +
+            'background:#e9ecef;color:#495057;border-radius:10px;font-size:0.68rem;font-weight:800;">' +
+            '#' + (rang + 1) + '</span>';
+        }
+
         // Bouton détail
         let actions = '';
         if (data.peutVoirDetailsAutres) {
@@ -20103,7 +20131,7 @@ function chargerToutesNotes() {
           '<div class="note-card-header" onclick="this.parentNode.classList.toggle(\'expanded\')">' +
             '<div class="note-avatar">' + initiales + '</div>' +
             '<div class="note-info">' +
-              '<p class="note-name">' + nomAffichage + '</p>' +
+              '<p class="note-name">' + nomAffichage + rangHtml + '</p>' +
               '<div class="note-email">' +
                 '<i class="fa-solid fa-envelope"></i>' +
                 (n.arbitreEmail || 'Email non disponible') +
@@ -20149,55 +20177,7 @@ function chargerToutesNotes() {
 }
 
 window.chargerToutesNotes = chargerToutesNotes;
-
-// ---------- AFFICHAGE D'UNE NOTE ----------
-function construireAffichageNote(data) {
-  var pct = data.noteMax > 0 ? Math.round((data.noteObtenue / data.noteMax) * 100) : 0;
-  var couleur = 'danger';
-  if (pct >= 70) couleur = 'success';
-  else if (pct >= 50) couleur = 'warning';
-
-  var initiales = extraireInitiales(data.arbitreNom || data.arbitreEmail);
-  var dateFin = data.dateFin ? new Date(data.dateFin).toLocaleString('fr-FR') : '-';
-
-  var html = '<div class="membre-item arbitre" style="margin-top: 16px;">' +
-    '<div class="membre-item-header">' +
-      '<div class="membre-item-left">' +
-        '<div class="membre-avatar" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">' + initiales + '</div>' +
-        '<div class="membre-name-block">' +
-          '<p class="membre-name">' + (data.arbitreNom || data.arbitreEmail) + '</p>' +
-          '<div class="membre-qualite-line">Soumis le ' + dateFin + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="membre-item-right">' +
-        '<span class="badge bg-' + couleur + '" style="font-size: 1.1rem; padding: 0.5em 0.8em;">' +
-          data.noteObtenue + ' / ' + data.noteMax +
-        '</span>' +
-      '</div>' +
-    '</div>' +
-    '<div class="membre-item-body" style="max-height: 600px; padding-top: 14px;">' +
-      '<div class="membre-info-grid">' +
-        '<div class="membre-info-row">' +
-          '<span class="info-icon"><i class="fa fa-chart-line"></i></span>' +
-          '<span class="info-label">Pourcentage :</span>' +
-          '<span class="info-value fw-bold">' + pct + '%</span>' +
-        '</div>' +
-        '<div class="progress-custom mt-2 mb-3" style="width: 100%;">' +
-          '<div class="progress-custom-bar" style="width: ' + pct + '%;"></div>' +
-        '</div>' +
-        '<button class="btn btn-sm btn-outline-info" onclick="toggleDetailNote(\'d-' + data.idReponse + '\')">' +
-          '<i class="fa-solid fa-eye me-1"></i>Voir le detail des reponses</button>' +
-        '<div id="d-' + data.idReponse + '" class="mt-3" style="display:none;">' +
-          construireDetailReponses(data) +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
-
-  return html;
-}
-
-window.construireAffichageNote = construireAffichageNote;
+  
 
 function construireDetailReponses(data) {
   var html = '';
