@@ -8928,11 +8928,716 @@ h3.h5.fw-bold.text-primary i {
 
 
 
+/* ============================================================
+   BOUTON "EXPORTER EN PDF" (dans les cartes de corrigé)
+   ============================================================ */
+.exporter-pdf-btn {
+  padding: 6px 12px !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  border-radius: 8px !important;
+  border: 2px solid #dc3545 !important;
+  color: #dc3545 !important;
+  background: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.25s ease !important;
+  white-space: nowrap !important;
+}
+
+.exporter-pdf-btn:hover {
+  background: linear-gradient(135deg, #dc3545, #b02a37) !important;
+  color: #ffffff !important;
+  border-color: #dc3545 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.35);
+}
+
+.exporter-pdf-btn i {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 576px) {
+  .exporter-pdf-btn {
+    padding: 5px 8px !important;
+  }
+  .exporter-pdf-btn span {
+    display: none;   /* Cache le texte "PDF" sur mobile */
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════ */
+/* MODULE DEMANDES - Styles                                              */
+/* ═══════════════════════════════════════════════════════════════════════ */
+
+/* Carte menu DEMANDES */
+.card-demandes {
+  background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%) !important;
+  box-shadow: 
+    0 4px 12px rgba(111, 66, 193, 0.30),
+    0 12px 28px rgba(111, 66, 193, 0.22),
+    0 24px 48px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Bandeau d'en-tête du module */
+.demandes-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #6f42c1, #5a32a3);
+  color: white;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(111, 66, 193, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.demandes-banner::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.demandes-banner-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  backdrop-filter: blur(8px);
+}
+
+.demandes-banner-text h5 {
+  margin: 0 0 4px 0;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.3px;
+}
+
+.demandes-banner-text p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* Barre d'onglets DEMANDES - Grille 2×2 uniforme */
+.demandes-tabs {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid #e9ecef;
+}
+
+.demandes-tabs .nav-item {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+}
+
+.demandes-tabs .nav-link {
+  width: 100% !important;
+  border-radius: 12px !important;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #6c757d;
+  padding: 11px 14px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  border: none !important;
+  text-align: center;
+}
+
+.demandes-tabs .nav-link:hover:not(.active) {
+  background: #f8f9fa;
+  color: #6f42c1;
+  transform: translateY(-1px);
+}
+
+.demandes-tabs .nav-link.active {
+  background: linear-gradient(135deg, #6f42c1, #5a32a3) !important;
+  color: white !important;
+  box-shadow: 0 6px 16px rgba(111, 66, 193, 0.35);
+}
+
+/* Responsive : sur mobile, on peut garder 2 colonnes */
+@media (max-width: 576px) {
+  .demandes-tabs .nav-link {
+    font-size: 0.72rem;
+    padding: 10px 8px !important;
+  }
+  .demandes-tabs .nav-link span {
+    display: none;
+  }
+  .demandes-tabs .nav-link i {
+    font-size: 1.1rem;
+  }
+}
+
+/* Cartes de choix de demande */
+.demande-choix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.demande-choix-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 22px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.demande-choix-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: currentColor;
+}
+
+.demande-choix-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    0 8px 24px rgba(0,0,0,0.08),
+    0 20px 40px rgba(0,0,0,0.06);
+}
+
+.demande-choix-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.demande-choix-card:hover .demande-choix-icon {
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.demande-choix-card h5 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #212529;
+  margin: 0;
+}
+
+.demande-choix-card p {
+  font-size: 0.82rem;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.demande-choix-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #f8f9fa;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 6px;
+}
+
+.demande-choix-card:hover .demande-choix-btn {
+  transform: translateX(4px);
+}
+
+/* Couleurs par type */
+.demande-choix-attestation { color: #198754; }
+.demande-choix-attestation .demande-choix-icon { background: linear-gradient(135deg, #198754, #20c997); }
+.demande-choix-attestation .demande-choix-btn { color: #198754; }
+
+.demande-choix-transfert { color: #0d6efd; }
+.demande-choix-transfert .demande-choix-icon { background: linear-gradient(135deg, #0d6efd, #0a58ca); }
+.demande-choix-transfert .demande-choix-btn { color: #0d6efd; }
+
+.demande-choix-assesseur { color: #0dcaf0; }
+.demande-choix-assesseur .demande-choix-icon { background: linear-gradient(135deg, #0dcaf0, #0aa2c0); }
+.demande-choix-assesseur .demande-choix-btn { color: #0aa2c0; }
+
+.demande-choix-card:hover .demande-choix-btn {
+  background: currentColor;
+  color: white !important;
+}
+
+/* Modale formulaire */
+.modal-demande-header {
+  background: linear-gradient(135deg, #6f42c1, #5a32a3);
+  color: white;
+  border-bottom: none;
+  padding: 18px 24px;
+}
+
+.modal-demande-header-attestation {
+  background: linear-gradient(135deg, #198754, #20c997) !important;
+}
+
+.modal-demande-header-transfert {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;
+}
+
+.modal-demande-header-assesseur {
+  background: linear-gradient(135deg, #0dcaf0, #0aa2c0) !important;
+}
+
+.modal-demande-header .modal-title {
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+}
+
+/* Bloc récapitulatif dans la modale */
+.demande-recap-bloc {
+  display: flex;
+  gap: 14px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #f0fdf4, #ffffff);
+  border-left: 4px solid #198754;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.demande-recap-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #198754;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.demande-recap-text p {
+  margin: 0 0 6px 0;
+  font-size: 0.9rem;
+  color: #212529;
+}
+
+.demande-recap-text p.small {
+  color: #6c757d;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* Bloc aperçu */
+.demande-recap-preview {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid #e9ecef;
+}
+
+.demande-preview-titre {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #6f42c1;
+  letter-spacing: 0.7px;
+  margin-bottom: 10px;
+}
+
+.demande-preview-liste {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.demande-preview-liste li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+  font-size: 0.85rem;
+  color: #495057;
+  line-height: 1.4;
+}
+
+.demande-preview-liste li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  color: #198754;
+  font-weight: 900;
+}
+
+/* Liste des demandes */
+.demandes-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.demande-item {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.demande-item:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.demande-item.expanded {
+  border-color: #6f42c1;
+  box-shadow: 0 8px 24px rgba(111, 66, 193, 0.15);
+}
+
+.demande-item.demande-attente {
+  border-left: 4px solid #fd7e14;
+}
+
+.demande-item.demande-traitee {
+  border-left: 4px solid #198754;
+  opacity: 0.95;
+}
+
+.demande-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(90deg, #ffffff, #f8f9fa);
+  transition: background 0.2s ease;
+}
+
+.demande-item-header:hover {
+  background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+}
+
+.demande-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.demande-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.demande-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.demande-item-nom {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #212529;
+  margin: 0 0 4px 0;
+  word-wrap: break-word;
+}
+
+.demande-item-date {
+  font-size: 0.72rem;
+  color: #6c757d;
+  font-weight: 600;
+  margin: 0;
+}
+
+.demande-item-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.demande-chevron {
+  color: #6c757d;
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.demande-item.expanded .demande-chevron {
+  transform: rotate(180deg);
+  color: #6f42c1;
+}
+
+.demande-item-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.25s ease;
+  background: #f8f9fa;
+  border-top: 1px solid transparent;
+}
+
+.demande-item.expanded .demande-item-body {
+  max-height: 500px;
+  padding: 16px 18px;
+  border-top-color: #e9ecef;
+}
+
+.demande-details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.demande-detail {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.demande-detail-label {
+  color: #6c757d;
+  font-weight: 700;
+  min-width: 130px;
+}
+
+.demande-detail-value {
+  color: #212529;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.demande-traitement-info {
+  padding: 10px 14px;
+  background: #d1e7dd;
+  color: #0f5132;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  margin-bottom: 12px;
+  border-left: 3px solid #198754;
+}
+
+.demande-item-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #e9ecef;
+  flex-wrap: wrap;
+}
+
+.demande-btn-action {
+  padding: 8px 18px !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .demandes-banner {
+    padding: 16px;
+    gap: 12px;
+  }
+  .demandes-banner-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.2rem;
+  }
+  .demandes-banner-text h5 { font-size: 1rem; }
+  .demandes-banner-text p { font-size: 0.72rem; }
+
+  .demandes-tabs .nav-link {
+    font-size: 0.72rem;
+    padding: 9px 12px !important;
+  }
+  .demandes-tabs .nav-link span {
+    display: none;
+  }
+  .demandes-tabs .nav-link i { font-size: 1rem; }
+
+  .demande-choix-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .demande-choix-card {
+    padding: 20px 16px;
+    flex-direction: row;
+    text-align: left;
+    gap: 14px;
+  }
+  .demande-choix-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .demande-choix-card h5 { font-size: 0.95rem; }
+  .demande-choix-card p { font-size: 0.75rem; }
+  .demande-choix-btn {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+    margin-top: 0;
+    margin-left: auto;
+  }
+
+  .demande-detail {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .demande-detail-label {
+    min-width: auto;
+    font-size: 0.72rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════ */
+/* AMÉLIORATION LISTE DEMANDES - DÉTAILS COMPLETS + APERÇU PDF          */
+/* ═══════════════════════════════════════════════════════════════════════ */
+
+.demande-body-section-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6f42c1;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 2px dashed #e9ecef;
+  display: flex;
+  align-items: center;
+}
+
+/* Aperçu PDF intégré */
+.demande-apercu-pdf {
+  margin-top: 16px;
+  padding: 14px;
+  background: #ffffff;
+  border: 2px solid #6f42c1;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(111, 66, 193, 0.08);
+}
+
+.demande-apercu-titre {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #6f42c1;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.demande-apercu-iframe-wrapper {
+  width: 100%;
+  height: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.demande-apercu-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.demande-apercu-placeholder {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: #fff8e1;
+  border-left: 4px solid #fd7e14;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: #7a4a00;
+  display: flex;
+  align-items: center;
+  font-style: italic;
+}
+
+/* Responsive aperçu PDF */
+@media (max-width: 768px) {
+  .demande-apercu-iframe-wrapper {
+    height: 350px;
+  }
+}
+
+.card-demandes {
+  background: linear-gradient(135deg, #c9a87c 0%, #a8895f 100%) !important;
+  box-shadow: 
+    0 4px 12px rgba(201, 168, 124, 0.35),
+    0 12px 28px rgba(201, 168, 124, 0.25),
+    0 24px 48px rgba(0, 0, 0, 0.12) !important;
+  color: #3d2f1f !important;
+}
+
+.card-demandes h4,
+.card-demandes small,
+.card-demandes .menu-icon {
+  color: #3d2f1f !important;
+  text-shadow: none !important;
+}
 </style>
 
 
 </head>
 <body>
+<!-- Écran de chargement -->
 <!-- Écran de chargement -->
 <div id="loadingScreen">
   <img src="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK" 
@@ -9207,7 +9912,7 @@ h3.h5.fw-bold.text-primary i {
       </div>
 
       <!-- 7. Infos - Tests - Échanges -->
-      <div class="col-12 col-lg-4">
+      <div class="col-6 col-lg-4">
         <div class="card menu-card card-infos-tests" onclick="basculerVue('infos-tests-echanges')">
           <i class="fa-solid fa-comments menu-icon"></i>
           <h4>Infos - Tests - Échanges</h4>
@@ -9215,7 +9920,17 @@ h3.h5.fw-bold.text-primary i {
         </div>
       </div>
 
+      <!-- 8. DEMANDES (Attestations / Transferts / Assesseurs) -->
+    <div class="col-6 col-lg-4">
+  <div class="card menu-card card-demandes" onclick="basculerVue('demandes')">
+    <i class="fa-solid fa-file-circle-plus menu-icon"></i>
+    <h4>Demandes</h4>
+    <small>Attestations • Transferts • Assesseurs</small>
+  </div>
+</div>
+
     </div>
+
   </div>
 </div> <!-- Fin de #view-home -->
 
@@ -10900,22 +11615,48 @@ h3.h5.fw-bold.text-primary i {
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="card border-0 shadow-sm mb-3">
-          <div class="card-body">
-            <div class="mb-3">
-              <label class="form-label fw-bold small">
-                <i class="fa-solid fa-heading text-primary me-1"></i>Titre du devoir
-              </label>
-              <input type="text" id="devoirTitre" class="form-control" placeholder="Ex: Les lois du jeu 2026" required>
-            </div>
-            <div class="mb-0">
-              <label class="form-label fw-bold small">
-                <i class="fa-solid fa-clock text-primary me-1"></i>Durée limite (minutes)
-              </label>
-              <input type="number" id="devoirDuree" class="form-control" min="1" placeholder="Ex: 30" required>
-            </div>
-          </div>
-        </div>
+        <!-- Info contextuelle -->
+<div class="alert alert-info py-2 px-3 small mb-3" id="devoirInfoAuteur">
+  <i class="fa-solid fa-circle-info me-1"></i>
+  <span id="devoirInfoAuteurTexte">Vous créez ce devoir. Choisissez librement la durée de validité.</span>
+</div>
+
+<div class="card border-0 shadow-sm mb-3">
+  <div class="card-body">
+    <div class="mb-3">
+      <label class="form-label fw-bold small">
+        <i class="fa-solid fa-heading text-primary me-1"></i>Titre du devoir
+      </label>
+      <input type="text" id="devoirTitre" class="form-control" placeholder="Ex: Les lois du jeu 2026" required>
+    </div>
+
+    <div class="row g-2">
+      <div class="col-12 col-md-6">
+        <label class="form-label fw-bold small">
+          <i class="fa-solid fa-stopwatch text-primary me-1"></i>Temps de composition (minutes)
+        </label>
+        <input type="number" id="devoirDuree" class="form-control" min="1" placeholder="Ex: 30" required>
+        <small class="text-muted">Temps dont dispose l'arbitre pour répondre une fois le devoir démarré.</small>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label fw-bold small">
+          <i class="fa-solid fa-hourglass-half text-primary me-1"></i>Durée de validité (heures)
+        </label>
+        <input type="number" id="devoirDureeValidite" class="form-control" min="1" placeholder="Ex: 72" required>
+        <small class="text-muted">Durée pendant laquelle le devoir reste ouvert à partir de maintenant.</small>
+      </div>
+    </div>
+
+    <!-- Raccourcis durée de validité -->
+    <div class="mt-2 d-flex flex-wrap gap-1">
+      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('devoirDureeValidite').value=24">24 h</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('devoirDureeValidite').value=48">48 h</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('devoirDureeValidite').value=72">72 h</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('devoirDureeValidite').value=168">1 semaine</button>
+    </div>
+  </div>
+</div>
 
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h6 class="fw-bold mb-0">
@@ -11008,6 +11749,139 @@ h3.h5.fw-bold.text-primary i {
     </div>
   </div>
 </div>
+    </div>
+  </div>
+</div> <!-- Fin de #view-infos-tests-echanges -->
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ==================== MODULE DEMANDES ==================== -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="view-demandes" class="app-view d-none">
+  <div class="container py-3 px-2 px-md-3">
+
+    <!-- Bandeau explicatif -->
+    <div class="demandes-banner mb-3">
+      <div class="demandes-banner-icon">
+        <i class="fa-solid fa-file-circle-plus"></i>
+      </div>
+      <div class="demandes-banner-text">
+        <h5>Module Demandes</h5>
+        <p>Attestations • Transferts • Assesseurs</p>
+      </div>
+    </div>
+
+    <!-- Barre d'onglets principale -->
+    <ul class="nav nav-pills demandes-tabs mb-3" id="demandesTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="tab-demande-btn" data-bs-toggle="pill" data-bs-target="#d-pane-demande" type="button" role="tab">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Demande</span>
+        </button>
+      </li>
+      <li class="nav-item demandes-liste-item role-validateur" role="presentation">
+        <button class="nav-link" id="tab-liste-attestations-btn" data-bs-toggle="pill" data-bs-target="#d-pane-attestations" type="button" role="tab" onclick="chargerListeDemandes('ATTESTATION')">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Attestations</span>
+        </button>
+      </li>
+      <li class="nav-item demandes-liste-item role-validateur" role="presentation">
+        <button class="nav-link" id="tab-liste-transferts-btn" data-bs-toggle="pill" data-bs-target="#d-pane-transferts" type="button" role="tab" onclick="chargerListeDemandes('TRANSFERT')">
+          <i class="fa-solid fa-right-left"></i>
+          <span>Transferts</span>
+        </button>
+      </li>
+      <li class="nav-item demandes-liste-item role-validateur" role="presentation">
+        <button class="nav-link" id="tab-liste-assesseurs-btn" data-bs-toggle="pill" data-bs-target="#d-pane-assesseurs" type="button" role="tab" onclick="chargerListeDemandes('ASSESSEUR')">
+          <i class="fa-solid fa-user-tie"></i>
+          <span>Assesseurs</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="demandesTabContent">
+
+      <!-- ────────────── SOUS-MENU DEMANDE ────────────── -->
+      <div class="tab-pane fade show active" id="d-pane-demande" role="tabpanel">
+        <div class="demande-choix-grid">
+          <div class="demande-choix-card demande-choix-attestation" onclick="ouvrirFormulaireDemande('ATTESTATION')">
+            <div class="demande-choix-icon"><i class="fa-solid fa-file-lines"></i></div>
+            <h5>Demander une attestation</h5>
+            <p>Obtenir une attestation officielle de la Sous-CRA</p>
+            <button class="demande-choix-btn">Demander <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+
+          <div class="demande-choix-card demande-choix-transfert" onclick="ouvrirFormulaireDemande('TRANSFERT')">
+            <div class="demande-choix-icon"><i class="fa-solid fa-right-left"></i></div>
+            <h5>Demander un transfert</h5>
+            <p>Changer de CRA ou Sous-CRA de rattachement</p>
+            <button class="demande-choix-btn">Demander <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+
+          <div class="demande-choix-card demande-choix-assesseur" onclick="ouvrirFormulaireDemande('ASSESSEUR')">
+            <div class="demande-choix-icon"><i class="fa-solid fa-user-tie"></i></div>
+            <h5>Devenir assesseur</h5>
+            <p>Solliciter un reclassement dans le corps des assesseurs</p>
+            <button class="demande-choix-btn">Demander <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────────────── LISTE ATTESTATIONS ────────────── -->
+      <div class="tab-pane fade" id="d-pane-attestations" role="tabpanel">
+        <div class="export-header">
+          <span class="badge bg-success"><i class="fa-solid fa-file-lines me-1"></i>Liste des Attestations</span>
+          <div id="exportBarreAttestations"></div>
+        </div>
+        <div id="containerListeAttestations"></div>
+      </div>
+
+      <!-- ────────────── LISTE TRANSFERTS ────────────── -->
+      <div class="tab-pane fade" id="d-pane-transferts" role="tabpanel">
+        <div class="export-header">
+          <span class="badge bg-primary"><i class="fa-solid fa-right-left me-1"></i>Liste des Transferts</span>
+          <div id="exportBarreTransferts"></div>
+        </div>
+        <div id="containerListeTransferts"></div>
+      </div>
+
+      <!-- ────────────── LISTE ASSESSEURS ────────────── -->
+      <div class="tab-pane fade" id="d-pane-assesseurs" role="tabpanel">
+        <div class="export-header">
+          <span class="badge bg-info text-dark"><i class="fa-solid fa-user-tie me-1"></i>Liste des Assesseurs</span>
+          <div id="exportBarreAssesseurs"></div>
+        </div>
+        <div id="containerListeAssesseurs"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- MODALE : FORMULAIRE DE DEMANDE -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="modalFormulaireDemande" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+      <div class="modal-header modal-demande-header" id="modalDemandeHeader">
+        <h5 class="modal-title" id="modalDemandeTitre">
+          <i class="fa-solid fa-paper-plane me-2"></i>
+          Nouvelle Demande
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4" id="modalDemandeCorps">
+        <!-- Rempli dynamiquement -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fa-solid fa-times me-1"></i>Annuler
+        </button>
+        <button type="button" class="btn btn-success" id="btnEnvoyerDemande" onclick="envoyerDemandeDepuisModal()">
+          <i class="fa-solid fa-paper-plane me-1"></i>Envoyer la demande
+        </button>
+      </div>
     </div>
   </div>
 </div> <!-- Fin de #view-infos-tests-echanges -->
@@ -11143,6 +12017,8 @@ h3.h5.fw-bold.text-primary i {
 // ========================================================
 let currentUser = "";
 let userPermissions = {};
+let devoirEnEditionId = null;
+var compteurQuestionsBuilder = 0;
 let globalMembres = [];
 let globalDesignations = [];
 let getMatchsSuperviseur = [];
@@ -17927,18 +18803,30 @@ function getOptimizedDriveUrl(fileId, isBureautique = false) {
   return 'https://drive.google.com/file/d/' + fileId + '/preview';
 }
 
-var compteurQuestionsBuilder = 0;
 
 // ============================================================================
 // CHARGEMENT DE LA LISTE DES DEVOIRS
 // ============================================================================
-var compteurQuestionsBuilder = 0;
 
 function chargerListeDevoirs() {
   const emailUser = sessionStorage.getItem('user_email_souscra') || window.currentUser || '';
 
   google.script.run
     .withSuccessHandler(function(data) {
+      // ✅ Protection contre null
+      if (!data || typeof data !== 'object') {
+        console.warn('[chargerListeDevoirs] Réponse vide');
+        const container = document.getElementById('listeDevoirsContainer');
+        if (container) {
+          container.innerHTML = '<div class="text-center text-muted my-5">' +
+            '<i class="fa-solid fa-file-pen fa-3x mb-3" style="color: #dee2e6;"></i>' +
+            '<p>Aucun devoir à afficher.</p></div>';
+        }
+        const btnCreer = document.getElementById('btnCreerDevoir');
+        if (btnCreer) btnCreer.classList.add('d-none');
+        return;
+      }
+
       const btnCreer = document.getElementById('btnCreerDevoir');
       if (btnCreer) btnCreer.classList.toggle('d-none', !data.peutCreer);
 
@@ -17972,7 +18860,19 @@ function chargerListeDevoirs() {
 
         var dateSoumission = new Date(d.dateSoumission).toLocaleDateString('fr-FR');
 
+        // ═══════════════════════════════════════════════════════
+        // BOUTONS D'ACTION
+        // ═══════════════════════════════════════════════════════
+
+        // 👁️ Consulter : toujours visible
         var actions = '<button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); consulterDevoir(\'' + d.id + '\')" title="Consulter"><i class="fa-solid fa-eye"></i></button>';
+
+        // ✏️ Modifier : uniquement admin OU auteur du devoir
+        if (d.peutModifier === true) {
+          actions += '<button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); ouvrirEditionDevoir(\'' + d.id + '\')" title="Modifier"><i class="fa-solid fa-pen"></i></button>';
+        }
+
+        // 📦 Archiver / 🗑️ Supprimer : réservés aux membres formation
         if (data.peutCreer) {
           if (statut !== 'archive') {
             actions += '<button class="btn btn-sm btn-outline-warning" onclick="event.stopPropagation(); archiverDevoirUI(\'' + d.id + '\')" title="Archiver"><i class="fa-solid fa-box-archive"></i></button>';
@@ -18004,15 +18904,15 @@ function chargerListeDevoirs() {
       container.innerHTML = html;
     })
     .withFailureHandler(function(err) {
+      console.error('[chargerListeDevoirs] Erreur :', err);
       const btnCreer = document.getElementById('btnCreerDevoir');
       if (btnCreer) btnCreer.classList.add('d-none');
 
       const container = document.getElementById('listeDevoirsContainer');
-      if (container) container.innerHTML = '<p class="text-danger text-center">Erreur : ' + err.message + '</p>';
+      if (container) container.innerHTML = '<p class="text-danger text-center">Erreur : ' + (err.message || err) + '</p>';
     })
     .listerDevoirs(emailUser);
 }
-
 window.chargerListeDevoirs = chargerListeDevoirs;
 
 
@@ -18692,29 +19592,71 @@ function soumettreDevoirUI(automatique) {
   if (!devoirEnCours) return;
 
   if (!automatique) {
-    const manquantes = devoirEnCours.questions.filter(function(q) {
-      if (!q.obligatoire) return false;
+    // ═══════════════════════════════════════════════════════
+    // VALIDATION ROBUSTE : chaque question obligatoire
+    // ═══════════════════════════════════════════════════════
+    const questionsManquantes = [];
+
+    devoirEnCours.questions.forEach(function(q) {
+      if (!q.obligatoire) return;
+
+      // Trouver le bloc de la question
       const bloc = document.querySelector('[data-question-id="' + q.id + '"]');
+      
+      if (!bloc) {
+        // Le bloc n'existe pas — on ne peut pas valider
+        questionsManquantes.push(q);
+        return;
+      }
+
+      let estRepondu = false;
+
+      // ─── Cas 1 : QCM unique ou Vrai/Faux (radio) ───
       if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'vrai_faux') {
-        return !bloc.querySelector('input[name="rep-' + q.id + '"]:checked');
-      } else if (q.typeReponse === 'qcm_multiple') {
-        return bloc.querySelectorAll('input[data-question="' + q.id + '"]:checked').length === 0;
-      } else {
-        const texte = bloc.querySelector('#rep-' + q.id);
-        return !texte || !texte.value.trim();
+        const radios = bloc.querySelectorAll('input[type="radio"]');
+        estRepondu = Array.from(radios).some(function(r) { return r.checked; });
+      }
+      // ─── Cas 2 : QCM multiple (checkbox) ───
+      else if (q.typeReponse === 'qcm_multiple') {
+        const checkboxes = bloc.querySelectorAll('input[type="checkbox"]');
+        estRepondu = Array.from(checkboxes).some(function(c) { return c.checked; });
+      }
+      // ─── Cas 3 : Réponse libre (textarea) ───
+      else {
+        const textarea = bloc.querySelector('textarea');
+        estRepondu = textarea && textarea.value.trim() !== '';
+      }
+
+      if (!estRepondu) {
+        questionsManquantes.push(q);
       }
     });
-    if (manquantes.length > 0) {
-      alert('Veuillez répondre à toutes les questions obligatoires avant de valider.');
+
+    if (questionsManquantes.length > 0) {
+      // Message détaillé : préciser quelles questions manquent
+      const numerosManquants = questionsManquantes.map(function(q) {
+        // Retrouver le numéro (ordre)
+        const index = devoirEnCours.questions.findIndex(function(item) { return item.id === q.id; });
+        return 'Q' + (index + 1);
+      }).join(', ');
+
+      afficherToastTemporaire(
+        "⚠️ Veuillez répondre aux questions obligatoires : " + numerosManquants,
+        "warning"
+      );
       return;
     }
+
+    // Confirmation
     if (!confirm("Confirmer l'envoi définitif de vos réponses ? Aucune modification ne sera possible après.")) return;
   }
 
+  // ═══════════════════════════════════════════════════════
+  // COLLECTE DES RÉPONSES
+  // ═══════════════════════════════════════════════════════
   const reponses = collecterReponses();
   clearInterval(chronoInterval);
 
-  // 🔑 Récupération de l'email côté client
   const emailUser = sessionStorage.getItem('user_email_souscra') 
                  || localStorage.getItem('user_email_souscra') 
                  || window.currentUser 
@@ -18722,13 +19664,22 @@ function soumettreDevoirUI(automatique) {
 
   google.script.run
     .withSuccessHandler(function(res) {
-      bootstrap.Modal.getInstance(document.getElementById('modalFaireDevoir')).hide();
+      const modalEl = document.getElementById('modalFaireDevoir');
+      const modalInstance = bootstrap.Modal.getInstance(modalEl);
+      if (modalInstance) modalInstance.hide();
+      
       devoirEnCours = null;
-      alert('Devoir envoyé ! Votre note : ' + res.noteObtenue + ' / ' + res.noteMax + ' (hors questions à réponse libre).');
+      afficherToastTemporaire(
+        '✅ Devoir envoyé ! Votre note : ' + res.noteObtenue + ' / ' + res.noteMax + ' (hors questions à réponse libre).',
+        'success'
+      );
     })
-    .withFailureHandler(function(err) { alert("Erreur lors de l'envoi : " + err.message); })
-    .soumettreReponses(devoirEnCours.idReponse, reponses, emailUser);   // ⬅ 3e argument
+    .withFailureHandler(function(err) {
+      afficherToastTemporaire("❌ Erreur lors de l'envoi : " + err.message, 'danger');
+    })
+    .soumettreReponses(devoirEnCours.idReponse, reponses, emailUser);
 }
+window.soumettreDevoirUI = soumettreDevoirUI;
 
 function consulterDevoir(devoirId) {
   var body = document.getElementById('consulterDevoirBody');
@@ -18996,14 +19947,16 @@ function chargerToutesNotes() {
         return;
       }
 
-      // ✅ Nouveaux calculs statistiques (notes ramenées sur 20)
+      // ═══════════════════════════════════════════════════════
+      // STATISTIQUES (notes ramenées sur 20)
+      // ═══════════════════════════════════════════════════════
       var totalNotesSur20 = 0;
       var nbNotes = 0;
-      var maxNote = null;        // meilleure note sur 20
-      var minNote = null;        // plus faible note sur 20
-      var nbOntLaMoyenne = 0;    // note >= 10/20
-      var nbOnt14OuPlus = 0;     // note >= 14/20
-      var nbSousMoyenne = 0;     // note < 10/20
+      var maxNote = null;
+      var minNote = null;
+      var nbOntLaMoyenne = 0;
+      var nbOnt14OuPlus = 0;
+      var nbSousMoyenne = 0;
 
       data.notes.forEach(function(n) {
         if (n.noteMax > 0) {
@@ -19026,10 +19979,12 @@ function chargerToutesNotes() {
 
       var html = '';
 
-      // ✅ Bandeau récapitulatif (nouvelle version, 7 items)
+      // ═══════════════════════════════════════════════════════
+      // BANDEAU RÉCAPITULATIF (7 items)
+      // ═══════════════════════════════════════════════════════
       html += '<div class="notes-recap">' +
 
-        // 1. Participants (avec % d'arbitres)
+        // 1. Participants
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-users me-1"></i>Participants</span>' +
           '<span class="notes-recap-value">' + data.notes.length +
@@ -19038,7 +19993,7 @@ function chargerToutesNotes() {
           '</span>' +
         '</div>' +
 
-        // 2. Moyenne sur 20
+        // 2. Moyenne
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-chart-line me-1"></i>Moyenne</span>' +
           '<span class="notes-recap-value">' + moyenneSur20.toFixed(1) + ' / 20</span>' +
@@ -19056,7 +20011,7 @@ function chargerToutesNotes() {
           '<span class="notes-recap-value text-danger">' + plusBasse + ' / 20</span>' +
         '</div>' +
 
-        // 5. Ont au moins la moyenne (>= 10)
+        // 5. >= 10/20
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-check-circle me-1 text-success"></i>≥ 10/20</span>' +
           '<span class="notes-recap-value text-success">' + nbOntLaMoyenne +
@@ -19065,7 +20020,7 @@ function chargerToutesNotes() {
           '</span>' +
         '</div>' +
 
-        // 6. Ont au moins 14
+        // 6. >= 14/20
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-star me-1 text-warning"></i>≥ 14/20</span>' +
           '<span class="notes-recap-value text-warning">' + nbOnt14OuPlus +
@@ -19074,7 +20029,7 @@ function chargerToutesNotes() {
           '</span>' +
         '</div>' +
 
-        // 7. Sous la moyenne (< 10)
+        // 7. < 10/20
         '<div class="notes-recap-item">' +
           '<span class="notes-recap-label"><i class="fa-solid fa-triangle-exclamation me-1 text-danger"></i>&lt; 10/20</span>' +
           '<span class="notes-recap-value text-danger">' + nbSousMoyenne +
@@ -19085,18 +20040,34 @@ function chargerToutesNotes() {
 
       '</div>';
 
+      // Message mode restreint
       if (data.modeRestreint) {
         html += '<div class="alert alert-info small"><i class="fa-solid fa-info-circle me-1"></i>Vous ne pouvez visualiser que votre note.</div>';
       }
 
+      // ═══════════════════════════════════════════════════════
+      // BOUTONS D'ACTION (Détails + Export PDF)
+      // ═══════════════════════════════════════════════════════
+      var boutonsAction = '';
+
       if (data.peutVoirTousDetails) {
-        html += '<div class="mb-3 text-end">' +
-          '<button class="btn btn-sm btn-primary" onclick="voirTousDetails(\'' + data.devoirId + '\')">' +
-            '<i class="fa-solid fa-list-check me-1"></i>Voir tous les details</button>' +
-        '</div>';
+        boutonsAction += '<button class="btn btn-sm btn-primary me-2" onclick="voirTousDetails(\'' + data.devoirId + '\')">' +
+          '<i class="fa-solid fa-list-check me-1"></i>Voir tous les détails</button>';
       }
 
-      // Cartes de notes
+      // ✅ Bouton PDF : visible pour ceux qui peuvent voir toutes les notes
+      if (data.peutVoirDetailsAutres === true || data.peutVoirTousDetails === true) {
+        boutonsAction += '<button class="btn btn-sm btn-danger" onclick="exporterNotesPdf(\'' + data.devoirId + '\')">' +
+          '<i class="fa-solid fa-file-pdf me-1"></i>Exporter en PDF</button>';
+      }
+
+      if (boutonsAction !== '') {
+        html += '<div class="mb-3 text-end">' + boutonsAction + '</div>';
+      }
+
+      // ═══════════════════════════════════════════════════════
+      // CARTES DE NOTES
+      // ═══════════════════════════════════════════════════════
       html += '<div class="notes-container-accordion">';
 
       data.notes.forEach(function(n) {
@@ -19109,7 +20080,7 @@ function chargerToutesNotes() {
         else if (pct >= 35) perfClass = 'moyen';
 
         // Nom d'affichage robuste
-        const nomAffichage = n.arbitreNom || n.arbitreEmail || 'Membre inconnu';
+        const nomAffichage = n.arbitreNom || n.arbitreEmail || 'Utilisateur inconnu';
         const initiales = extraireInitiales(nomAffichage);
         const dateFin = n.dateFin || '-';
         const noteAffichage = (n.noteObtenue !== undefined && n.noteObtenue !== null)
@@ -19387,6 +20358,23 @@ function chargerListeCorriges() {
 
         var dateCloture = d.dateCloture ? new Date(d.dateCloture).toLocaleDateString('fr-FR') : '-';
 
+        // ✅ Bouton PDF : uniquement pour admin ou auteur
+        var ADMIN_EMAIL_LOCAL = 'albahrou@gmail.com';
+        var emailUserLower = String(emailUser).toLowerCase().trim();
+        var estAdmin = (emailUserLower === ADMIN_EMAIL_LOCAL);
+        var estAuteur = d.estAuteur === true;
+
+        var boutonPdf = '';
+        if (estAdmin || estAuteur) {
+          boutonPdf = 
+            '<button class="btn btn-sm btn-outline-danger exporter-pdf-btn" ' +
+              'onclick="event.stopPropagation(); exporterCorrigePdf(\'' + d.id + '\')" ' +
+              'title="Télécharger le corrigé en PDF">' +
+              '<i class="fa-solid fa-file-pdf"></i>' +
+              '<span class="d-none d-md-inline ms-1">PDF</span>' +
+            '</button>';
+        }
+
         html += '<div class="devoir-card corrige-card ' + statutClass + '" data-titre="' + (d.titre || '').toLowerCase() + '">' +
           '<div class="devoir-header" onclick="ouvrirCorrigeDansCarte(\'' + d.id + '\', \'corrige-body-' + d.id + '\')">' +
             '<div style="flex: 1; min-width: 0;">' +
@@ -19400,7 +20388,10 @@ function chargerListeCorriges() {
               '</div>' +
               '<div class="devoir-badges mt-2">' + statutBadge + '</div>' +
             '</div>' +
-            '<i class="fa-solid fa-chevron-down" style="color: #6c757d;"></i>' +
+            '<div class="d-flex align-items-center gap-2">' +
+              boutonPdf +
+              '<i class="fa-solid fa-chevron-down" style="color: #6c757d;"></i>' +
+            '</div>' +
           '</div>' +
           '<div id="corrige-body-' + d.id + '" style="display: none;">' +
             '<div class="corrige-loading text-center py-3">' +
@@ -19420,7 +20411,6 @@ function chargerListeCorriges() {
     })
     .listerDevoirsCorriges(emailUser);
 }
-
 window.chargerListeCorriges = chargerListeCorriges;
 
 function filtrerCorriges(query) {
@@ -19690,6 +20680,362 @@ document.addEventListener('shown.bs.tab', function(e) {
     chargerListeCorriges();
   }
 });
+
+/**
+ * Génère et télécharge le corrigé d'un devoir en PDF.
+ * 🔒 Accessible uniquement à l'admin ou à l'auteur (vérifié côté serveur).
+ */
+function exporterCorrigePdf(devoirId) {
+  if (!devoirId) {
+    afficherToastTemporaire("⚠️ Identifiant du devoir manquant.", "warning");
+    return;
+  }
+
+  // ✅ Vérifier que jsPDF est chargé
+  if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+    afficherToastTemporaire("❌ Bibliothèque PDF non chargée. Rechargez la page.", "danger");
+    return;
+  }
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
+  if (!emailUser) {
+    afficherToastTemporaire("❌ Utilisateur non identifié.", "danger");
+    return;
+  }
+
+  afficherToastTemporaire("📄 Génération du PDF...", "info");
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res || !res.success) {
+        afficherToastTemporaire("❌ " + (res && res.message ? res.message : "Erreur"), "danger");
+        return;
+      }
+
+      try {
+        genererPdfCorrige(res.devoir, res.questions);
+        afficherToastTemporaire("✅ PDF téléchargé : " + res.devoir.titre, "success");
+      } catch (err) {
+        console.error('[PDF] Erreur génération :', err);
+        afficherToastTemporaire("❌ Erreur lors de la génération PDF : " + err.message, "danger");
+      }
+    })
+    .withFailureHandler(function(err) {
+      console.error('[exporterCorrigePdf] Erreur :', err);
+      afficherToastTemporaire("❌ Erreur : " + (err.message || err), "danger");
+    })
+    .obtenirCorrigePourPdf(devoirId, emailUser);
+}
+window.exporterCorrigePdf = exporterCorrigePdf;
+
+
+/**
+ * Génère le PDF du corrigé avec jsPDF + autoTable.
+ */
+function genererPdfCorrige(devoir, questions) {
+  const { jsPDF } = window.jspdf;
+  
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+  const margin = 15;
+  const contentWidth = pageWidth - 2 * margin;
+
+  let y = margin;
+
+  // ═══════════════════════════════════════════════════════
+  // 1. EN-TÊTE
+  // ═══════════════════════════════════════════════════════
+  // Bande verte en haut
+  doc.setFillColor(25, 135, 84);
+  doc.rect(0, 0, pageWidth, 30, 'F');
+
+  // Titre principal
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Sous-CRA Koumpentoum', margin, 12);
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Corrigé du devoir', margin, 20);
+
+  doc.setFontSize(8);
+  doc.text('Généré le ' + new Date().toLocaleString('fr-FR'), pageWidth - margin, 20, { align: 'right' });
+
+  y = 40;
+
+  // ═══════════════════════════════════════════════════════
+  // 2. INFOS DU DEVOIR
+  // ═══════════════════════════════════════════════════════
+  doc.setTextColor(33, 37, 41);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('N°' + devoir.numero + ' - ' + devoir.titre, margin, y);
+  y += 8;
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(108, 117, 125);
+  doc.text('Auteur : ' + devoir.auteurNom, margin, y);
+  y += 5;
+  doc.text('Publié le : ' + devoir.dateSoumission + '  |  Clôture : ' + devoir.dateCloture + '  |  Durée : ' + devoir.dureeLimite + ' min', margin, y);
+  y += 5;
+  doc.text('Nombre de questions : ' + devoir.nbQuestions, margin, y);
+  y += 10;
+
+  // Ligne de séparation
+  doc.setDrawColor(222, 226, 230);
+  doc.setLineWidth(0.5);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════
+  // 3. QUESTIONS
+  // ═══════════════════════════════════════════════════════
+  questions.forEach(function(q, idx) {
+    // Vérifier si on a assez de place, sinon nouvelle page
+    if (y > pageHeight - 40) {
+      doc.addPage();
+      y = margin;
+    }
+
+    // --- Numéro + Barème ---
+    doc.setFillColor(13, 110, 253);
+    doc.roundedRect(margin, y - 5, 12, 7, 1.5, 1.5, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Q' + (idx + 1), margin + 6, y, { align: 'center' });
+
+    doc.setTextColor(108, 117, 125);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('(' + q.bareme + ' pt)', margin + 16, y);
+
+    y += 7;
+
+    // --- Énoncé ---
+    doc.setTextColor(33, 37, 41);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    const enonceLines = doc.splitTextToSize(q.enonce, contentWidth - 5);
+    doc.text(enonceLines, margin + 3, y);
+    y += enonceLines.length * 5 + 3;
+
+    // --- Réponses ---
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+
+    if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
+      const bonnes = Array.isArray(q.bonneReponse) ? q.bonneReponse : [];
+      
+      q.options.forEach(function(opt, i) {
+        const estBonne = bonnes.indexOf(i) !== -1;
+        const prefix = estBonne ? '  ✓ ' : '     ';
+        const optText = prefix + opt;
+        const optLines = doc.splitTextToSize(optText, contentWidth - 10);
+
+        if (estBonne) {
+          // Surligner en vert clair
+          const optHeight = optLines.length * 5;
+          doc.setFillColor(209, 231, 221);
+          doc.rect(margin + 3, y - 4, contentWidth - 6, optHeight + 2, 'F');
+          doc.setTextColor(15, 81, 50);
+          doc.setFont('helvetica', 'bold');
+        } else {
+          doc.setTextColor(73, 80, 87);
+          doc.setFont('helvetica', 'normal');
+        }
+
+        doc.text(optLines, margin + 5, y);
+        y += optLines.length * 5 + 1;
+
+        // Vérifier saut de page
+        if (y > pageHeight - 30) {
+          doc.addPage();
+          y = margin;
+        }
+      });
+    } else if (q.typeReponse === 'vrai_faux') {
+      const bonne = q.bonneReponse;
+      const bonneText = '  ✓ Réponse : ' + (bonne === 'vrai' ? 'VRAI' : 'FAUX');
+      
+      doc.setFillColor(209, 231, 221);
+      doc.rect(margin + 3, y - 4, contentWidth - 6, 7, 'F');
+      doc.setTextColor(15, 81, 50);
+      doc.setFont('helvetica', 'bold');
+      doc.text(bonneText, margin + 5, y);
+      y += 9;
+    } else {
+      // Réponse libre
+      doc.setTextColor(108, 117, 125);
+      doc.setFont('helvetica', 'italic');
+      doc.text('  (Réponse libre - non notée automatiquement)', margin + 5, y);
+      y += 6;
+
+      if (q.bonneReponse) {
+        doc.setFillColor(209, 231, 221);
+        doc.rect(margin + 3, y - 4, contentWidth - 6, 7, 'F');
+        doc.setTextColor(15, 81, 50);
+        doc.setFont('helvetica', 'bold');
+        doc.text('  ✓ Réponse attendue : ' + q.bonneReponse, margin + 5, y);
+        y += 9;
+      }
+    }
+
+    // Séparation entre questions
+    y += 4;
+    doc.setDrawColor(241, 243, 245);
+    doc.setLineWidth(0.3);
+    doc.line(margin + 3, y, pageWidth - margin - 3, y);
+    y += 8;
+  });
+
+  // ═══════════════════════════════════════════════════════
+  // 4. PIED DE PAGE (sur toutes les pages)
+  // ═══════════════════════════════════════════════════════
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      'Sous-CRA Koumpentoum — Corrigé ' + devoir.titre,
+      margin,
+      pageHeight - 8
+    );
+    doc.text(
+      'Page ' + i + ' / ' + totalPages,
+      pageWidth - margin,
+      pageHeight - 8,
+      { align: 'right' }
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // 5. SAUVEGARDER
+  // ═══════════════════════════════════════════════════════
+  const nomFichier = 'Corrige_' + devoir.titre.replace(/[^a-zA-Z0-9]/g, '_') + '_' + Date.now() + '.pdf';
+  doc.save(nomFichier);
+}
+window.genererPdfCorrige = genererPdfCorrige;
+
+/**
+ * Copie le corrigé d'un devoir dans le presse-papiers.
+ * 🔒 Accessible uniquement à l'admin ou à l'auteur du devoir (vérifié côté serveur).
+ */
+function copierCorrigeDevoir(devoirId, titreDevoir) {
+  if (!devoirId) {
+    afficherToastTemporaire("⚠️ Identifiant du devoir manquant.", "warning");
+    return;
+  }
+
+  // ✅ Récupération de l'email utilisateur
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
+  if (!emailUser) {
+    afficherToastTemporaire("❌ Utilisateur non identifié.", "danger");
+    return;
+  }
+
+  afficherToastTemporaire("📋 Préparation du corrigé...", "info");
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res || !res.success) {
+        afficherToastTemporaire("❌ " + (res && res.message ? res.message : "Erreur"), "danger");
+        return;
+      }
+
+      // ✅ Copier le texte dans le presse-papiers
+      copierDansPressePapiers(res.texte, titreDevoir || res.titre);
+    })
+    .withFailureHandler(function(err) {
+      console.error('[copierCorrigeDevoir] Erreur :', err);
+      afficherToastTemporaire("❌ Erreur : " + (err.message || err), "danger");
+    })
+    .copierCorrigeDevoir(devoirId, emailUser);
+}
+window.copierCorrigeDevoir = copierCorrigeDevoir;
+
+
+/**
+ * Utilitaire : copie un texte dans le presse-papiers
+ * avec fallback pour les navigateurs anciens.
+ */
+function copierDansPressePapiers(texte, titreDevoir) {
+  if (!texte) {
+    afficherToastTemporaire("⚠️ Aucun contenu à copier.", "warning");
+    return;
+  }
+
+  // ✅ Méthode moderne (navigateurs récents + HTTPS)
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texte)
+      .then(function() {
+        afficherToastTemporaire(
+          "✅ Corrigé copié ! (" + (titreDevoir || 'Devoir') + ") — Collez-le où vous voulez avec Ctrl+V",
+          "success"
+        );
+      })
+      .catch(function(err) {
+        console.warn('[Copier] navigator.clipboard a échoué, fallback...', err);
+        copierFallback(texte, titreDevoir);
+      });
+  } else {
+    // ✅ Fallback pour les navigateurs anciens
+    copierFallback(texte, titreDevoir);
+  }
+}
+
+
+/**
+ * Fallback : utilise un textarea temporaire pour copier.
+ */
+function copierFallback(texte, titreDevoir) {
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = texte;
+    textarea.style.position = 'fixed';
+    textarea.style.top = '-9999px';
+    textarea.style.left = '-9999px';
+    textarea.setAttribute('readonly', '');
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, texte.length);
+
+    const succes = document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    if (succes) {
+      afficherToastTemporaire(
+        "✅ Corrigé copié ! (" + (titreDevoir || 'Devoir') + ")",
+        "success"
+      );
+    } else {
+      afficherToastTemporaire("❌ Copie impossible. Vérifiez les permissions du navigateur.", "danger");
+    }
+  } catch (err) {
+    console.error('[Copier Fallback] Erreur :', err);
+    afficherToastTemporaire("❌ Erreur de copie : " + err.message, "danger");
+  }
+}
+window.copierDansPressePapiers = copierDansPressePapiers;
+window.copierFallback = copierFallback;
 
 
 
@@ -20777,6 +22123,1343 @@ function toggleQuestionCard(cardId) {
 }
 window.toggleQuestionCard = toggleQuestionCard;
 
+// ═══════════════════════════════════════════════════════════════
+// OUVERTURE DU MODAL D'ÉDITION D'UN DEVOIR
+// ═══════════════════════════════════════════════════════════════
+function ouvrirEditionDevoir(devoirId) {
+  console.log('[ouvrirEditionDevoir] 🔵 devoirId reçu =', devoirId);
+
+  if (!devoirId || devoirId === 'undefined' || devoirId === 'null') {
+    afficherToastTemporaire("❌ Identifiant du devoir invalide.", "danger");
+    return;
+  }
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
+  afficherToastTemporaire("Chargement du devoir...", "info");
+
+  google.script.run
+    .withSuccessHandler(function(data) {
+      console.log('[ouvrirEditionDevoir] ✅ Réponse :', data);
+
+      if (!data || !data.questions) {
+        afficherToastTemporaire("❌ Devoir introuvable.", "danger");
+        return;
+      }
+      ouvrirModalEditionDevoir(data);
+    })
+    .withFailureHandler(function(err) {
+      console.error('[ouvrirEditionDevoir] ❌ Erreur :', err);
+      afficherToastTemporaire("❌ " + (err.message || "Erreur"), "danger");
+    })
+    .obtenirDevoirPourEdition(devoirId, emailUser);
+}
+window.ouvrirEditionDevoir = ouvrirEditionDevoir;
+
+
+function ouvrirModalEditionDevoir(data) {
+  devoirEnEditionId = data.id;
+
+  const emailUser = (sessionStorage.getItem('user_email_souscra') 
+                  || localStorage.getItem('user_email_souscra') 
+                  || window.currentUser 
+                  || '').toLowerCase().trim();
+
+  const estAuteur = (String(data.auteurEmail || '').toLowerCase().trim() === emailUser);
+  const estAdmin = (emailUser === 'albahrou@gmail.com');
+
+  // Remplir les champs
+  document.getElementById('devoirTitre').value = data.titre || '';
+  document.getElementById('devoirDuree').value = data.dureeLimite || '';
+
+  // Calculer les heures de validité restantes
+  const champValidite = document.getElementById('devoirDureeValidite');
+  if (champValidite) {
+    if (data.dateCloture) {
+      const clotureMs = new Date(data.dateCloture).getTime();
+      const maintenant = Date.now();
+      const heuresRestantes = Math.max(0, Math.round((clotureMs - maintenant) / 3600000));
+      champValidite.value = heuresRestantes > 0 ? heuresRestantes : '';
+      champValidite.placeholder = heuresRestantes > 0 
+        ? 'Heures restantes (' + heuresRestantes + 'h)' 
+        : 'Devoir expiré — entrez une nouvelle durée';
+    } else {
+      champValidite.value = '';
+    }
+  }
+
+  // Vider et recharger les questions
+  document.getElementById('listeQuestionsBuilder').innerHTML = '';
+  compteurQuestionsBuilder = 0;
+
+  // Modifier le titre du modal
+  const modalTitle = document.querySelector('#modalCreerDevoir .modal-title');
+  if (modalTitle) {
+    modalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Modifier le devoir';
+  }
+
+  // Modifier le bouton principal
+  const btnPublier = document.querySelector('#modalCreerDevoir .btn-primary');
+  if (btnPublier) {
+    btnPublier.innerHTML = '<i class="fa-solid fa-save me-1"></i>Enregistrer les modifications';
+    btnPublier.onclick = function() { soumettreEditionDevoir(); };
+  }
+
+  // Avertissement contextuel
+  const modalBody = document.querySelector('#modalCreerDevoir .modal-body');
+  const ancienAvert = modalBody.querySelector('.alerte-edition');
+  if (ancienAvert) ancienAvert.remove();
+
+  const avertissement = document.createElement('div');
+  avertissement.className = 'alert alert-warning alerte-edition small mb-3';
+  
+  let roleTexte = estAuteur ? 'Vous modifiez votre devoir.' 
+                : (estAdmin ? 'Vous modifiez ce devoir en tant qu\'administrateur.' 
+                            : 'Vous modifiez ce devoir.');
+  
+  avertissement.innerHTML = 
+    '<i class="fa-solid fa-triangle-exclamation me-1"></i>' +
+    '<strong>' + roleTexte + '</strong> Les notes des arbitres ayant déjà soumis ' +
+    'seront <strong>recalculées automatiquement</strong> si vous changez les bonnes réponses.';
+  modalBody.insertBefore(avertissement, modalBody.firstChild);
+
+  // Charger chaque question dans le builder
+  data.questions.forEach(function(q) {
+    ajouterQuestionBuilderAvecDonnees(q);
+  });
+
+  new bootstrap.Modal(document.getElementById('modalCreerDevoir')).show();
+}
+window.ouvrirModalEditionDevoir = ouvrirModalEditionDevoir;
+
+
+function ajouterQuestionBuilderAvecDonnees(q) {
+  compteurQuestionsBuilder++;
+  const qid = 'qb-' + compteurQuestionsBuilder;
+
+  const div = document.createElement('div');
+  div.className = 'card mb-3 p-3 bg-light';
+  div.id = qid;
+  div.setAttribute('data-question-id', q.id || '');
+  div.setAttribute('data-media-url', q.mediaUrl || '');
+  div.setAttribute('data-media-type', q.mediaType || '');
+
+  // Aperçu média existant
+  let mediaExistantHtml = '';
+  if (q.mediaUrl) {
+    const match = String(q.mediaUrl).match(/\/d\/([a-zA-Z0-9_-]+)/);
+    const fileId = match ? match[1] : '';
+    if (fileId) {
+      if (q.mediaType === 'video') {
+        mediaExistantHtml = 
+          '<div class="qb-media-existent small mt-1 p-2 bg-white border rounded">' +
+            '<i class="fa-solid fa-video text-primary me-1"></i>Vidéo jointe : ' +
+            '<a href="' + q.mediaUrl + '" target="_blank">voir</a>' +
+            '<button type="button" class="btn btn-sm btn-outline-danger ms-2" ' +
+              'onclick="supprimerMediaQuestion(\'' + qid + '\')">' +
+              '<i class="fa-solid fa-trash"></i> Retirer' +
+            '</button>' +
+          '</div>';
+      } else {
+        mediaExistantHtml = 
+          '<div class="qb-media-existent small mt-1 p-2 bg-white border rounded">' +
+            '<img src="https://lh3.googleusercontent.com/d/' + fileId + '" ' +
+              'style="max-height: 60px; border-radius: 6px;" class="me-2">' +
+            '<button type="button" class="btn btn-sm btn-outline-danger" ' +
+              'onclick="supprimerMediaQuestion(\'' + qid + '\')">' +
+              '<i class="fa-solid fa-trash"></i> Retirer' +
+            '</button>' +
+          '</div>';
+      }
+    }
+  }
+
+  div.innerHTML =
+    '<div class="d-flex justify-content-between mb-2">' +
+      '<strong>Question ' + compteurQuestionsBuilder + '</strong>' +
+      '<button type="button" class="btn btn-sm btn-outline-danger" ' +
+        'onclick="document.getElementById(\'' + qid + '\').remove()">' +
+        '<i class="fa-solid fa-trash"></i></button>' +
+    '</div>' +
+    '<div class="mb-2">' +
+      '<textarea class="form-control qb-enonce" rows="2" placeholder="Énoncé" required>' + 
+        (q.enonce || '') + 
+      '</textarea>' +
+    '</div>' +
+    '<div class="row g-2 mb-2">' +
+      '<div class="col-md-6">' +
+        '<select class="form-select qb-type" onchange="changerTypeQuestion(\'' + qid + '\')">' +
+          '<option value="qcm_unique"' + (q.typeReponse === 'qcm_unique' ? ' selected' : '') + '>QCM (choix unique)</option>' +
+          '<option value="qcm_multiple"' + (q.typeReponse === 'qcm_multiple' ? ' selected' : '') + '>QCM (choix multiple)</option>' +
+          '<option value="vrai_faux"' + (q.typeReponse === 'vrai_faux' ? ' selected' : '') + '>Vrai / Faux</option>' +
+          '<option value="reponse_libre"' + (q.typeReponse === 'reponse_libre' ? ' selected' : '') + '>Réponse libre</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-md-3">' +
+        '<input type="number" class="form-control qb-bareme" placeholder="Barème" min="0" step="0.5" value="' + (q.bareme || '') + '" required>' +
+      '</div>' +
+      '<div class="col-md-3 d-flex align-items-center">' +
+        '<div class="form-check">' +
+          '<input class="form-check-input qb-obligatoire" type="checkbox"' + (q.obligatoire ? ' checked' : '') + '>' +
+          '<label class="form-check-label">Obligatoire</label>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="qb-options-container mb-2"></div>' +
+    '<div class="mb-2">' +
+      '<label class="form-label small">Média support (photo/vidéo, optionnel)</label>' +
+      '<input type="file" class="form-control qb-media" accept="image/*,video/*" ' +
+        'onchange="previsualiserMedia(\'' + qid + '\', this)">' +
+      '<div class="qb-media-preview small text-muted mt-1"></div>' +
+      mediaExistantHtml +
+    '</div>';
+
+  document.getElementById('listeQuestionsBuilder').appendChild(div);
+
+  // Charger les options selon le type
+  if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
+    chargerOptionsQCM(qid, q.options || [], q.bonneReponse || []);
+  } else if (q.typeReponse === 'vrai_faux') {
+    chargerOptionsVraiFaux(qid, q.bonneReponse);
+  } else {
+    changerTypeQuestion(qid);
+  }
+}
+window.ajouterQuestionBuilderAvecDonnees = ajouterQuestionBuilderAvecDonnees;
+
+
+function chargerOptionsQCM(qid, options, bonnesIndex) {
+  const div = document.getElementById(qid);
+  const optionsContainer = div.querySelector('.qb-options-container');
+  const type = div.querySelector('.qb-type').value;
+  const inputType = (type === 'qcm_unique') ? 'radio' : 'checkbox';
+  const groupName = qid + '-bonne';
+
+  optionsContainer.innerHTML =
+    '<label class="form-label small">Choix de réponses (cochez la/les bonne(s) réponse(s))</label>' +
+    '<div class="qb-options-list"></div>' +
+    '<button type="button" class="btn btn-sm btn-outline-secondary mt-1" ' +
+      'onclick="ajouterOptionQCM(\'' + qid + '\')">' +
+      '<i class="fa-solid fa-plus"></i> Ajouter un choix' +
+    '</button>';
+
+  const list = optionsContainer.querySelector('.qb-options-list');
+
+  if (options.length === 0) {
+    ajouterOptionQCM(qid);
+    ajouterOptionQCM(qid);
+    return;
+  }
+
+  options.forEach(function(optTexte, idx) {
+    const estBonne = (bonnesIndex || []).indexOf(idx) !== -1;
+    const ligne = document.createElement('div');
+    ligne.className = 'input-group input-group-sm mb-1 qb-option-ligne';
+    ligne.innerHTML =
+      '<span class="input-group-text">' +
+        '<input type="' + inputType + '" name="' + groupName + '" class="qb-option-bonne"' + 
+          (estBonne ? ' checked' : '') + '>' +
+      '</span>' +
+      '<input type="text" class="form-control qb-option-texte" placeholder="Texte du choix" value="' + 
+        String(optTexte).replace(/"/g, '&quot;') + '">' +
+      '<button type="button" class="btn btn-outline-danger" ' +
+        'onclick="this.closest(\'.qb-option-ligne\').remove()">' +
+        '<i class="fa-solid fa-xmark"></i>' +
+      '</button>';
+    list.appendChild(ligne);
+  });
+}
+window.chargerOptionsQCM = chargerOptionsQCM;
+
+
+function chargerOptionsVraiFaux(qid, bonneReponse) {
+  const div = document.getElementById(qid);
+  const optionsContainer = div.querySelector('.qb-options-container');
+  optionsContainer.innerHTML =
+    '<label class="form-label small">Bonne réponse</label>' +
+    '<select class="form-select qb-vf-reponse">' +
+      '<option value="vrai"' + (bonneReponse === 'vrai' ? ' selected' : '') + '>Vrai</option>' +
+      '<option value="faux"' + (bonneReponse === 'faux' ? ' selected' : '') + '>Faux</option>' +
+    '</select>';
+}
+window.chargerOptionsVraiFaux = chargerOptionsVraiFaux;
+
+
+function supprimerMediaQuestion(qid) {
+  const div = document.getElementById(qid);
+  if (!div) return;
+  
+  div.setAttribute('data-media-url', '');
+  div.setAttribute('data-media-supprime', 'true');
+  
+  const preview = div.querySelector('.qb-media-existent');
+  if (preview) preview.remove();
+  
+  afficherToastTemporaire("Média retiré (sera supprimé à l'enregistrement).", "info");
+}
+window.supprimerMediaQuestion = supprimerMediaQuestion;
+
+
+async function soumettreEditionDevoir() {
+  if (!devoirEnEditionId) {
+    afficherToastTemporaire("❌ Aucun devoir en cours d'édition.", "danger");
+    return;
+  }
+
+  const titre = document.getElementById('devoirTitre').value.trim();
+  const duree = document.getElementById('devoirDuree').value;
+  const dureeValidite = document.getElementById('devoirDureeValidite').value;
+
+  if (!titre) { afficherToastTemporaire("⚠️ Titre obligatoire.", "warning"); return; }
+  if (!duree || Number(duree) <= 0) { afficherToastTemporaire("⚠️ Durée composition invalide.", "warning"); return; }
+
+  const blocs = document.querySelectorAll('#listeQuestionsBuilder > div');
+  if (blocs.length === 0) { afficherToastTemporaire("⚠️ Au moins une question.", "warning"); return; }
+
+  const questions = [];
+
+  for (const bloc of blocs) {
+    const enonce = bloc.querySelector('.qb-enonce').value.trim();
+    const type = bloc.querySelector('.qb-type').value;
+    const bareme = bloc.querySelector('.qb-bareme').value;
+    const obligatoire = bloc.querySelector('.qb-obligatoire').checked;
+    const questionId = bloc.getAttribute('data-question-id') || '';
+    const mediaSupprime = bloc.getAttribute('data-media-supprime') === 'true';
+
+    if (!enonce) { afficherToastTemporaire("⚠️ Énoncé vide.", "warning"); return; }
+    if (bareme === '' || Number(bareme) < 0) { afficherToastTemporaire("⚠️ Barème invalide.", "warning"); return; }
+
+    let options = [];
+    let bonneReponse = null;
+
+    if (type === 'qcm_unique' || type === 'qcm_multiple') {
+      const lignes = bloc.querySelectorAll('.qb-option-ligne');
+      if (lignes.length < 2) { afficherToastTemporaire("⚠️ QCM : 2 choix min.", "warning"); return; }
+      const bonnesIndex = [];
+      lignes.forEach(function(ligne, idx) {
+        const texte = ligne.querySelector('.qb-option-texte').value.trim();
+        options.push(texte);
+        if (ligne.querySelector('.qb-option-bonne').checked) bonnesIndex.push(idx);
+      });
+      if (options.some(function(o) { return !o; })) { afficherToastTemporaire("⚠️ Choix vide.", "warning"); return; }
+      if (bonnesIndex.length === 0) { afficherToastTemporaire("⚠️ Cochez la bonne réponse.", "warning"); return; }
+      bonneReponse = bonnesIndex;
+    } else if (type === 'vrai_faux') {
+      bonneReponse = bloc.querySelector('.qb-vf-reponse').value;
+    }
+
+    const question = {
+      id: questionId,
+      enonce,
+      typeReponse: type,
+      options,
+      bonneReponse,
+      bareme: Number(bareme),
+      obligatoire,
+      mediaUrl: bloc.getAttribute('data-media-url') || '',
+      mediaType: bloc.getAttribute('data-media-type') || '',
+      mediaSupprime: mediaSupprime
+    };
+
+    const fileInput = bloc.querySelector('.qb-media');
+    if (fileInput.files && fileInput.files[0]) {
+      const fichier = fileInput.files[0];
+      question.mediaBase64 = await lireFichierEnBase64(fichier);
+      question.mediaNom = fichier.name;
+      question.mediaMimeType = fichier.type;
+      question.mediaType = fichier.type.startsWith('video') ? 'video' : 'photo';
+    }
+
+    questions.push(question);
+  }
+
+  const btnPublier = document.querySelector('#modalCreerDevoir .btn-primary');
+  const ancienTexte = btnPublier.innerHTML;
+  btnPublier.disabled = true;
+  btnPublier.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Enregistrement...';
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      // Fermer le modal
+      const modalEl = document.getElementById('modalCreerDevoir');
+      const modalInstance = bootstrap.Modal.getInstance(modalEl);
+      if (modalInstance) modalInstance.hide();
+
+      // Réinitialiser le bouton
+      btnPublier.disabled = false;
+      btnPublier.innerHTML = ancienTexte;
+
+      // Message de succès
+      let msg = "✅ Devoir modifié avec succès.";
+      if (res && res.nbRecalculees > 0) {
+        msg += ' 📊 ' + res.nbRecalculees + ' note(s) recalculée(s)';
+        if (res.nbAmeliorees > 0) msg += ' (' + res.nbAmeliorees + ' améliorée(s))';
+        if (res.nbDegradees > 0) msg += ' (' + res.nbDegradees + ' revue(s) à la baisse)';
+        msg += '.';
+      }
+      afficherToastTemporaire(msg, "success");
+
+      devoirEnEditionId = null;
+
+      // Recharger après fermeture du modal
+      if (modalEl) {
+        modalEl.addEventListener('hidden.bs.modal', function onHidden() {
+          modalEl.removeEventListener('hidden.bs.modal', onHidden);
+          chargerListeDevoirs();
+        }, { once: true });
+      } else {
+        setTimeout(chargerListeDevoirs, 400);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btnPublier.disabled = false;
+      btnPublier.innerHTML = ancienTexte;
+      afficherToastTemporaire("❌ " + (err.message || "Erreur"), "danger");
+    })
+    .modifierDevoir(devoirEnEditionId, { 
+      titre: titre, 
+      dureeLimite: duree, 
+      dureeValiditeHeures: dureeValidite,
+      questions: questions 
+    }, emailUser);
+}
+window.soumettreEditionDevoir = soumettreEditionDevoir;
+
+/**
+ * Génère et télécharge la liste des notes d'un devoir en PDF.
+ * 🔒 Accessible aux techniques et à l'auteur du devoir (vérifié côté serveur).
+ */
+function exporterNotesPdf(devoirId) {
+  if (!devoirId) {
+    afficherToastTemporaire("⚠️ Identifiant du devoir manquant.", "warning");
+    return;
+  }
+
+  // Vérifier que jsPDF est chargé
+  if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+    afficherToastTemporaire("❌ Bibliothèque PDF non chargée. Rechargez la page.", "danger");
+    return;
+  }
+
+  const emailUser = sessionStorage.getItem('user_email_souscra') 
+                 || localStorage.getItem('user_email_souscra') 
+                 || window.currentUser 
+                 || '';
+
+  if (!emailUser) {
+    afficherToastTemporaire("❌ Utilisateur non identifié.", "danger");
+    return;
+  }
+
+  afficherToastTemporaire("📄 Génération du PDF...", "info");
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res || !res.success) {
+        afficherToastTemporaire("❌ " + (res && res.message ? res.message : "Erreur"), "danger");
+        return;
+      }
+
+      try {
+        genererPdfNotes(res.devoir, res.notes, res.stats);
+        afficherToastTemporaire("✅ PDF téléchargé : Notes - " + res.devoir.titre, "success");
+      } catch (err) {
+        console.error('[PDF Notes] Erreur génération :', err);
+        afficherToastTemporaire("❌ Erreur lors de la génération PDF : " + err.message, "danger");
+      }
+    })
+    .withFailureHandler(function(err) {
+      console.error('[exporterNotesPdf] Erreur :', err);
+      afficherToastTemporaire("❌ Erreur : " + (err.message || err), "danger");
+    })
+    .obtenirNotesPourPdf(devoirId, emailUser);
+}
+window.exporterNotesPdf = exporterNotesPdf;
+
+
+/**
+ * Génère le PDF de la liste des notes avec jsPDF + autoTable.
+ */
+function genererPdfNotes(devoir, notes, stats) {
+  const { jsPDF } = window.jspdf;
+  
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+  const margin = 15;
+
+  // ═══════════════════════════════════════════════════════
+  // 1. EN-TÊTE
+  // ═══════════════════════════════════════════════════════
+  doc.setFillColor(13, 110, 253);
+  doc.rect(0, 0, pageWidth, 30, 'F');
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Sous-CRA Koumpentoum', margin, 12);
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Liste des notes — ' + devoir.titre, margin, 20);
+
+  doc.setFontSize(8);
+  doc.text('Généré le ' + new Date().toLocaleString('fr-FR'), pageWidth - margin, 20, { align: 'right' });
+
+  let y = 40;
+
+  // ═══════════════════════════════════════════════════════
+  // 2. INFOS DU DEVOIR
+  // ═══════════════════════════════════════════════════════
+  doc.setTextColor(33, 37, 41);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('N°' + devoir.numero + ' - ' + devoir.titre, margin, y);
+  y += 7;
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(108, 117, 125);
+  doc.text('Auteur : ' + (devoir.auteurNom || '-'), margin, y);
+  y += 5;
+  doc.text('Publié le : ' + devoir.dateSoumission + '  |  Clôturé le : ' + devoir.dateCloture, margin, y);
+  y += 10;
+
+  // ═══════════════════════════════════════════════════════
+  // 3. BANDEAU RÉCAPITULATIF
+  // ═══════════════════════════════════════════════════════
+  doc.setFillColor(241, 243, 245);
+  doc.roundedRect(margin, y, pageWidth - 2 * margin, 40, 3, 3, 'F');
+  
+  y += 6;
+  doc.setTextColor(33, 37, 41);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('SYNTHÈSE', margin + 5, y);
+  y += 6;
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(73, 80, 87);
+  
+  const colWidth = (pageWidth - 2 * margin - 10) / 2;
+  
+  // Colonne gauche
+  doc.text('• Participants : ' + stats.nbParticipants + ' / ' + stats.nbTotalUtilisateurs + 
+           ' (' + stats.tauxParticipation + '%)', margin + 5, y);
+  doc.text('• Moyenne générale : ' + stats.moyenneSur20 + ' / 20', margin + 5, y + 5);
+  doc.text('• Meilleure note : ' + stats.meilleureNote + ' / 20', margin + 5, y + 10);
+  
+  // Colonne droite
+  doc.text('• Plus basse note : ' + stats.plusBasseNote + ' / 20', margin + 5 + colWidth, y);
+  doc.text('• ≥ 10/20 : ' + stats.nbOntLaMoyenne + ' participant(s)', margin + 5 + colWidth, y + 5);
+  doc.text('• ≥ 14/20 : ' + stats.nbOnt14Plus + ' participant(s)', margin + 5 + colWidth, y + 10);
+  doc.text('• < 10/20 : ' + stats.nbSousMoyenne + ' participant(s)', margin + 5 + colWidth, y + 15);
+
+  y += 45;
+
+  // ═══════════════════════════════════════════════════════
+  // 4. TABLEAU DES NOTES
+  // ═══════════════════════════════════════════════════════
+  if (notes.length === 0) {
+    doc.setTextColor(108, 117, 125);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'italic');
+    doc.text('Aucune note enregistrée pour ce devoir.', margin, y);
+  } else {
+    const lignes = notes.map(function(n, i) {
+      return [
+        String(i + 1),
+        n.arbitreNom,
+        String(n.noteObtenue) + ' / ' + String(n.noteMax),
+        String(n.noteSur20) + ' / 20',
+        n.pourcentage + ' %',
+        n.dateFin
+      ];
+    });
+
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Nom complet', 'Note', 'Sur 20', '%', 'Date de soumission']],
+      body: lignes,
+      theme: 'striped',
+      styles: {
+        fontSize: 8.5,
+        cellPadding: 2.5,
+        overflow: 'linebreak'
+      },
+      headStyles: {
+        fillColor: [13, 110, 253],
+        textColor: 255,
+        fontStyle: 'bold',
+        halign: 'center'
+      },
+      alternateRowStyles: {
+        fillColor: [248, 249, 250]
+      },
+      columnStyles: {
+        0: { cellWidth: 12, halign: 'center' },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 22, halign: 'center' },
+        3: { cellWidth: 22, halign: 'center' },
+        4: { cellWidth: 18, halign: 'center' },
+        5: { cellWidth: 38, halign: 'center' }
+      },
+      // Colorer la note en fonction de la performance
+      didParseCell: function(data) {
+        if (data.section === 'body' && data.column.index === 3) {
+          const noteSur20 = parseFloat(data.cell.raw);
+          if (noteSur20 >= 14) {
+            data.cell.styles.textColor = [25, 135, 84];
+            data.cell.styles.fontStyle = 'bold';
+          } else if (noteSur20 >= 10) {
+            data.cell.styles.textColor = [13, 110, 253];
+            data.cell.styles.fontStyle = 'bold';
+          } else if (noteSur20 < 10) {
+            data.cell.styles.textColor = [220, 53, 69];
+            data.cell.styles.fontStyle = 'bold';
+          }
+        }
+      },
+      margin: { left: margin, right: margin }
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // 5. PIED DE PAGE
+  // ═══════════════════════════════════════════════════════
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      'Sous-CRA Koumpentoum — Notes ' + devoir.titre,
+      margin,
+      pageHeight - 8
+    );
+    doc.text(
+      'Page ' + i + ' / ' + totalPages,
+      pageWidth - margin,
+      pageHeight - 8,
+      { align: 'right' }
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // 6. SAUVEGARDER
+  // ═══════════════════════════════════════════════════════
+  const nomFichier = 'Notes_' + devoir.titre.replace(/[^a-zA-Z0-9]/g, '_') + '_' + Date.now() + '.pdf';
+  doc.save(nomFichier);
+}
+window.genererPdfNotes = genererPdfNotes;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULE DEMANDES - FRONTEND
+// ═══════════════════════════════════════════════════════════════════════════
+
+var demandeTypeEnCours = null;      // Type de demande actuellement dans la modale
+var demandeChargeePourValidation = null; // Pour la validation en attente
+
+// Emails des validateurs (miroir du backend)
+const EMAILS_VALIDATEURS_DEMANDES = [
+  'albahrou@gmail.com',
+  'mamadousalamcisko10@gmail.com'
+];
+
+function estUtilisateurValidateurDemande_() {
+  const email = (window.currentUser
+    || sessionStorage.getItem('user_email_souscra')
+    || '').toLowerCase().trim();
+  return EMAILS_VALIDATEURS_DEMANDES.indexOf(email) !== -1;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FILTRE : Sous-CRA selon la CRA sélectionnée
+// ═══════════════════════════════════════════════════════════════════════════
+function filtrerSousCRADestination() {
+  const craSelect = document.getElementById('dem_cra_dest');
+  const sousCraSelect = document.getElementById('dem_souscra_dest');
+  const hint = document.getElementById('dem_souscra_hint');
+
+  if (!craSelect || !sousCraSelect) return;
+
+  const craChoisie = craSelect.value;
+
+  // ─── Table de correspondance CRA → Sous-CRA ───
+  const SOUS_CRA_PAR_CRA = {
+    'Dakar': [
+      'Sous-CRA de Dakar',
+      'Sous-CRA de Guédiawaye',
+      'Sous-CRA de Keur Massar',
+      'Sous-CRA de Pikine',
+      'Sous-CRA de Rufisque'
+    ],
+    'Diourbel': [
+      'Sous-CRA de Bambey',
+      'Sous-CRA de Diourbel',
+      'Sous-CRA de Mbacké'
+    ],
+    'Fatick': [
+      'Sous-CRA de Fatick',
+      'Sous-CRA de Foundiougne',
+      'Sous-CRA de Gossas'
+    ],
+    'Kaffrine': [
+      'Sous-CRA de Birkelane',
+      'Sous-CRA de Kaffrine',
+      'Sous-CRA de Koungheul',
+      'Sous-CRA de Malem Hodar'
+    ],
+    'Kaolack': [
+      'Sous-CRA de Guinguinéo',
+      'Sous-CRA de Kaolack',
+      'Sous-CRA de Nioro du Rip'
+    ],
+    'Kédougou': [
+      // Aucune Sous-CRA dans cette région
+    ],
+    'Kolda': [
+      'Sous-CRA de Kolda',
+      'Sous-CRA de Vélingara'
+    ],
+    'Louga': [
+      'Sous-CRA de Kébémer',
+      'Sous-CRA de Linguère',
+      'Sous-CRA de Louga'
+    ],
+    'Matam': [
+      'Sous-CRA de Kanel',
+      'Sous-CRA de Matam'
+    ],
+    'Saint-Louis': [
+      'Sous-CRA de Dagana',
+      'Sous-CRA de Podor'
+    ],
+    'Sédhiou': [
+      'Sous-CRA de Bounkiling',
+      'Sous-CRA de Goudomp',
+      'Sous-CRA de Sédhiou'
+    ],
+    'Tambacounda': [
+      'Sous-CRA de Goudiry',
+      'Sous-CRA de Koumpentoum'
+    ],
+    'Thiès': [
+      'Sous-CRA de Mbour',
+      'Sous-CRA de Thiès',
+      'Sous-CRA de Tivaouane'
+    ],
+    'Ziguinchor': [
+      'Sous-CRA de Bignona',
+      'Sous-CRA de Oussouye',
+      'Sous-CRA de Ziguinchor'
+    ]
+  };
+
+  // ─── Cas 1 : aucune CRA sélectionnée ───
+  if (!craChoisie) {
+    sousCraSelect.innerHTML = '<option value="">-- Sélectionner d\'abord la CRA --</option>';
+    sousCraSelect.disabled = true;
+    if (hint) {
+      hint.innerHTML = '<i class="fa-solid fa-info-circle me-1"></i>Sélectionnez d\'abord une CRA pour afficher les Sous-CRA disponibles.';
+      hint.className = 'form-text small text-muted mt-1';
+    }
+    return;
+  }
+
+  const listeSousCra = SOUS_CRA_PAR_CRA[craChoisie] || [];
+
+  // ─── Cas 2 : CRA sans Sous-CRA (ex: Kédougou) ───
+  if (listeSousCra.length === 0) {
+    sousCraSelect.innerHTML =
+      '<option value="Aucune Sous-CRA disponible">Aucune Sous-CRA dans cette région</option>';
+    sousCraSelect.disabled = true;
+    if (hint) {
+      hint.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-1 text-warning"></i>' +
+        'La CRA de <strong>' + craChoisie + '</strong> n\'a pas encore de Sous-CRA. ' +
+        'Vous ne pouvez pas faire de transfert vers cette CRA.';
+      hint.className = 'form-text small text-warning mt-1';
+    }
+    return;
+  }
+
+  // ─── Cas 3 : CRA avec Sous-CRA ───
+  let html = '<option value="">-- Sélectionner la Sous-CRA --</option>';
+  listeSousCra.forEach(function(ss) {
+    html += '<option value="' + ss + '">' + ss + '</option>';
+  });
+
+  sousCraSelect.innerHTML = html;
+  sousCraSelect.disabled = false;
+
+  if (hint) {
+    hint.innerHTML = '<i class="fa-solid fa-check-circle me-1 text-success"></i>' +
+      '<strong>' + listeSousCra.length + '</strong> Sous-CRA disponible(s) pour la CRA de <strong>' + craChoisie + '</strong>.';
+    hint.className = 'form-text small text-success mt-1';
+  }
+}
+window.filtrerSousCRADestination = filtrerSousCRADestination;
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 1. OUVERTURE DU FORMULAIRE SELON LE TYPE
+// ═══════════════════════════════════════════════════════════════════════════
+function ouvrirFormulaireDemande(type) {
+  demandeTypeEnCours = type;
+
+  const titreEl = document.getElementById('modalDemandeTitre');
+  const corpsEl = document.getElementById('modalDemandeCorps');
+  const headerEl = document.getElementById('modalDemandeHeader');
+  const btnEnvoyer = document.getElementById('btnEnvoyerDemande');
+
+  // Reset classes header
+  headerEl.classList.remove('modal-demande-header-attestation',
+                            'modal-demande-header-transfert',
+                            'modal-demande-header-assesseur');
+
+  let titre = '';
+  let icone = '';
+  let couleurClasse = '';
+  let corpsHtml = '';
+
+  // ═══════════════════════════════════════════════════════
+  // TYPE 1 : ATTESTATION
+  // ═══════════════════════════════════════════════════════
+  if (type === 'ATTESTATION') {
+    titre = "Demande d'attestation";
+    icone = 'fa-file-lines';
+    couleurClasse = 'modal-demande-header-attestation';
+    corpsHtml =
+      '<div class="demande-recap-bloc">' +
+        '<div class="demande-recap-icon"><i class="fa-solid fa-circle-info"></i></div>' +
+        '<div class="demande-recap-text">' +
+          '<p><strong>Aucune saisie nécessaire.</strong></p>' +
+          '<p class="small mb-0">Vos informations personnelles (nom, qualité, grade, date de naissance, CNI, téléphone) ' +
+          'seront automatiquement reprises depuis votre fiche membre.</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="demande-recap-preview">' +
+        '<h6 class="demande-preview-titre"><i class="fa-solid fa-file-invoice me-1"></i>Aperçu</h6>' +
+        '<ul class="demande-preview-liste">' +
+          '<li>Document officiel signé par le Président de la Sous-CRA</li>' +
+          '<li>Envoyé automatiquement à votre adresse email après validation</li>' +
+        '</ul>' +
+      '</div>';
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // TYPE 2 : TRANSFERT
+  // ═══════════════════════════════════════════════════════
+  else if (type === 'TRANSFERT') {
+    titre = "Demande de transfert";
+    icone = 'fa-right-left';
+    couleurClasse = 'modal-demande-header-transfert';
+    corpsHtml =
+      '<p class="text-muted small mb-3">' +
+        'Indiquez votre <strong>zone de destination</strong>. Vos autres informations seront reprises automatiquement.' +
+      '</p>' +
+
+      // ─── CRA de destination ───
+      '<div class="mb-3">' +
+        '<label class="form-label fw-bold small" for="dem_cra_dest">' +
+          '<i class="fa-solid fa-building-flag me-1"></i>CRA de destination <span class="text-danger">*</span>' +
+        '</label>' +
+        '<select id="dem_cra_dest" class="form-select" required onchange="filtrerSousCRADestination()">' +
+          '<option value="">-- Sélectionner la CRA --</option>' +
+          '<option value="Dakar">Dakar</option>' +
+          '<option value="Diourbel">Diourbel</option>' +
+          '<option value="Fatick">Fatick</option>' +
+          '<option value="Kaffrine">Kaffrine</option>' +
+          '<option value="Kaolack">Kaolack</option>' +
+          '<option value="Kédougou">Kédougou</option>' +
+          '<option value="Kolda">Kolda</option>' +
+          '<option value="Louga">Louga</option>' +
+          '<option value="Matam">Matam</option>' +
+          '<option value="Saint-Louis">Saint-Louis</option>' +
+          '<option value="Sédhiou">Sédhiou</option>' +
+          '<option value="Tambacounda">Tambacounda</option>' +
+          '<option value="Thiès">Thiès</option>' +
+          '<option value="Ziguinchor">Ziguinchor</option>' +
+        '</select>' +
+      '</div>' +
+
+      // ─── Sous-CRA de destination (filtrée automatiquement) ───
+      '<div class="mb-3">' +
+        '<label class="form-label fw-bold small" for="dem_souscra_dest">' +
+          '<i class="fa-solid fa-map-location-dot me-1"></i>Sous-CRA de destination <span class="text-danger">*</span>' +
+        '</label>' +
+        '<select id="dem_souscra_dest" class="form-select" required disabled>' +
+          '<option value="">-- Sélectionner d\'abord la CRA --</option>' +
+        '</select>' +
+        '<div class="form-text small text-muted mt-1" id="dem_souscra_hint">' +
+          '<i class="fa-solid fa-info-circle me-1"></i>Sélectionnez d\'abord une CRA pour afficher les Sous-CRA disponibles.' +
+        '</div>' +
+      '</div>' +
+
+      // ─── Aperçu ───
+      '<div class="demande-recap-preview">' +
+        '<h6 class="demande-preview-titre"><i class="fa-solid fa-info-circle me-1"></i>À savoir</h6>' +
+        '<ul class="demande-preview-liste">' +
+          '<li>Votre grade et vos coordonnées seront automatiquement transmis</li>' +
+          '<li>La demande sera visée et signée par le Président de la Sous-CRA</li>' +
+        '</ul>' +
+      '</div>';
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // TYPE 3 : ASSESSEUR
+  // ═══════════════════════════════════════════════════════
+  else if (type === 'ASSESSEUR') {
+    titre = "Demande de reclassement assesseur";
+    icone = 'fa-user-tie';
+    couleurClasse = 'modal-demande-header-assesseur';
+    corpsHtml =
+      '<div class="demande-recap-bloc">' +
+        '<div class="demande-recap-icon"><i class="fa-solid fa-user-check"></i></div>' +
+        '<div class="demande-recap-text">' +
+          '<p><strong>Passage du corps arbitral au corps assesseur.</strong></p>' +
+          '<p class="small mb-0">Votre demande sera transmise à la Commission Centrale des Arbitres ' +
+          'pour reclassement. Vos informations personnelles et votre grade seront automatiquement joints.</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="demande-recap-preview">' +
+        '<h6 class="demande-preview-titre"><i class="fa-solid fa-file-invoice me-1"></i>Aperçu</h6>' +
+        '<ul class="demande-preview-liste">' +
+          '<li>Document officiel visé par le Président de la Sous-CRA</li>' +
+          '<li>Téléchargement disponible après validation (réservé au bureau)</li>' +
+        '</ul>' +
+      '</div>';
+  }
+
+  titreEl.innerHTML = '<i class="fa-solid ' + icone + ' me-2"></i>' + titre;
+  headerEl.classList.add(couleurClasse);
+  corpsEl.innerHTML = corpsHtml;
+
+  if (btnEnvoyer) btnEnvoyer.disabled = false;
+
+  new bootstrap.Modal(document.getElementById('modalFormulaireDemande')).show();
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 2. ENVOI DE LA DEMANDE
+// ═══════════════════════════════════════════════════════════════════════════
+function envoyerDemandeDepuisModal() {
+  if (!demandeTypeEnCours) return;
+
+  const emailUser = window.currentUser
+    || sessionStorage.getItem('user_email_souscra')
+    || '';
+
+  if (!emailUser) {
+    afficherToastTemporaire("❌ Vous devez être connecté.", "danger");
+    return;
+  }
+
+  const btn = document.getElementById('btnEnvoyerDemande');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Envoi en cours...';
+  }
+
+  const restaurerBouton = function() {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i>Envoyer la demande';
+    }
+  };
+
+  const onSuccess = function(res) {
+    restaurerBouton();
+
+    // Fermer la modale de formulaire
+    const modalForm = bootstrap.Modal.getInstance(document.getElementById('modalFormulaireDemande'));
+    if (modalForm) modalForm.hide();
+
+    // Ouvrir la modale de confirmation
+    setTimeout(function() {
+      new bootstrap.Modal(document.getElementById('modalConfirmationDemande')).show();
+    }, 300);
+  };
+
+  const onFailure = function(err) {
+    restaurerBouton();
+    afficherToastTemporaire("❌ " + (err.message || "Erreur lors de l'envoi"), "danger");
+  };
+
+  if (demandeTypeEnCours === 'ATTESTATION') {
+    google.script.run
+      .withSuccessHandler(onSuccess)
+      .withFailureHandler(onFailure)
+      .soumettreDemandeAttestation(emailUser);
+
+  } else if (demandeTypeEnCours === 'TRANSFERT') {
+    const cra = (document.getElementById('dem_cra_dest') || {}).value || '';
+    const sousCra = (document.getElementById('dem_souscra_dest') || {}).value || '';
+
+    if (!cra.trim() || !sousCra.trim()) {
+      restaurerBouton();
+      afficherToastTemporaire("⚠️ Veuillez renseigner la CRA et la Sous-CRA de destination.", "warning");
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(onSuccess)
+      .withFailureHandler(onFailure)
+      .soumettreDemandeTransfert({
+        craDestination: cra.trim(),
+        sousCRADestination: sousCra.trim()
+      }, emailUser);
+
+  } else if (demandeTypeEnCours === 'ASSESSEUR') {
+    google.script.run
+      .withSuccessHandler(onSuccess)
+      .withFailureHandler(onFailure)
+      .soumettreDemandeAssesseur(emailUser);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 3. CHARGEMENT DES LISTES (admin / VP uniquement)
+// ═══════════════════════════════════════════════════════════════════════════
+function chargerListeDemandes(type) {
+  if (!estUtilisateurValidateurDemande_()) {
+    afficherToastTemporaire("🔒 Accès réservé au Président et au Vice-Président.", "warning");
+    return;
+  }
+
+  let containerId = '';
+  if (type === 'ATTESTATION') containerId = 'containerListeAttestations';
+  else if (type === 'TRANSFERT') containerId = 'containerListeTransferts';
+  else if (type === 'ASSESSEUR') containerId = 'containerListeAssesseurs';
+
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML =
+    '<div class="text-center py-4">' +
+      '<div class="spinner-border text-success"></div>' +
+      '<p class="mt-2 text-muted fw-bold small">Chargement...</p>' +
+    '</div>';
+
+  const emailUser = window.currentUser
+    || sessionStorage.getItem('user_email_souscra')
+    || '';
+
+  google.script.run
+    .withSuccessHandler(function(liste) {
+      afficherListeDemandes_(type, liste || [], container);
+    })
+    .withFailureHandler(function(err) {
+      container.innerHTML =
+        '<div class="alert alert-danger text-center">❌ ' + (err.message || 'Erreur') + '</div>';
+    })
+    .getDemandesListe(type, emailUser);
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AFFICHAGE DES LISTES (VERSION DÉTAILLÉE - DEMANDE INTÉGRALE)
+// ═══════════════════════════════════════════════════════════════════════════
+function afficherListeDemandes_(type, liste, container) {
+  if (!liste || liste.length === 0) {
+    container.innerHTML =
+      '<div class="text-center text-muted py-5">' +
+        '<i class="fa-solid fa-inbox fa-3x mb-3" style="color:#dee2e6;"></i>' +
+        '<p>Aucune demande pour le moment.</p>' +
+      '</div>';
+    return;
+  }
+
+  let couleur = '#198754';
+  let icone = 'fa-file-lines';
+  if (type === 'TRANSFERT') { couleur = '#0d6efd'; icone = 'fa-right-left'; }
+  else if (type === 'ASSESSEUR') { couleur = '#0dcaf0'; icone = 'fa-user-tie'; }
+
+  let html = '<div class="demandes-liste">';
+
+  liste.forEach(function(d, index) {
+    const statut = String(d.statut || 'ATTENTE').toUpperCase();
+    const isTraitee = (statut === 'TRAITEE');
+    const cardId = 'demande-' + type + '-' + index;
+
+    const badgeStatut = isTraitee
+      ? '<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>TRAITÉE</span>'
+      : '<span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>ATTENTE</span>';
+
+    // ═══════════════════════════════════════════════════════
+    // BLOC DÉTAILLÉ COMPLET (toutes les infos de la demande)
+    // ═══════════════════════════════════════════════════════
+    let detailsHtml = '';
+
+    if (type === 'ATTESTATION') {
+      detailsHtml =
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-medal me-1"></i>Qualité :</span>' +
+          '<span class="demande-detail-value">' + (d.qualite || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-star me-1"></i>Grade :</span>' +
+          '<span class="demande-detail-value">' + (d.grade || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-calendar me-1"></i>Date et lieu de naissance :</span>' +
+          '<span class="demande-detail-value">' + (d.dateLieuNaissance || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-id-card me-1"></i>N° CNI :</span>' +
+          '<span class="demande-detail-value">' + (d.cni || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-phone me-1"></i>Téléphone :</span>' +
+          '<span class="demande-detail-value">' + (d.telephone || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-envelope me-1"></i>Email :</span>' +
+          '<span class="demande-detail-value">' + (d.email || '-') + '</span></div>';
+    } else if (type === 'TRANSFERT') {
+      detailsHtml =
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-star me-1"></i>Grade :</span>' +
+          '<span class="demande-detail-value">' + (d.grade || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-building-flag me-1"></i>CRA destination :</span>' +
+          '<span class="demande-detail-value">' + (d.craDestination || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-map-location-dot me-1"></i>Sous-CRA destination :</span>' +
+          '<span class="demande-detail-value">' + (d.sousCRADestination || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-calendar me-1"></i>Date et lieu de naissance :</span>' +
+          '<span class="demande-detail-value">' + (d.dateLieuNaissance || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-id-card me-1"></i>N° CNI :</span>' +
+          '<span class="demande-detail-value">' + (d.cni || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-phone me-1"></i>Téléphone :</span>' +
+          '<span class="demande-detail-value">' + (d.telephone || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-envelope me-1"></i>Email :</span>' +
+          '<span class="demande-detail-value">' + (d.email || '-') + '</span></div>';
+    } else if (type === 'ASSESSEUR') {
+      detailsHtml =
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-star me-1"></i>Grade actuel :</span>' +
+          '<span class="demande-detail-value">' + (d.grade || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-user-tag me-1"></i>Qualité actuelle :</span>' +
+          '<span class="demande-detail-value">' + (d.qualite || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-calendar me-1"></i>Date et lieu de naissance :</span>' +
+          '<span class="demande-detail-value">' + (d.dateLieuNaissance || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-id-card me-1"></i>N° CNI :</span>' +
+          '<span class="demande-detail-value">' + (d.cni || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-phone me-1"></i>Téléphone :</span>' +
+          '<span class="demande-detail-value">' + (d.telephone || '-') + '</span></div>' +
+        '<div class="demande-detail"><span class="demande-detail-label"><i class="fa-solid fa-envelope me-1"></i>Email :</span>' +
+          '<span class="demande-detail-value">' + (d.email || '-') + '</span></div>';
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // APERÇU DU PDF (intégré) — Utilise l'URL Drive si disponible
+    // ═══════════════════════════════════════════════════════
+    let apercuPdfHtml = '';
+    if (d.documentUrl) {
+      // Convertir l'URL Drive en URL d'embed
+      const matchId = String(d.documentUrl).match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (matchId && matchId[1]) {
+        apercuPdfHtml =
+          '<div class="demande-apercu-pdf">' +
+            '<div class="demande-apercu-titre">' +
+              '<i class="fa-solid fa-file-pdf me-1 text-danger"></i>Aperçu du document signé' +
+            '</div>' +
+            '<div class="demande-apercu-iframe-wrapper">' +
+              '<iframe src="https://drive.google.com/file/d/' + matchId[1] + '/preview" ' +
+                'class="demande-apercu-iframe" ' +
+                'allow="autoplay; fullscreen" ' +
+                'loading="lazy">' +
+              '</iframe>' +
+            '</div>' +
+          '</div>';
+      }
+    } else if (!isTraitee) {
+      apercuPdfHtml =
+        '<div class="demande-apercu-placeholder">' +
+          '<i class="fa-solid fa-hourglass-half me-2"></i>' +
+          'Le document sera généré automatiquement après validation.' +
+        '</div>';
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // BOUTON D'ACTION
+    // ═══════════════════════════════════════════════════════
+    const boutonAction = isTraitee
+      ? '<button class="btn btn-sm btn-secondary demande-btn-action" disabled>' +
+          '<i class="fa-solid fa-check-double me-1"></i>Traitée</button>'
+      : '<button class="btn btn-sm btn-success demande-btn-action" ' +
+          'onclick="event.stopPropagation(); validerDemandeUI(\'' + type + '\', \'' + d.id + '\')">' +
+          '<i class="fa-solid fa-check me-1"></i>Valider la demande</button>';
+
+    // ═══════════════════════════════════════════════════════
+    // CARTE FINALE
+    // ═══════════════════════════════════════════════════════
+    html +=
+      '<div class="demande-item ' + (isTraitee ? 'demande-traitee' : 'demande-attente') + '" id="' + cardId + '">' +
+        '<div class="demande-item-header" onclick="toggleDemandeCard(\'' + cardId + '\')">' +
+          '<div class="demande-item-left">' +
+            '<div class="demande-avatar" style="background:linear-gradient(135deg,' + couleur + ', ' + couleur + 'cc);">' +
+              '<i class="fa-solid ' + icone + '"></i>' +
+            '</div>' +
+            '<div class="demande-item-info">' +
+              '<p class="demande-item-nom">' + (d.nomComplet || '-') + '</p>' +
+              '<p class="demande-item-date">' +
+                '<i class="fa-regular fa-clock me-1"></i>' + (d.dateDemande || '-') +
+              '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="demande-item-right">' +
+            badgeStatut +
+            '<i class="fa-solid fa-chevron-down demande-chevron"></i>' +
+          '</div>' +
+        '</div>' +
+        '<div class="demande-item-body">' +
+          '<div class="demande-body-section-title">' +
+            '<i class="fa-solid fa-clipboard-list me-1"></i>Détails de la demande' +
+          '</div>' +
+          '<div class="demande-details-grid">' + detailsHtml + '</div>' +
+
+          // ✅ Retrait de la date de traitement en double
+          (isTraitee && d.traitePar
+            ? '<div class="demande-traitement-info">' +
+                '<i class="fa-solid fa-user-check me-1"></i>Traitée par <strong>' + d.traitePar + '</strong>' +
+              '</div>'
+            : '') +
+
+          apercuPdfHtml +
+
+          '<div class="demande-item-actions">' +
+            (isTraitee && d.documentUrl
+              ? '<a href="' + d.documentUrl + '" target="_blank" class="btn btn-sm btn-outline-primary">' +
+                  '<i class="fa-solid fa-external-link-alt me-1"></i>Ouvrir dans Drive</a>' +
+                  '<a href="https://drive.google.com/uc?export=download&id=' + 
+                    (String(d.documentUrl).match(/\/d\/([a-zA-Z0-9_-]+)/) || [,''])[1] + 
+                    '" class="btn btn-sm btn-outline-success" download>' +
+                    '<i class="fa-solid fa-download me-1"></i>Télécharger PDF</a>'
+              : '') +
+            boutonAction +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleDemandeCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.toggle('expanded');
+}
+window.toggleDemandeCard = toggleDemandeCard;
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 5. VALIDATION D'UNE DEMANDE
+// ═══════════════════════════════════════════════════════════════════════════
+function validerDemandeUI(type, idDemande) {
+  if (!estUtilisateurValidateurDemande_()) {
+    afficherToastTemporaire("🔒 Accès réservé.", "warning");
+    return;
+  }
+
+  const labelType = type === 'ATTESTATION' ? "l'attestation"
+                  : (type === 'TRANSFERT' ? 'le transfert' : "l'assesseur");
+
+  confirmerAction(
+    "Voulez-vous valider cette demande ? Un document PDF signé sera généré automatiquement.",
+    function() {
+      const emailUser = window.currentUser
+        || sessionStorage.getItem('user_email_souscra')
+        || '';
+
+      afficherToastTemporaire("⏳ Génération du document en cours...", "info");
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          afficherToastTemporaire("✅ " + (res.message || "Validé !"), "success");
+
+          // Pour TRANSFERT / ASSESSEUR : téléchargement auto
+          if (type !== 'ATTESTATION' && res.pdfBase64 && res.nomFichier) {
+            telechargerPdfDepuisBase64_(res.pdfBase64, res.nomFichier);
+          }
+
+          // Recharger la liste
+          chargerListeDemandes(type);
+        })
+        .withFailureHandler(function(err) {
+          afficherToastTemporaire("❌ " + (err.message || "Erreur"), "danger");
+        })
+        .validerDemande(type, idDemande, emailUser);
+    },
+    {
+      titre: 'Valider la demande',
+      texteConfirmer: 'Valider',
+      couleurConfirmer: 'success',
+      icone: 'fa-check-circle'
+    }
+  );
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 6. TÉLÉCHARGEMENT DU PDF DEPUIS UNE CHAÎNE BASE64
+// ═══════════════════════════════════════════════════════════════════════════
+function telechargerPdfDepuisBase64_(base64, nomFichier) {
+  try {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomFichier || 'document.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 200);
+  } catch (err) {
+    console.error('[Téléchargement PDF] Erreur :', err);
+    afficherToastTemporaire("❌ Impossible de télécharger le PDF.", "danger");
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 7. MASQUAGE DES ONGLETS LISTES POUR NON-VALIDATEURS
+// ═══════════════════════════════════════════════════════════════════════════
+function appliquerVisibiliteOngletsDemandes_() {
+  const estValidateur = estUtilisateurValidateurDemande_();
+  document.querySelectorAll('.demandes-liste-item').forEach(function(el) {
+    el.classList.toggle('d-none', !estValidateur);
+  });
+}
+
+// Hook : applique la visibilité au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(appliquerVisibiliteOngletsDemandes_, 800);
+});
+
+// Re-applique aussi à chaque bascule de vue
+const _ancienneBasculerVue = window.basculerVue;
+window.basculerVue = function(nomVue) {
+  if (typeof _ancienneBasculerVue === 'function') {
+    _ancienneBasculerVue(nomVue);
+  }
+  if (nomVue === 'demandes') {
+    setTimeout(appliquerVisibiliteOngletsDemandes_, 100);
+  }
+};
+
 </script>
 
 <script>
@@ -20794,6 +23477,7 @@ window.toggleQuestionCard = toggleQuestionCard;
 </script>
 
   <!-- Modale universelle pour la lecture des circulaires -->
+ <!-- Modale universelle pour la lecture des circulaires -->
 <div class="modal fade" id="modalCirculaire" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content shadow-lg">
@@ -20806,6 +23490,31 @@ window.toggleQuestionCard = toggleQuestionCard;
       </div>
       <div class="modal-footer py-2">
         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- MODALE : CONFIRMATION DE VALIDATION -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="modalConfirmationDemande" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+      <div class="modal-body text-center p-4">
+        <div class="mb-3">
+          <i class="fa-solid fa-check-circle text-success" style="font-size:3rem;"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Demande envoyée !</h5>
+        <p class="text-muted small mb-0" id="modalConfirmationTexte">
+          Votre demande a bien été enregistrée.<br>
+          En attente de validation par le Président ou le Vice-Président.
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center border-0 pt-0 pb-4">
+        <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" style="border-radius:10px;">
+          <i class="fa-solid fa-check me-1"></i>Compris
+        </button>
       </div>
     </div>
   </div>
