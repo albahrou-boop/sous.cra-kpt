@@ -13143,6 +13143,10 @@ function handleMembreSubmit(e) {
       alert(res && res.mode === 'update' ? "✅ Membre mis à jour avec succès !" : "✅ Membre créé avec succès !");
       resetFormMembre();
       
+      // ✅ Invalider le cache local des dropdowns (pour refléter les changements)
+      localStorage.removeItem('scra_membres_dropdowns_v2');
+      window._membresChargementEnCours = false;
+      
       // Retour automatique sur l'onglet de la liste
       const tabBtnAffichage = document.getElementById('btn-tab-affichage');
       if (tabBtnAffichage) {
@@ -16280,10 +16284,20 @@ function afficherTableauDesignations(listeDesignations, permissions) {
 
 
 
-function loadMembresDropdowns() {
-  console.log("Chargement centralisé des membres pour les dropdowns...");
+// ═══════════════════════════════════════════════════════════════════════════
+// CHARGEMENT OPTIMISÉ DES MEMBRES POUR LES DROPDOWNS
+// Cache localStorage (1h) + payload allégé + fallback automatique
+// ═══════════════════════════════════════════════════════════════════════════
 
-  // 1. Génération du select Heures (statique)
+const CACHE_MEMBRES_KEY = 'scra_membres_dropdowns_v2';
+const CACHE_MEMBRES_TTL_MS = 60 * 60 * 1000; // 1 heure
+
+window._membresChargementEnCours = false;
+
+function loadMembresDropdowns() {
+  console.log('[Dropdowns] Chargement...');
+
+  // 1. Sélecteur d'heures (statique, rapide)
   const selectH = document.getElementById('d_heure');
   if (selectH && selectH.options && selectH.options.length <= 1) {
     let heuresHTML = '<option value="">-- Choisir Heure --</option>';
@@ -16294,83 +16308,170 @@ function loadMembresDropdowns() {
     selectH.innerHTML = heuresHTML;
   }
 
+  // 2. Vérifier le cache localStorage EN PREMIER
+  const cache = lireCacheMembres_();
+  if (cache && cache.donnees && cache.donnees.length > 0) {
+    console.log('[Dropdowns] ✅ Cache local utilisé (' + cache.donnees.length + ' membres)');
+    alimenterTousLesDropdowns_(cache.donnees);
+    return; // 🚀 Instantané !
+  }
+
+  // 3. Afficher un état "chargement" dans les dropdowns
+  afficherEtatChargementDropdowns_();
+
+  // 4. Anti-doublon
+  if (window._membresChargementEnCours) {
+    console.log('[Dropdowns] ⏳ Déjà en cours...');
+    return;
+  }
+  window._membresChargementEnCours = true;
+
+  // 5. Appel serveur avec la nouvelle fonction légère
   if (typeof google === 'undefined' || !google.script || !google.script.run) {
-    console.warn("Environnement Apps Script introuvable.");
+    window._membresChargementEnCours = false;
     return;
   }
 
-  // Récupération de l'e-mail pour les autorisations
-  const emailUser = window.currentUser || sessionStorage.getItem('user_email_souscra') || "";
-
-  // 2. Chargement des membres depuis Apps Script
   google.script.run
-    .withSuccessHandler(function(res) {
-      console.log("Données reçues pour les dropdowns :", res);
-      
-      const rawData = (res && res.data) ? res.data : res;
-      if (!rawData || !Array.isArray(rawData) || rawData.length === 0) {
-        console.warn("Aucune donnée de membre reçue.");
+    .withSuccessHandler(function(liste) {
+      window._membresChargementEnCours = false;
+      if (!liste || !Array.isArray(liste) || liste.length === 0) {
+        afficherErreurDropdowns_('Aucun membre disponible');
         return;
       }
-
-      // Extraction et nettoyage des noms
-      const listeNomsComplets = rawData.map(function(m) {
-        if (!m) return '';
-        if (typeof m === 'object' && !Array.isArray(m)) {
-          if (m.nomComplet) return String(m.nomComplet).trim();
-          const p = m.prenoms || m.prenom || '';
-          const n = m.nom || '';
-          return `${p} ${n}`.trim();
-        } else if (Array.isArray(m)) {
-          const p = m[1] ? String(m[1]).trim() : '';
-          const n = m[2] ? String(m[2]).trim() : '';
-          return `${p} ${n}`.trim();
-        }
-        return String(m).trim();
-      }).filter(function(nom) { 
-        return nom !== '' && nom !== 'undefined' && nom !== 'null'; 
-      });
-
-      const nomsUnique = [...new Set(listeNomsComplets)].sort((a, b) => a.localeCompare(b, 'fr'));
-      if (nomsUnique.length === 0) return;
-
-      // 🎯 TOUS LES IDS DE VOS MENUS DÉROULANTS (HTML fournis)
-      const customDropdownIds = [
-        'd_ac', 
-        'd_aa1', 
-        'd_aa2', 
-        'd_4e', 
-        'd_sup', 
-        'r_sup', 
-        'c_auteur', 
-        'syn_membre'
-      ];
-
-      // Alimentation automatique de chaque menu déroulant
-      customDropdownIds.forEach(function(id) {
-        const ulList = document.getElementById(`list_${id}`);
-        if (ulList) {
-          alimenterDropdownCustom(id, 'Sélectionner', nomsUnique);
-        } else {
-          console.warn(`Attention : l'élément list_${id} est introuvable dans le DOM.`);
-        }
-      });
-
-      // Cas particulier : si syn_membre possède un <select> standard en plus du custom
-      const selectAnalyse = document.getElementById('syn_membre');
-      if (selectAnalyse && selectAnalyse.tagName.toLowerCase() === 'select') {
-        let htmlOptions = '<option value="">-- Choisissez un membre --</option>';
-        nomsUnique.forEach(function(nom) {
-          htmlOptions += `<option value="${nom}">${nom}</option>`;
-        });
-        selectAnalyse.innerHTML = htmlOptions;
-      }
-
+      console.log('[Dropdowns] ✅ ' + liste.length + ' membres reçus');
+      ecrireCacheMembres_(liste);
+      alimenterTousLesDropdowns_(liste);
     })
     .withFailureHandler(function(err) {
-      console.error("Erreur de récupération des membres pour les dropdowns :", err);
+      window._membresChargementEnCours = false;
+      console.error('[Dropdowns] ❌ Erreur :', err);
+
+      // Fallback : cache expiré
+      const cacheExpire = lireCacheMembres_(true);
+      if (cacheExpire && cacheExpire.donnees && cacheExpire.donnees.length > 0) {
+        console.log('[Dropdowns] ⚠️ Fallback sur cache expiré');
+        alimenterTousLesDropdowns_(cacheExpire.donnees);
+        if (typeof afficherToastTemporaire === 'function') {
+          afficherToastTemporaire("⚠️ Données chargées depuis le cache local", "warning");
+        }
+      } else {
+        afficherErreurDropdowns_('Erreur de connexion. Réessayez.');
+      }
     })
-    .getMembresData(emailUser);
+    .getMembresPourDropdowns();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HELPERS CACHE
+// ═══════════════════════════════════════════════════════════════════════════
+
+function lireCacheMembres_(autoriserExpire) {
+  try {
+    const raw = localStorage.getItem(CACHE_MEMBRES_KEY);
+    if (!raw) return null;
+    const cache = JSON.parse(raw);
+    if (!cache || !cache.timestamp || !cache.donnees) return null;
+
+    const age = Date.now() - cache.timestamp;
+    if (age > CACHE_MEMBRES_TTL_MS && !autoriserExpire) {
+      console.log('[Dropdowns] Cache expiré (âge : ' + Math.round(age / 1000 / 60) + ' min)');
+      return null;
+    }
+    return cache;
+  } catch (e) {
+    console.warn('[Dropdowns] Erreur lecture cache :', e);
+    return null;
+  }
+}
+
+function ecrireCacheMembres_(liste) {
+  try {
+    localStorage.setItem(CACHE_MEMBRES_KEY, JSON.stringify({
+      timestamp: Date.now(),
+      donnees: liste
+    }));
+    console.log('[Dropdowns] 💾 Cache sauvegardé (' + liste.length + ' membres)');
+  } catch (e) {
+    console.warn('[Dropdowns] Impossible de sauvegarder :', e);
+  }
+}
+
+function forcerRechargementMembres_() {
+  localStorage.removeItem(CACHE_MEMBRES_KEY);
+  window._membresChargementEnCours = false;
+  loadMembresDropdowns();
+}
+window.forcerRechargementMembres_ = forcerRechargementMembres_;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ALIMENTATION DES DROPDOWNS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function alimenterTousLesDropdowns_(listeMembres) {
+  if (!listeMembres || listeMembres.length === 0) return;
+
+  const nomsNettoyes = listeMembres.map(function(m) {
+    if (typeof m === 'string') return m.trim();
+    return (m.n || m.nomComplet || '').trim();
+  }).filter(function(n) {
+    return n !== '' && n !== 'undefined' && n !== 'null';
+  });
+
+  const nomsUniques = [...new Set(nomsNettoyes)].sort(function(a, b) {
+    return a.localeCompare(b, 'fr');
+  });
+
+  if (nomsUniques.length === 0) return;
+
+  const customDropdownIds = ['d_ac', 'd_aa1', 'd_aa2', 'd_4e', 'd_sup', 'r_sup', 'c_auteur', 'syn_membre'];
+
+  customDropdownIds.forEach(function(id) {
+    const ulList = document.getElementById('list_' + id);
+    if (ulList) alimenterDropdownCustom(id, 'Sélectionner', nomsUniques);
+  });
+
+  const selectAnalyse = document.getElementById('syn_membre');
+  if (selectAnalyse && selectAnalyse.tagName.toLowerCase() === 'select') {
+    let htmlOptions = '<option value="">-- Choisissez un membre --</option>';
+    nomsUniques.forEach(function(nom) {
+      htmlOptions += `<option value="${nom}">${nom}</option>`;
+    });
+    selectAnalyse.innerHTML = htmlOptions;
+  }
+
+  console.log('[Dropdowns] ✅ ' + customDropdownIds.length + ' dropdowns alimentés (' + nomsUniques.length + ' membres)');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ÉTATS VISUELS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function afficherEtatChargementDropdowns_() {
+  const ids = ['d_ac', 'd_aa1', 'd_aa2', 'd_4e', 'd_sup', 'r_sup', 'c_auteur', 'syn_membre'];
+  const htmlChargement =
+    '<li class="text-muted small p-2 text-center">' +
+      '<span class="spinner-border spinner-border-sm me-2" style="width:0.9rem;height:0.9rem;"></span>' +
+      'Chargement...' +
+    '</li>';
+  ids.forEach(function(id) {
+    const ulList = document.getElementById('list_' + id);
+    if (ulList && ulList.children.length <= 1) ulList.innerHTML = htmlChargement;
+  });
+}
+
+function afficherErreurDropdowns_(message) {
+  const ids = ['d_ac', 'd_aa1', 'd_aa2', 'd_4e', 'd_sup', 'r_sup', 'c_auteur', 'syn_membre'];
+  const htmlErreur =
+    '<li class="text-danger small p-2 text-center">' +
+      '<i class="fa-solid fa-triangle-exclamation me-1"></i>' +
+      (message || 'Erreur de chargement') +
+      '<br><button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="forcerRechargementMembres_()">' +
+      '<i class="fa-solid fa-refresh me-1"></i>Réessayer</button></li>';
+  ids.forEach(function(id) {
+    const ulList = document.getElementById('list_' + id);
+    if (ulList && ulList.children.length <= 1) ulList.innerHTML = htmlErreur;
+  });
 }
 
 function filtrerMembresDropdown(inputEl) {
@@ -18931,20 +19032,6 @@ function toggleDevoirCard(cardId) {
 }
 
 window.toggleDevoirCard = toggleDevoirCard;
-
-
-function toggleDevoirCard(cardId) {
-  const el = document.getElementById(cardId);
-  if (!el) return;
-
-  if (el.style.display === 'none' || el.style.display === '') {
-    el.style.display = 'block';
-  } else {
-    el.style.display = 'none';
-  }
-}
-
-window.toggleDevoirCard = toggleDevoirCard;
 function filtrerDevoirs(query) {
   const cards = document.querySelectorAll('.devoir-card');
   const q = String(query || '').toLowerCase().trim();
@@ -19043,22 +19130,132 @@ function ajouterQuestionBuilder() {
 
 function changerTypeQuestion(qid) {
   const div = document.getElementById(qid);
-  const type = div.querySelector('.qb-type').value;
+  if (!div) return;
+
+  const selectType = div.querySelector('.qb-type');
+  const type = selectType ? selectType.value : 'qcm_unique';
   const optionsContainer = div.querySelector('.qb-options-container');
 
+  if (!optionsContainer) return;
+
+  // ═══════════════════════════════════════════════════════════
+  // ✅ PRÉSERVER les options existantes si déjà remplies
+  // ═══════════════════════════════════════════════════════════
+  const lignesExistantes = optionsContainer.querySelectorAll('.qb-option-ligne');
+  const optionsSauvegardees = [];
+
+  lignesExistantes.forEach(function(ligne) {
+    const inputTexte = ligne.querySelector('.qb-option-texte');
+    const inputBonne = ligne.querySelector('.qb-option-bonne');
+    optionsSauvegardees.push({
+      texte: inputTexte ? inputTexte.value : '',
+      bonne: inputBonne ? inputBonne.checked : false
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════
+  // CAS 1 : QCM (unique OU multiple) — préserver les options
+  // ═══════════════════════════════════════════════════════════
   if (type === 'qcm_unique' || type === 'qcm_multiple') {
-    optionsContainer.innerHTML =
+    // Si aucune option n'existe encore → créer 2 par défaut
+    if (optionsSauvegardees.length === 0) {
+      optionsContainer.innerHTML =
+        '<label class="form-label small">Choix de réponses (cochez la/les bonne(s) réponse(s))</label>' +
+        '<div class="qb-options-list"></div>' +
+        '<button type="button" class="btn btn-sm btn-outline-secondary mt-1" ' +
+          'onclick="ajouterOptionQCM(\'' + qid + '\')">' +
+          '<i class="fa-solid fa-plus"></i> Ajouter un choix' +
+        '</button>';
+
+      ajouterOptionQCM(qid);
+      ajouterOptionQCM(qid);
+      return;
+    }
+
+    // Sinon, reconstruire avec le bon input type (radio ↔ checkbox)
+    // sans perdre le texte ni l'état "bonne réponse"
+    const inputType = (type === 'qcm_unique') ? 'radio' : 'checkbox';
+    const groupName = qid + '-bonne';
+
+    let html =
       '<label class="form-label small">Choix de réponses (cochez la/les bonne(s) réponse(s))</label>' +
-      '<div class="qb-options-list"></div>' +
-      '<button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="ajouterOptionQCM(\'' + qid + '\')"><i class="fa-solid fa-plus"></i> Ajouter un choix</button>';
-    ajouterOptionQCM(qid);
-    ajouterOptionQCM(qid);
+      '<div class="qb-options-list">';
+
+    optionsSauvegardees.forEach(function(opt) {
+      // ⚠️ Si on passe en QCM unique et qu'il y avait plusieurs bonnes réponses,
+      // on garde uniquement la première pour éviter l'ambiguïté
+      const estBonne = opt.bonne;
+
+      const texteSecurise = String(opt.texte || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+      html +=
+        '<div class="input-group input-group-sm mb-1 qb-option-ligne">' +
+          '<span class="input-group-text">' +
+            '<input type="' + inputType + '" name="' + groupName + '" class="qb-option-bonne"' +
+              (estBonne ? ' checked' : '') + '>' +
+          '</span>' +
+          '<input type="text" class="form-control qb-option-texte" ' +
+            'placeholder="Texte du choix" value="' + texteSecurise + '">' +
+          '<button type="button" class="btn btn-outline-danger" ' +
+            'onclick="this.closest(\'.qb-option-ligne\').remove()">' +
+            '<i class="fa-solid fa-xmark"></i>' +
+          '</button>' +
+        '</div>';
+    });
+
+    html += '</div>' +
+      '<button type="button" class="btn btn-sm btn-outline-secondary mt-1" ' +
+        'onclick="ajouterOptionQCM(\'' + qid + '\')">' +
+        '<i class="fa-solid fa-plus"></i> Ajouter un choix' +
+      '</button>';
+
+    optionsContainer.innerHTML = html;
+
+    // ─── Si on est en QCM unique : ne garder qu'UNE seule bonne réponse ───
+    if (type === 'qcm_unique') {
+      const bonnesCochees = optionsContainer.querySelectorAll('.qb-option-bonne:checked');
+      if (bonnesCochees.length > 1) {
+        // Décocher toutes sauf la première
+        bonnesCochees.forEach(function(cb, index) {
+          if (index > 0) cb.checked = false;
+        });
+      }
+    }
+
+  // ═══════════════════════════════════════════════════════════
+  // CAS 2 : Vrai / Faux
+  // ═══════════════════════════════════════════════════════════
   } else if (type === 'vrai_faux') {
+    // Détecter l'ancienne bonne réponse si elle existe (pour la préserver)
+    let bonneAncienne = 'vrai';
+    if (optionsSauvegardees.length > 0) {
+      // Si l'utilisateur avait coché une option, on essaie de deviner
+      const optionCochee = optionsSauvegardees.find(function(o) { return o.bonne; });
+      if (optionCochee && optionCochee.texte) {
+        const texteLower = optionCochee.texte.toLowerCase();
+        if (texteLower.indexOf('faux') !== -1 || texteLower.indexOf('false') !== -1) {
+          bonneAncienne = 'faux';
+        }
+      }
+    }
+
     optionsContainer.innerHTML =
       '<label class="form-label small">Bonne réponse</label>' +
-      '<select class="form-select qb-vf-reponse"><option value="vrai">Vrai</option><option value="faux">Faux</option></select>';
+      '<select class="form-select qb-vf-reponse">' +
+        '<option value="vrai"' + (bonneAncienne === 'vrai' ? ' selected' : '') + '>Vrai</option>' +
+        '<option value="faux"' + (bonneAncienne === 'faux' ? ' selected' : '') + '>Faux</option>' +
+      '</select>';
+
+  // ═══════════════════════════════════════════════════════════
+  // CAS 3 : Réponse libre
+  // ═══════════════════════════════════════════════════════════
   } else {
-    optionsContainer.innerHTML = '<p class="text-muted small">Réponse libre : texte saisi par l\'arbitre, non compté dans la note automatique.</p>';
+    optionsContainer.innerHTML =
+      '<p class="text-muted small">Réponse libre : texte saisi par l\'arbitre, non compté dans la note automatique.</p>';
   }
 }
 
@@ -20177,7 +20374,55 @@ function chargerToutesNotes() {
 }
 
 window.chargerToutesNotes = chargerToutesNotes;
-  
+
+// ---------- AFFICHAGE D'UNE NOTE ----------
+function construireAffichageNote(data) {
+  var pct = data.noteMax > 0 ? Math.round((data.noteObtenue / data.noteMax) * 100) : 0;
+  var couleur = 'danger';
+  if (pct >= 70) couleur = 'success';
+  else if (pct >= 50) couleur = 'warning';
+
+  var initiales = extraireInitiales(data.arbitreNom || data.arbitreEmail);
+  var dateFin = data.dateFin ? new Date(data.dateFin).toLocaleString('fr-FR') : '-';
+
+  var html = '<div class="membre-item arbitre" style="margin-top: 16px;">' +
+    '<div class="membre-item-header">' +
+      '<div class="membre-item-left">' +
+        '<div class="membre-avatar" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">' + initiales + '</div>' +
+        '<div class="membre-name-block">' +
+          '<p class="membre-name">' + (data.arbitreNom || data.arbitreEmail) + '</p>' +
+          '<div class="membre-qualite-line">Soumis le ' + dateFin + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="membre-item-right">' +
+        '<span class="badge bg-' + couleur + '" style="font-size: 1.1rem; padding: 0.5em 0.8em;">' +
+          data.noteObtenue + ' / ' + data.noteMax +
+        '</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="membre-item-body" style="max-height: 600px; padding-top: 14px;">' +
+      '<div class="membre-info-grid">' +
+        '<div class="membre-info-row">' +
+          '<span class="info-icon"><i class="fa fa-chart-line"></i></span>' +
+          '<span class="info-label">Pourcentage :</span>' +
+          '<span class="info-value fw-bold">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="progress-custom mt-2 mb-3" style="width: 100%;">' +
+          '<div class="progress-custom-bar" style="width: ' + pct + '%;"></div>' +
+        '</div>' +
+        '<button class="btn btn-sm btn-outline-info" onclick="toggleDetailNote(\'d-' + data.idReponse + '\')">' +
+          '<i class="fa-solid fa-eye me-1"></i>Voir le detail des reponses</button>' +
+        '<div id="d-' + data.idReponse + '" class="mt-3" style="display:none;">' +
+          construireDetailReponses(data) +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  return html;
+}
+
+window.construireAffichageNote = construireAffichageNote;
 
 function construireDetailReponses(data) {
   var html = '';
@@ -22099,13 +22344,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-function toggleQuestionCard(cardId) {
-  const card = document.getElementById(cardId);
-  if (!card) return;
-  card.classList.toggle('expanded');
-}
-window.toggleQuestionCard = toggleQuestionCard;
-
 // ═══════════════════════════════════════════════════════════════
 // OUVERTURE DU MODAL D'ÉDITION D'UN DEVOIR
 // ═══════════════════════════════════════════════════════════════
@@ -22774,6 +23012,9 @@ function estUtilisateurValidateurDemande_() {
 // ═══════════════════════════════════════════════════════════════════════════
 // FILTRE : Sous-CRA selon la CRA sélectionnée
 // ═══════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════
+// FILTRE : Sous-CRA selon la CRA sélectionnée
+// ═══════════════════════════════════════════════════════════════════════════
 function filtrerSousCRADestination() {
   const craSelect = document.getElementById('dem_cra_dest');
   const sousCraSelect = document.getElementById('dem_souscra_dest');
@@ -22793,14 +23034,15 @@ function filtrerSousCRADestination() {
       'Sous-CRA de Rufisque'
     ],
     'Diourbel': [
+      // ⚠️ Diourbel (ville) n'est PAS une Sous-CRA
       'Sous-CRA de Bambey',
-      'Sous-CRA de Diourbel',
       'Sous-CRA de Mbacké'
     ],
     'Fatick': [
       'Sous-CRA de Fatick',
       'Sous-CRA de Foundiougne',
-      'Sous-CRA de Gossas'
+      'Sous-CRA de Gossas',
+      'Sous-CRA de Sokone'              // ✅ AJOUT
     ],
     'Kaffrine': [
       'Sous-CRA de Birkelane',
@@ -22814,7 +23056,7 @@ function filtrerSousCRADestination() {
       'Sous-CRA de Nioro du Rip'
     ],
     'Kédougou': [
-      // Aucune Sous-CRA dans cette région
+      // ⚠️ Kédougou n'a AUCUNE Sous-CRA
     ],
     'Kolda': [
       'Sous-CRA de Kolda',
@@ -22830,8 +23072,10 @@ function filtrerSousCRADestination() {
       'Sous-CRA de Matam'
     ],
     'Saint-Louis': [
+      // ⚠️ Saint-Louis (ville) n'est PAS une Sous-CRA
       'Sous-CRA de Dagana',
-      'Sous-CRA de Podor'
+      'Sous-CRA de Podor',
+      'Sous-CRA de Richard Toll'        // ✅ AJOUT
     ],
     'Sédhiou': [
       'Sous-CRA de Bounkiling',
@@ -22839,6 +23083,7 @@ function filtrerSousCRADestination() {
       'Sous-CRA de Sédhiou'
     ],
     'Tambacounda': [
+      // ⚠️ Tambacounda (ville) n'est PAS une Sous-CRA
       'Sous-CRA de Goudiry',
       'Sous-CRA de Koumpentoum'
     ],
@@ -22867,14 +23112,15 @@ function filtrerSousCRADestination() {
 
   const listeSousCra = SOUS_CRA_PAR_CRA[craChoisie] || [];
 
-  // ─── Cas 2 : CRA sans Sous-CRA (ex: Kédougou) ───
+  // ─── Cas 2 : CRA sans Sous-CRA (Kédougou) ───
   if (listeSousCra.length === 0) {
     sousCraSelect.innerHTML =
-      '<option value="Aucune Sous-CRA disponible">Aucune Sous-CRA dans cette région</option>';
+      '<option value="">Aucune Sous-CRA disponible</option>';
     sousCraSelect.disabled = true;
     if (hint) {
-      hint.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-1 text-warning"></i>' +
-        'La CRA de <strong>' + craChoisie + '</strong> n\'a pas encore de Sous-CRA. ' +
+      hint.innerHTML =
+        '<i class="fa-solid fa-triangle-exclamation me-1 text-warning"></i>' +
+        'La CRA de <strong>' + craChoisie + '</strong> n\'a pas de Sous-CRA. ' +
         'Vous ne pouvez pas faire de transfert vers cette CRA.';
       hint.className = 'form-text small text-warning mt-1';
     }
@@ -22890,9 +23136,21 @@ function filtrerSousCRADestination() {
   sousCraSelect.innerHTML = html;
   sousCraSelect.disabled = false;
 
+  // ─── Message contextuel selon la CRA ───
+  let messageSpecial = '';
+  if (craChoisie === 'Diourbel') {
+    messageSpecial = ' ⚠️ La ville de Diourbel n\'est pas une Sous-CRA.';
+  } else if (craChoisie === 'Saint-Louis') {
+    messageSpecial = ' ⚠️ La ville de Saint-Louis n\'est pas une Sous-CRA.';
+  } else if (craChoisie === 'Tambacounda') {
+    messageSpecial = ' ⚠️ La ville de Tambacounda n\'est pas une Sous-CRA.';
+  }
+
   if (hint) {
-    hint.innerHTML = '<i class="fa-solid fa-check-circle me-1 text-success"></i>' +
-      '<strong>' + listeSousCra.length + '</strong> Sous-CRA disponible(s) pour la CRA de <strong>' + craChoisie + '</strong>.';
+    hint.innerHTML =
+      '<i class="fa-solid fa-check-circle me-1 text-success"></i>' +
+      '<strong>' + listeSousCra.length + '</strong> Sous-CRA disponible(s) pour la CRA de <strong>' + craChoisie + '</strong>.' +
+      messageSpecial;
     hint.className = 'form-text small text-success mt-1';
   }
 }
@@ -23442,6 +23700,257 @@ window.basculerVue = function(nomVue) {
     setTimeout(appliquerVisibiliteOngletsDemandes_, 100);
   }
 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULE : IMPORT INTELLIGENT DE QUESTIONNAIRE
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Ouvre la modale d'import
+ */
+function ouvrirImportQuestionnaire() {
+  const textarea = document.getElementById('importQuestionnaireText');
+  const resultat = document.getElementById('importQuestionnaireResultat');
+  const btn = document.getElementById('btnAnalyserQuestionnaire');
+
+  if (textarea) textarea.value = '';
+  if (resultat) resultat.innerHTML = '';
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-magic me-1"></i>Analyser et importer';
+  }
+
+  new bootstrap.Modal(document.getElementById('modalImportQuestionnaire')).show();
+}
+window.ouvrirImportQuestionnaire = ouvrirImportQuestionnaire;
+
+
+/**
+ * Analyse le texte collé et remplit le builder
+ */
+function analyserQuestionnaireColle() {
+  const textarea = document.getElementById('importQuestionnaireText');
+  const resultat = document.getElementById('importQuestionnaireResultat');
+  const btn = document.getElementById('btnAnalyserQuestionnaire');
+
+  if (!textarea || !textarea.value.trim()) {
+    afficherToastTemporaire("⚠️ Veuillez coller le texte du questionnaire.", "warning");
+    return;
+  }
+
+  const texte = textarea.value.trim();
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Analyse en cours...';
+  }
+  if (resultat) resultat.innerHTML = '';
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-magic me-1"></i>Analyser et importer';
+      }
+
+      if (!res || !res.success) {
+        if (resultat) {
+          resultat.innerHTML =
+            '<div class="alert alert-danger">' +
+              '<i class="fa-solid fa-exclamation-circle me-1"></i>' +
+              (res && res.message ? res.message : 'Erreur d\'analyse.') +
+            '</div>';
+        }
+        return;
+      }
+
+      // ─── Affichage du résultat ───
+      if (resultat) {
+        let apercuHtml =
+          '<div class="alert alert-success">' +
+            '<i class="fa-solid fa-check-circle me-1"></i>' +
+            '<strong>' + res.questions.length + '</strong> question(s) détectée(s) avec succès !' +
+          '</div>' +
+          '<div class="card mb-2"><div class="card-body p-3">' +
+            '<h6 class="fw-bold mb-2">Aperçu :</h6>' +
+            '<div style="max-height: 250px; overflow-y: auto; font-size: 0.82rem;">';
+
+        res.questions.forEach(function(q, idx) {
+          apercuHtml +=
+            '<div class="mb-2 p-2" style="background: #f8f9fa; border-radius: 6px;">' +
+              '<div class="fw-bold">Q' + (idx + 1) + ' : ' + q.enonce + '</div>';
+
+          q.options.forEach(function(opt, i) {
+            const lettre = String.fromCharCode(65 + i);
+            const estBonne = Array.isArray(q.bonneReponse) && q.bonneReponse.indexOf(i) !== -1;
+            apercuHtml +=
+              '<div style="padding-left: 12px; ' + (estBonne ? 'color: #198754; font-weight: bold;' : '') + '">' +
+                lettre + '- ' + opt + (estBonne ? ' ✓' : '') +
+              '</div>';
+          });
+
+          apercuHtml += '</div>';
+        });
+
+        apercuHtml += '</div></div></div>';
+
+        resultat.innerHTML = apercuHtml;
+      }
+
+      // ─── Remplissage du builder ───
+      remplirBuilderAvecQuestionsImportees(res.questions, res.titre);
+
+      // ─── Fermeture de la modale d'import après un délai ───
+      setTimeout(function() {
+        const modalEl = document.getElementById('modalImportQuestionnaire');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        afficherToastTemporaire(
+          "✅ " + res.questions.length + " question(s) importée(s) ! Vérifiez et ajustez si besoin.",
+          "success"
+        );
+      }, 800);
+    })
+    .withFailureHandler(function(err) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-magic me-1"></i>Analyser et importer';
+      }
+      if (resultat) {
+        resultat.innerHTML =
+          '<div class="alert alert-danger">' +
+            '<i class="fa-solid fa-exclamation-circle me-1"></i>' +
+            'Erreur : ' + (err.message || err) +
+          '</div>';
+      }
+    })
+    .parserQuestionnaireTexte(texte, 'qcm_unique');
+}
+window.analyserQuestionnaireColle = analyserQuestionnaireColle;
+
+
+/**
+ * Remplit le builder avec les questions importées
+ */
+function remplirBuilderAvecQuestionsImportees(questions, titreDevoir) {
+  // ─── Vider le builder existant ───
+  const container = document.getElementById('listeQuestionsBuilder');
+  if (container) container.innerHTML = '';
+  compteurQuestionsBuilder = 0;
+
+  // ─── Remplir le titre du devoir (si vide) ───
+  const inputTitre = document.getElementById('devoirTitre');
+  if (inputTitre && !inputTitre.value.trim() && titreDevoir) {
+    inputTitre.value = titreDevoir;
+  }
+
+  // ─── Ajouter chaque question ───
+  questions.forEach(function(q) {
+    ajouterQuestionBuilderAvecImport(q);
+  });
+
+  // ─── Mise à jour du badge ───
+  mettreAJourBadgeQuestions();
+}
+
+
+/**
+ * Ajoute une question pré-remplie (version import)
+ * (similaire à ajouterQuestionBuilderAvecDonnees, mais pour l'import)
+ */
+function ajouterQuestionBuilderAvecImport(q) {
+  compteurQuestionsBuilder++;
+  const qid = 'qb-' + compteurQuestionsBuilder;
+
+  const div = document.createElement('div');
+  div.className = 'card mb-3 p-3 bg-light';
+  div.id = qid;
+  div.setAttribute('data-question-id', '');
+
+  // ─── Construction du HTML ───
+  div.innerHTML =
+    '<div class="d-flex justify-content-between mb-2">' +
+      '<strong>Question ' + compteurQuestionsBuilder + '</strong>' +
+      '<button type="button" class="btn btn-sm btn-outline-danger" ' +
+        'onclick="document.getElementById(\'' + qid + '\').remove(); mettreAJourBadgeQuestions();">' +
+        '<i class="fa-solid fa-trash"></i>' +
+      '</button>' +
+    '</div>' +
+    '<div class="mb-2">' +
+      '<textarea class="form-control qb-enonce" rows="2" placeholder="Énoncé" required>' +
+        escapeHtmlImport(q.enonce || '') +
+      '</textarea>' +
+    '</div>' +
+    '<div class="row g-2 mb-2">' +
+      '<div class="col-md-6">' +
+        '<select class="form-select qb-type" onchange="changerTypeQuestion(\'' + qid + '\')">' +
+          '<option value="qcm_unique"' + (q.typeReponse === 'qcm_unique' ? ' selected' : '') + '>QCM (choix unique)</option>' +
+          '<option value="qcm_multiple"' + (q.typeReponse === 'qcm_multiple' ? ' selected' : '') + '>QCM (choix multiple)</option>' +
+          '<option value="vrai_faux"' + (q.typeReponse === 'vrai_faux' ? ' selected' : '') + '>Vrai / Faux</option>' +
+          '<option value="reponse_libre"' + (q.typeReponse === 'reponse_libre' ? ' selected' : '') + '>Réponse libre</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-md-3">' +
+        '<input type="number" class="form-control qb-bareme" placeholder="Barème" min="0" step="0.5" value="' + (q.bareme || 1) + '" required>' +
+      '</div>' +
+      '<div class="col-md-3 d-flex align-items-center">' +
+        '<div class="form-check">' +
+          '<input class="form-check-input qb-obligatoire" type="checkbox"' + (q.obligatoire !== false ? ' checked' : '') + '>' +
+          '<label class="form-check-label">Obligatoire</label>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="qb-options-container mb-2"></div>' +
+    '<div class="mb-2">' +
+      '<label class="form-label small">Média support (photo/vidéo, optionnel)</label>' +
+      '<input type="file" class="form-control qb-media" accept="image/*,video/*" ' +
+        'onchange="previsualiserMedia(\'' + qid + '\', this)">' +
+      '<div class="qb-media-preview small text-muted mt-1"></div>' +
+    '</div>';
+
+  document.getElementById('listeQuestionsBuilder').appendChild(div);
+
+  // ─── Remplir les options ───
+  if (q.typeReponse === 'qcm_unique' || q.typeReponse === 'qcm_multiple') {
+    chargerOptionsQCM(qid, q.options || [], q.bonneReponse || []);
+  } else if (q.typeReponse === 'vrai_faux') {
+    chargerOptionsVraiFaux(qid, q.bonneReponse);
+  } else {
+    changerTypeQuestion(qid);
+  }
+}
+window.ajouterQuestionBuilderAvecImport = ajouterQuestionBuilderAvecImport;
+
+
+/**
+ * Échappe le HTML (pour éviter l'injection dans le textarea)
+ */
+function escapeHtmlImport(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+
+/**
+ * Met à jour le badge du nombre de questions
+ */
+function mettreAJourBadgeQuestions() {
+  const badge = document.getElementById('nbQuestionsBadge');
+  const container = document.getElementById('listeQuestionsBuilder');
+  if (!badge || !container) return;
+
+  const nb = container.querySelectorAll(':scope > div').length;
+  badge.textContent = nb + ' question' + (nb > 1 ? 's' : '');
+}
+window.mettreAJourBadgeQuestions = mettreAJourBadgeQuestions;
+
+
+  
 
 </script>
 
