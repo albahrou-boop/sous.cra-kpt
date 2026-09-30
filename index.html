@@ -23949,6 +23949,282 @@ function mettreAJourBadgeQuestions() {
 }
 window.mettreAJourBadgeQuestions = mettreAJourBadgeQuestions;
 
+  // ═══════════════════════════════════════════════════════════════════════
+// 🔒 GESTION DE LA SESSION ET DÉCONNEXION AUTOMATIQUE
+// Durée d'inactivité : 6 heures (personnalisable)
+// ═══════════════════════════════════════════════════════════════════════
+
+const SESSION_DUREE_MS = 6 * 60 * 60 * 1000;         // 6 heures en millisecondes
+const SESSION_AVERTISSEMENT_MS = 5 * 60 * 1000;       // Avertissement 5 min avant
+const SESSION_CLE_ACTIVITE = 'scra_last_activity';
+const SESSION_CLE_EMAIL = 'user_email_souscra';
+const SESSION_CHECK_INTERVAL_MS = 60 * 1000;          // Vérification toutes les 60 secondes
+
+let sessionCheckInterval = null;
+let avertissementAffiche = false;
+
+/**
+ * Enregistre l'activité de l'utilisateur (timestamp actuel)
+ */
+function enregistrerActivite() {
+  try {
+    localStorage.setItem(SESSION_CLE_ACTIVITE, String(Date.now()));
+    // Si l'utilisateur revient, on réarme l'avertissement
+    avertissementAffiche = false;
+  } catch (e) {
+    console.warn('[Session] Impossible d\'enregistrer l\'activité :', e);
+  }
+}
+window.enregistrerActivite = enregistrerActivite;
+
+/**
+ * Récupère le timestamp de la dernière activité
+ */
+function getDerniereActivite() {
+  try {
+    const val = localStorage.getItem(SESSION_CLE_ACTIVITE);
+    return val ? parseInt(val, 10) : 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+/**
+ * Vérifie si la session a expiré (inactivité > SESSION_DUREE_MS)
+ */
+function sessionEstExpiree() {
+  const derniere = getDerniereActivite();
+  if (!derniere) return false; // Pas de trace = pas de session active à expirer
+  return (Date.now() - derniere) > SESSION_DUREE_MS;
+}
+
+/**
+ * Déconnecte l'utilisateur et affiche le modal de connexion
+ */
+function deconnecterPourInactivite() {
+  console.log('[Session] 🔒 Déconnexion pour inactivité');
+
+  // Nettoyage complet
+  try {
+    sessionStorage.removeItem(SESSION_CLE_EMAIL);
+    localStorage.removeItem(SESSION_CLE_EMAIL);
+    localStorage.removeItem(SESSION_CLE_ACTIVITE);
+  } catch (e) {
+    console.warn(e);
+  }
+
+  // Réinitialisation des variables globales
+  window.currentUser = '';
+  window.userEmail = '';
+  window.userEmailEnCours = '';
+  if (typeof userPermissions !== 'undefined') {
+    window.userPermissions = typeof getEmptyPermissionsClient === 'function'
+      ? getEmptyPermissionsClient()
+      : {};
+  }
+
+  // Arrêt du timer
+  if (sessionCheckInterval) {
+    clearInterval(sessionCheckInterval);
+    sessionCheckInterval = null;
+  }
+
+  // Masquer l'interface
+  const header = document.getElementById('appHeader');
+  if (header) {
+    header.classList.add('d-none');
+    header.style.setProperty('display', 'none', 'important');
+  }
+
+  // Masquer toutes les vues
+  document.querySelectorAll('.app-view').forEach(function(view) {
+    view.classList.add('d-none');
+  });
+
+  // Afficher le modal de connexion
+  if (typeof afficherModalConnexion === 'function') {
+    afficherModalConnexion(true);
+  }
+
+  // Afficher une alerte élégante
+  if (typeof afficherToastTemporaire === 'function') {
+    afficherToastTemporaire(
+      "🔒 Session expirée après 6h d'inactivité. Veuillez vous reconnecter.",
+      "warning"
+    );
+  } else {
+    alert("🔒 Session expirée après 6h d'inactivité. Veuillez vous reconnecter.");
+  }
+
+  // Pré-remplir l'email dans le formulaire si on l'a
+  const inputEmail = document.getElementById('inputLoginEmail');
+  if (inputEmail && derniereEmailConnue) {
+    inputEmail.value = derniereEmailConnue;
+  }
+}
+
+/**
+ * Vérifie l'état de la session (appelé périodiquement)
+ */
+function verifierSession() {
+  const email = sessionStorage.getItem(SESSION_CLE_EMAIL)
+             || localStorage.getItem(SESSION_CLE_EMAIL)
+             || '';
+
+  // Pas de session active → rien à vérifier
+  if (!email) return;
+
+  const derniere = getDerniereActivite();
+  if (!derniere) {
+    // Session active mais pas de timestamp → on en initialise un
+    enregistrerActivite();
+    return;
+  }
+
+  const ecoule = Date.now() - derniere;
+
+  // ─── Session expirée ───
+  if (ecoule > SESSION_DUREE_MS) {
+    deconnecterPourInactivite();
+    return;
+  }
+
+  // ─── Avertissement 5 minutes avant ───
+  const tempsRestant = SESSION_DUREE_MS - ecoule;
+  if (tempsRestant <= SESSION_AVERTISSEMENT_MS && !avertissementAffiche) {
+    avertissementAffiche = true;
+    const minutes = Math.ceil(tempsRestant / 60000);
+    if (typeof afficherToastTemporaire === 'function') {
+      afficherToastTemporaire(
+        "⚠️ Votre session expirera dans " + minutes + " minute(s) d'inactivité. Cliquez pour rester connecté.",
+        "warning"
+      );
+    }
+  }
+}
+
+/**
+ * Démarre le système de surveillance de session
+ */
+function demarrerSurveillanceSession() {
+  // Arrêter un éventuel timer existant
+  if (sessionCheckInterval) {
+    clearInterval(sessionCheckInterval);
+  }
+
+  // Enregistrer l'activité initiale
+  enregistrerActivite();
+
+  // Vérifier immédiatement si la session est déjà expirée
+  if (sessionEstExpiree()) {
+    console.log('[Session] Session déjà expirée au démarrage');
+    deconnecterPourInactivite();
+    return;
+  }
+
+  // Lancer la vérification périodique
+  sessionCheckInterval = setInterval(verifierSession, SESSION_CHECK_INTERVAL_MS);
+
+  console.log('[Session] ✅ Surveillance démarrée (durée : 6h, vérification : 60s)');
+}
+
+/**
+ * ⚡ ÉVÉNEMENTS D'ACTIVITÉ UTILISATEUR
+ * Tout clic, frappe, scroll ou changement de page réinitialise le compteur.
+ */
+function attacherEvenementsActivite() {
+  const evts = ['click', 'keydown', 'mousemove', 'scroll', 'touchstart', 'input', 'change'];
+  const throttle = function(fn, delai) {
+    let last = 0;
+    return function() {
+      const now = Date.now();
+      if (now - last > delai) {
+        last = now;
+        fn.apply(this, arguments);
+      }
+    };
+  };
+  // On limite à 1 enregistrement toutes les 30 secondes pour ne pas saturer
+  const activiteThrottled = throttle(enregistrerActivite, 30000);
+
+  evts.forEach(function(evt) {
+    document.addEventListener(evt, activiteThrottled, { passive: true });
+  });
+
+  console.log('[Session] ✅ Événements d\'activité attachés');
+}
+
+/**
+ * 🚀 INITIALISATION AU CHARGEMENT DE LA PAGE
+ * Vérifie la session et démarre la surveillance si l'utilisateur est connecté.
+ */
+function initialiserSession() {
+  const email = sessionStorage.getItem(SESSION_CLE_EMAIL)
+             || localStorage.getItem(SESSION_CLE_EMAIL)
+             || '';
+
+  // ─── CAS 1 : Aucun utilisateur connecté ───
+  if (!email) {
+    console.log('[Session] Aucun utilisateur connecté');
+    // Nettoyer toute trace résiduelle
+    try { localStorage.removeItem(SESSION_CLE_ACTIVITE); } catch (e) {}
+    return;
+  }
+
+  // ─── CAS 2 : Session déjà expirée → déconnexion ───
+  if (sessionEstExpiree()) {
+    console.log('[Session] ⏰ Session expirée, déconnexion automatique');
+    deconnecterPourInactivite();
+    return;
+  }
+
+  // ─── CAS 3 : Session valide → démarrer la surveillance ───
+  console.log('[Session] ✅ Session valide pour ' + email);
+  demarrerSurveillanceSession();
+}
+
+// Exposer globalement pour un usage manuel si besoin
+window.deconnecterPourInactivite = deconnecterPourInactivite;
+window.verifierSession = verifierSession;
+
+// ═══════════════════════════════════════════════════════════════════════
+// HOOKS : appel de initialiserSession() au bon moment
+// ═══════════════════════════════════════════════════════════════════════
+
+// Hook 1 : au chargement initial
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(initialiserSession, 500);
+  attacherEvenementsActivite();
+});
+
+// Hook 2 : après une connexion réussie (à appeler depuis soumettreConnexion)
+// On surcharge la fonction afficherEmailDansBanniere pour démarrer la surveillance
+const _ancienAfficherEmailDansBanniere = window.afficherEmailDansBanniere;
+window.afficherEmailDansBanniere = function(email) {
+  if (typeof _ancienAfficherEmailDansBanniere === 'function') {
+    _ancienAfficherEmailDansBanniere(email);
+  }
+  if (email) {
+    enregistrerActivite();
+    demarrerSurveillanceSession();
+  }
+};
+
+// Hook 3 : arrêt de la surveillance à la déconnexion manuelle
+const _ancienChangerUtilisateur = window.changerUtilisateur;
+window.changerUtilisateur = function() {
+  if (sessionCheckInterval) {
+    clearInterval(sessionCheckInterval);
+    sessionCheckInterval = null;
+  }
+  try {
+    localStorage.removeItem(SESSION_CLE_ACTIVITE);
+  } catch (e) {}
+  if (typeof _ancienChangerUtilisateur === 'function') {
+    _ancienChangerUtilisateur();
+  }
+};
+
 
   
 
