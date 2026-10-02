@@ -9641,7 +9641,6 @@ h3.h5.fw-bold.text-primary i {
 </head>
 <body>
 <!-- Écran de chargement -->
-<!-- Écran de chargement -->
 <div id="loadingScreen">
   <img src="https://lh3.googleusercontent.com/d/1akPyG5I5kotAt-H_C_Fl79hv4gcCZsjK" 
        alt="Logo" 
@@ -10322,11 +10321,15 @@ h3.h5.fw-bold.text-primary i {
               <i class="fa-solid fa-flag-checkered"></i>Tour
             </label>
             <select id="d_etape" class="form-select" required>
-              <option value="" disabled selected>-- Sélectionner --</option>
-              <option value="Normal">Normal</option>
-              <option value="Demi-Finale">Demi-Finale</option>
-              <option value="Finale">Finale</option>
-            </select>
+  <option value="" disabled selected>-- Sélectionner --</option>
+  <option value="Normal">Normal</option>
+  <option value="Demi-Finale">Demi-Finale</option>
+  <option value="Finale">Finale</option>
+  <option value="Poules Phases">Poules Phases</option>
+  <option value="Demi Phases">Demi Phases</option>
+  <option value="Finale Phases">Finale Phases</option>
+  <option value="Régional">Régional</option>
+</select>
           </div>
         </div>
       </div>
@@ -11042,31 +11045,36 @@ h3.h5.fw-bold.text-primary i {
             <h6><i class="fa-solid fa-map-location-dot me-2"></i>Détail de la zone</h6>
           </div>
           <div class="table-responsive">
-            <table class="analyse-table">
-              <thead class="text-center">
-                <tr>
-                  <th rowspan="2" class="align-middle">Zone</th>
-                  <th colspan="2">Normal</th>
-                  <th colspan="2">Demi-Finale</th>
-                  <th colspan="2">Finale</th>
-                </tr>
-                <tr>
-                  <th>Matchs</th>
-                  <th>Montant</th>
-                  <th>Matchs</th>
-                  <th>Montant</th>
-                  <th>Matchs</th>
-                  <th>Montant</th>
-                </tr>
-              </thead>
-              <tbody id="bodyCheckOffZone">
-                <tr><td colspan="7" class="text-center text-muted py-4">
-                  <i class="fa-solid fa-hand-pointer me-2"></i>Veuillez sélectionner une zone.
-                </td></tr>
-              </tbody>
-              <tfoot id="footCheckOffZone"></tfoot>
-            </table>
-          </div>
+  <table class="analyse-table">
+    <thead class="text-center">
+      <tr>
+        <th rowspan="2" class="align-middle">Zone</th>
+        <th colspan="2">Normal</th>
+        <th colspan="2">Demi-F.</th>
+        <th colspan="2">Finale</th>
+        <th colspan="2">Poules</th>
+        <th colspan="2">Demi Ph.</th>
+        <th colspan="2">Fin. Ph.</th>
+        <th colspan="2">Régional</th>
+      </tr>
+      <tr>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+      </tr>
+    </thead>
+    <tbody id="bodyCheckOffZone">
+      <tr><td colspan="15" class="text-center text-muted py-4">
+        <i class="fa-solid fa-hand-pointer me-2"></i>Veuillez sélectionner une zone.
+      </td></tr>
+    </tbody>
+    <tfoot id="footCheckOffZone"></tfoot>
+  </table>
+</div>
         </div>
       </div>
 
@@ -11093,51 +11101,57 @@ h3.h5.fw-bold.text-primary i {
             <h6><i class="fa-solid fa-globe me-2"></i>Vue globale toutes zones</h6>
           </div>
           <div class="table-responsive">
-            <table class="analyse-table">
-              <thead class="text-center">
-                <tr>
-                  <th rowspan="2" class="align-middle">Zone</th>
-                  <th colspan="2">Normal</th>
-                  <th colspan="2">Demi-Finale</th>
-                  <th colspan="2">Finale</th>
-                </tr>
-                <tr>
-                  <th>Matchs</th>
-                  <th>Montant</th>
-                  <th>Matchs</th>
-                  <th>Montant</th>
-                  <th>Matchs</th>
-                  <th>Montant</th>
-                </tr>
-              </thead>
-              <tbody id="bodyCheckOffToutes"></tbody>
-            </table>
-          </div>
+  <table class="analyse-table">
+    <thead class="text-center">
+      <tr>
+        <th rowspan="2" class="align-middle">Zone</th>
+        <th colspan="2">Normal</th>
+        <th colspan="2">Demi-F.</th>
+        <th colspan="2">Finale</th>
+        <th colspan="2">Poules</th>
+        <th colspan="2">Demi Ph.</th>
+        <th colspan="2">Fin. Ph.</th>
+        <th colspan="2">Régional</th>
+      </tr>
+      <tr>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+        <th>M.</th><th>Montant</th>
+      </tr>
+    </thead>
+    <tbody id="bodyCheckOffToutes"></tbody>
+  </table>
+</div>
         </div>
       </div>
 
       <!-- Sous-section : Paiements -->
       <div id="tabPaiementsCheck" class="analyse-subsection" style="display: none;">
-        <div class="analyse-table-wrapper">
-          <div class="analyse-table-header">
-            <h6><i class="fa-solid fa-hand-holding-dollar me-2"></i>Situation des paiements</h6>
-          </div>
-          <div class="table-responsive">
-            <table class="analyse-table">
-              <thead>
-                <tr>
-                  <th>Membre</th>
-                  <th>Normal</th>
-                  <th>Demi-Finale</th>
-                  <th>Finale</th>
-                  <th>Montant Reçu</th>
-                </tr>
-              </thead>
-              <tbody id="bodyCheckOffPaiements"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+  <div class="analyse-table-wrapper">
+    <div class="analyse-table-header">
+      <h6><i class="fa-solid fa-hand-holding-dollar me-2"></i>Situation des paiements</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="analyse-table">
+        <thead>
+          <tr>
+            <th>Membre</th>
+            <th>Normal</th>
+            <th>Demi-Finale</th>
+            <th>Finale</th>
+            <th>Spéciaux <i class="fa-solid fa-circle-info" title="Poules Phases, Demi Phases, Finale Phases, Régional"></i></th>
+            <th>Montant Reçu</th>
+          </tr>
+        </thead>
+        <tbody id="bodyCheckOffPaiements"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
     </div>
 
   </div>
@@ -11661,18 +11675,23 @@ h3.h5.fw-bold.text-primary i {
   </div>
 </div>
 
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <h6 class="fw-bold mb-0">
-            <i class="fa-solid fa-list-ol text-primary me-1"></i>Questions
-          </h6>
-          <span class="badge bg-light text-dark border" id="nbQuestionsBadge">0 question</span>
-        </div>
+        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+  <h6 class="fw-bold mb-0">
+    <i class="fa-solid fa-list-ol text-primary me-1"></i>Questions
+  </h6>
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="ouvrirImportQuestionnaire()">
+      <i class="fa-solid fa-file-import me-1"></i>Importer un questionnaire
+    </button>
+    <span class="badge bg-light text-dark border" id="nbQuestionsBadge">0 question</span>
+  </div>
+</div>
 
-        <div id="listeQuestionsBuilder"></div>
+<div id="listeQuestionsBuilder"></div>
 
-        <button type="button" class="btn btn-outline-primary btn-sm w-100 mt-2" onclick="ajouterQuestionBuilder()">
-          <i class="fa-solid fa-plus me-1"></i>Ajouter une question
-        </button>
+<button type="button" class="btn btn-outline-primary btn-sm w-100 mt-2" onclick="ajouterQuestionBuilder()">
+  <i class="fa-solid fa-plus me-1"></i>Ajouter une question manuellement
+</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
@@ -11680,6 +11699,75 @@ h3.h5.fw-bold.text-primary i {
         </button>
         <button type="button" class="btn btn-primary" onclick="soumettreCreationDevoir()">
           <i class="fa-solid fa-paper-plane me-1"></i>Publier le devoir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- MODALE : IMPORT INTELLIGENT DE QUESTIONNAIRE -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="modalImportQuestionnaire" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #fd7e14, #f0a800); color: white;">
+        <h5 class="modal-title">
+          <i class="fa-solid fa-file-import me-2"></i>Importer un questionnaire
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+
+        <!-- Instructions -->
+        <div class="alert alert-info small mb-3">
+          <div class="fw-bold mb-2"><i class="fa-solid fa-info-circle me-1"></i>Comment procéder :</div>
+          <ol class="mb-0 ps-3">
+            <li>Copiez le texte de votre questionnaire (Word, Google Docs ou PDF)</li>
+            <li>Collez-le dans la zone ci-dessous</li>
+            <li>Cliquez sur <strong>Analyser et importer</strong></li>
+            <li>L'application détectera automatiquement les questions et les options (A, B, C, D)</li>
+          </ol>
+        </div>
+
+        <!-- Format attendu -->
+        <div class="alert alert-warning small mb-3">
+          <div class="fw-bold mb-2"><i class="fa-solid fa-triangle-exclamation me-1"></i>Format attendu :</div>
+          <pre style="background: white; padding: 8px; border-radius: 6px; margin: 0; font-size: 0.72rem; line-height: 1.4; white-space: pre-wrap;">TITRE DU DEVOIR
+
+QUESTION 1 : Énoncé de la question ?
+A- Première option
+B- Deuxième option
+C- Troisième option
+D- Quatrième option
+
+QUESTION 2 : ...</pre>
+          <div class="mt-2 small">
+            ✅ <strong>Formats acceptés</strong> : <code>QUESTION 1 :</code> <code>Q1 :</code> <code>Q1.</code> <code>Question 1 :</code><br>
+            ✅ <strong>Options acceptées</strong> : <code>A-</code> <code>A.</code> <code>A)</code> <code>A -</code>
+          </div>
+        </div>
+
+        <!-- Zone de collage -->
+        <label class="form-label fw-bold small">
+          <i class="fa-solid fa-paste me-1"></i>Collez votre questionnaire ici :
+        </label>
+        <textarea id="importQuestionnaireText"
+                  class="form-control"
+                  rows="14"
+                  placeholder="Collez ici le texte complet de votre questionnaire..."
+                  style="font-family: monospace; font-size: 0.82rem;"></textarea>
+
+        <!-- Résultat d'analyse -->
+        <div id="importQuestionnaireResultat" class="mt-3"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fa-solid fa-times me-1"></i>Annuler
+        </button>
+        <button type="button" class="btn btn-warning fw-bold" id="btnAnalyserQuestionnaire" onclick="analyserQuestionnaireColle()">
+          <i class="fa-solid fa-magic me-1"></i>Analyser et importer
         </button>
       </div>
     </div>
@@ -11887,7 +11975,7 @@ h3.h5.fw-bold.text-primary i {
       </div>
     </div>
   </div>
-</div> <!-- Fin de #view-infos-tests-echanges -->
+</div>
 
 
 
@@ -12078,12 +12166,14 @@ const donneesLoisEtMods = {
 
 // Documents des Topics
 const topicsDocs = {
-  "topic-hors-jeu": "1iZfSBhfWhyXALfPkaTmEJi1zobMbmHYY",
-  "topic-incidents": "16pQzuykTNpKOYy0Vt-0V241Upj88GzaT",
-  "topic-main": "1oZrMEk31ADKYF4CucpBhlDlqICtAXwB_",
-  "topic-duels": "1oytyfvM2c0ORFcOJc78lPNMu6pe2wNET",
-  "topic-fautes-tactiques": "171SwGzWHefRl5SSMZoaMICdqlGmgkAhs",
-  "topic-positionnement": ""
+  "topic-main": "1pUWQKgy-fHblSQnTcxx1tDK8wJVFyiR-",
+  "topic-duels": "1snLU0luB2GDAIwb0nlX7fgwInY0Nbndn",
+  "topic-fautes-tactiques": "1KQlReljVc0Y2-81QwICQYiCSxPvM3h0V",
+  "topic-hors-jeu": "1ophWYEPmLBTeTW3Qp7KnEOc82DWE_rvM",
+  "topic-incidents": "1bcCbwl5h5maP_z7uP0MEniTX9093KNC3",
+  "topic-positionnement": "1Vr5WI9POkvxFDAEgh0XGFoSJhY9KVPy9",
+  "Arbitre-Moderne": "1EVHs9H5fE0mPbBQNtn-P60mDj01C3eqX",
+  "Game-Management": "15XVnK4xCqHK9-36sVysmAND9dzfuZZft"
 };
 
 // URL Web App (constante globale)
@@ -15425,25 +15515,80 @@ window.switchCheckAnalyseTab = switchCheckAnalyseTab;
  * @param {string} zoneCible - Nom de la zone ou 'TOUTES'
  * @param {string} situation - 'Tout', 'Payé', ou 'Recouvrer'
  */
+/**
+ * Calcul de la situation pour une zone ou pour l'ensemble des zones
+ * Prend en compte les barèmes spécifiques et ignore les matchs futurs.
+ * 
+ * 🆕 NOUVEAUX TOURS : Poules Phases, Demi Phases, Finale Phases, Régional
+ */
 function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, situation) {
-  const toursConfig = ['Normal', 'Demi-Finale', 'Finale'];
-  let statsParTour = {
-    'Normal': { matchs: 0, montant: 0, anomalie: false },
-    'Demi-Finale': { matchs: 0, montant: 0, anomalie: false },
-    'Finale': { matchs: 0, montant: 0, anomalie: false }
-  };
+  // ✅ Liste des tours avec leurs configurations
+  const toursConfig = [
+    { label: 'Normal',           key: 'normal' },
+    { label: 'Demi-Finale',      key: 'demi' },
+    { label: 'Finale',           key: 'finale' },
+    { label: 'Poules Phases',    key: 'poules' },
+    { label: 'Demi Phases',      key: 'demi_phases' },
+    { label: 'Finale Phases',    key: 'finale_phases' },
+    { label: 'Régional',         key: 'regional' }
+  ];
+
+  let statsParTour = {};
+  toursConfig.forEach(function(t) {
+    statsParTour[t.label] = { matchs: 0, montant: 0, anomalie: false };
+  });
 
   const isToutes = String(zoneCible || '').toLowerCase() === 'toutes';
   const maintenant = new Date();
 
-  function getTarifUnitaire(zoneNom, tourNom) {
+  // ═══════════════════════════════════════════════════════
+  // 🎯 TARIFS CHECK-OFF PAR ARBITRE (montant versé à la Sous-CRA)
+  // ═══════════════════════════════════════════════════════
+  function getTarifUnitaireCheckOff(zoneNom, tourNom) {
     const z = (zoneNom || '').toLowerCase();
-    const t = (tourNom || '').toLowerCase();
+    const t = (tourNom || '').toLowerCase().trim();
+
+    // ─── Tours spéciaux ───
+    if (t.includes('poule'))  return 875;      // Poules Phases
+    if (t.includes('demi') && t.includes('phase')) return 875;  // Demi Phases
+    if (t.includes('final') && t.includes('phase')) return 1125; // Finale Phases
+    if (t.includes('regional') || t.includes('régional')) return 500; // Régional
+
+    // ─── Tours classiques ───
+    if (t.includes('demi')) return 3000;    // Demi-Finale
+    if (t.includes('final')) return 4000;   // Finale
+    
+    // ─── Tour Normal ───
     const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
-    if (t.includes('demi')) return 3000;
-    if (t.includes('final')) return 4000;
-    if (t.includes('normal')) return estZoneSpeciale ? 1600 : 1900;
-    return 1900;
+    return estZoneSpeciale ? 1600 : 1900;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // 🎯 TARIFS HONORAIRES ARBITRES (montant reçu par l'arbitre)
+  // ═══════════════════════════════════════════════════════
+  function getHonorairesArbitres(tourNom) {
+    const t = (tourNom || '').toLowerCase().trim();
+
+    // ─── Tours spéciaux ───
+    if (t.includes('poule') || (t.includes('demi') && t.includes('phase')) || (t.includes('final') && t.includes('phase'))) {
+      return { standard: 3500, quatrieme: 2000 };
+    }
+
+    // ─── Régional : pas de calcul d'honoraires ───
+    if (t.includes('regional') || t.includes('régional')) {
+      return null;
+    }
+
+    // ─── Tours classiques ───
+    if (t.includes('demi')) {
+      return { standard: 2700, quatrieme: 900 };
+    }
+    if (t.includes('final')) {
+      return { standard: 3600, quatrieme: 1200 };
+    }
+
+    // ─── Tour Normal ───
+    return { standard: null, quatrieme: null };
   }
 
   function estMatchPasseOuAtteint(dateMatchVal, heureMatchVal) {
@@ -15480,27 +15625,49 @@ function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, s
 
   // 3. Calcul par tour
   toursConfig.forEach(function(tour) {
-    const tourKeyLower = tour.toLowerCase();
+    const tourLabel = tour.label;
+    const tourLower = tourLabel.toLowerCase();
 
+    // ─── Filtrer les désignations de ce tour ───
     const desigsTour = desigsFiltrees.filter(function(d) {
-      const e = String(d.etape || '').toLowerCase();
-      if (tourKeyLower.includes('demi')) return e.includes('demi');
-      if (tourKeyLower.includes('final')) return e.includes('final');
-      return !e.includes('demi') && !e.includes('final');
+      const e = String(d.etape || '').toLowerCase().trim();
+      
+      if (tourLower.includes('poule')) return e.includes('poule');
+      if (tourLower === 'demi-finale') return e.includes('demi') && !e.includes('phase');
+      if (tourLower === 'finale') return e.includes('final') && !e.includes('phase');
+      if (tourLower.includes('demi phase') || (tourLower.includes('demi') && tourLower.includes('phase'))) 
+        return e.includes('demi') && e.includes('phase');
+      if (tourLower.includes('finale phase') || (tourLower.includes('final') && tourLower.includes('phase'))) 
+        return e.includes('final') && e.includes('phase');
+      if (tourLower.includes('regional') || tourLower.includes('régional')) 
+        return e.includes('regional') || e.includes('régional');
+      
+      // Normal : tout ce qui n'est pas les autres
+      return !e.includes('demi') && !e.includes('final') && !e.includes('poule') 
+             && !e.includes('regional') && !e.includes('régional');
     });
 
+    // ─── Filtrer les check-offs de ce tour ───
     const checksTour = checksFiltres.filter(function(c) {
-      const e = String(c.etape || 'Normal').toLowerCase();
-      if (tourKeyLower.includes('demi')) return e.includes('demi');
-      if (tourKeyLower.includes('final')) return e.includes('final');
-      return !e.includes('demi') && !e.includes('final');
+      const e = String(c.etape || 'Normal').toLowerCase().trim();
+      
+      if (tourLower.includes('poule')) return e.includes('poule');
+      if (tourLower === 'demi-finale') return e.includes('demi') && !e.includes('phase');
+      if (tourLower === 'finale') return e.includes('final') && !e.includes('phase');
+      if (tourLower.includes('demi phase')) return e.includes('demi') && e.includes('phase');
+      if (tourLower.includes('finale phase')) return e.includes('final') && e.includes('phase');
+      if (tourLower.includes('regional') || tourLower.includes('régional')) 
+        return e.includes('regional') || e.includes('régional');
+      
+      return !e.includes('demi') && !e.includes('final') && !e.includes('poule') 
+             && !e.includes('regional') && !e.includes('régional');
     });
 
     // --- A. TOUT : désignations ---
     const totalMatchsDesignations = desigsTour.length;
     let totalMontantTheorique = 0;
     desigsTour.forEach(function(d) {
-      totalMontantTheorique += getTarifUnitaire(d.zone || zoneCible, tour);
+      totalMontantTheorique += getTarifUnitaireCheckOff(d.zone || zoneCible, tourLabel);
     });
 
     // --- B. PAYÉ : check-offs CONFIRME/VALIDE ---
@@ -15531,34 +15698,31 @@ function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, s
     const matchsSansCheck = Math.max(0, totalMatchsDesignations - totalMatchsCheckOffs);
 
     let matchsRecouvrer = matchsAttente + matchsSansCheck;
-    let montantRecouvrer = montantAttente + (matchsSansCheck * getTarifUnitaire(zoneCible, tour));
+    let montantRecouvrer = montantAttente + (matchsSansCheck * getTarifUnitaireCheckOff(zoneCible, tourLabel));
 
     // --- D. DÉTECTION D'ANOMALIE ---
-    // Une anomalie existe si le nombre de matchs PAYÉS dépasse le total des désignations
     const anomalie = (matchsPayes > totalMatchsDesignations);
 
     if (anomalie) {
       console.warn('[CheckOff Anomalie] Zone : ' + zoneCible +
-        ' | Tour : ' + tour +
+        ' | Tour : ' + tourLabel +
         ' | Payés : ' + matchsPayes +
-        ' | Total désignations : ' + totalMatchsDesignations +
-        ' | Écart : ' + (matchsPayes - totalMatchsDesignations));
+        ' | Total désignations : ' + totalMatchsDesignations);
     }
 
     // --- Affectation finale ---
     if (situation === 'Tout') {
-      statsParTour[tour].matchs = totalMatchsDesignations;
-      statsParTour[tour].montant = totalMontantTheorique;
+      statsParTour[tourLabel].matchs = totalMatchsDesignations;
+      statsParTour[tourLabel].montant = totalMontantTheorique;
     } else if (situation === 'Payé') {
-      statsParTour[tour].matchs = matchsPayes;
-      statsParTour[tour].montant = montantPaye;
+      statsParTour[tourLabel].matchs = matchsPayes;
+      statsParTour[tourLabel].montant = montantPaye;
     } else if (situation === 'Recouvrer') {
-      statsParTour[tour].matchs = matchsRecouvrer;
-      statsParTour[tour].montant = montantRecouvrer;
+      statsParTour[tourLabel].matchs = matchsRecouvrer;
+      statsParTour[tourLabel].montant = montantRecouvrer;
     }
 
-    // Marquer l'anomalie sur le tour
-    statsParTour[tour].anomalie = anomalie;
+    statsParTour[tourLabel].anomalie = anomalie;
   });
 
   return statsParTour;
@@ -15571,6 +15735,11 @@ window.calculerSituationCheckOff = calculerSituationCheckOff;
 /**
  * Charge l'affichage pour la vue TOUTES les zones avec le sélecteur de Situation
  */
+/**
+ * Charge l'affichage pour la vue TOUTES les zones avec le sélecteur de Situation
+ * 🆕 Gère désormais les 7 tours : Normal, Demi-Finale, Finale, Poules Phases,
+ *    Demi Phases, Finale Phases, Régional
+ */
 function chargerCheckOffToutes() {
   const selectSituation = document.getElementById('syn_situation_toutes');
   const body = document.getElementById('bodyCheckOffToutes');
@@ -15580,32 +15749,50 @@ function chargerCheckOffToutes() {
   const zonesList = ["Koumpentoum", "Bamba", "Kahène", "Méréto", "Malème Niani",
                      "Patoulane", "Ndame", "Kouthiaba", "Payar", "Kouthiagaydi"];
 
-  body.innerHTML = '<tr><td colspan="7"><div class="analyse-loading"><div class="spinner-border text-success"></div></div></td></tr>';
+  // ✅ Liste des tours à afficher (ordre d'affichage)
+  const TOURS_AFFICHES = [
+    'Normal',
+    'Demi-Finale',
+    'Finale',
+    'Poules Phases',
+    'Demi Phases',
+    'Finale Phases',
+    'Régional'
+  ];
+
+  body.innerHTML = '<tr><td colspan="15"><div class="analyse-loading"><div class="spinner-border text-success"></div></div></td></tr>';
 
   google.script.run
     .withSuccessHandler(function(checkOffsData) {
       google.script.run
         .withSuccessHandler(function(desigsData) {
           let html = '';
-          let totGenMatchsNormal = 0, totGenMontantNormal = 0;
-          let totGenMatchsDemi = 0, totGenMontantDemi = 0;
-          let totGenMatchsFinale = 0, totGenMontantFinale = 0;
+
+          // ✅ Totaux généraux par tour (objet dynamique)
+          const totauxGeneraux = {};
+          TOURS_AFFICHES.forEach(function(t) {
+            totauxGeneraux[t] = { matchs: 0, montant: 0 };
+          });
+
           let anomaliesZones = [];
 
           zonesList.forEach(function(z) {
             const stats = calculerSituationCheckOff(checkOffsData, desigsData, z, situationChoisie);
 
-            totGenMatchsNormal += stats['Normal'].matchs;
-            totGenMontantNormal += stats['Normal'].montant;
-            totGenMatchsDemi += stats['Demi-Finale'].matchs;
-            totGenMontantDemi += stats['Demi-Finale'].montant;
-            totGenMatchsFinale += stats['Finale'].matchs;
-            totGenMontantFinale += stats['Finale'].montant;
+            // ✅ Accumulation des totaux par tour
+            TOURS_AFFICHES.forEach(function(tour) {
+              totauxGeneraux[tour].matchs += stats[tour].matchs;
+              totauxGeneraux[tour].montant += stats[tour].montant;
+            });
 
-            // Détection anomalie pour cette zone
-            const hasAnomalie = stats['Normal'].anomalie || stats['Demi-Finale'].anomalie || stats['Finale'].anomalie;
+            // ✅ Détection anomalie (sur TOUS les tours)
+            let hasAnomalie = false;
+            TOURS_AFFICHES.forEach(function(tour) {
+              if (stats[tour].anomalie) hasAnomalie = true;
+            });
             if (hasAnomalie) anomaliesZones.push(z);
 
+            // --- Ligne zone ---
             html += '<tr>';
             html += '<td>';
             html += '<div class="analyse-cell-name">';
@@ -15620,8 +15807,8 @@ function chargerCheckOffToutes() {
             html += '</div>';
             html += '</td>';
 
-            // Colonnes par tour
-            ['Normal', 'Demi-Finale', 'Finale'].forEach(function(tour) {
+            // ✅ Colonnes par tour (7 tours)
+            TOURS_AFFICHES.forEach(function(tour) {
               const isAnomalie = stats[tour].anomalie;
               html += '<td class="text-center"><span class="fw-bold ' + (isAnomalie ? 'text-danger' : '') + '">' + stats[tour].matchs + '</span></td>';
               html += '<td class="text-end"><span class="fw-bold ' + (isAnomalie ? 'text-danger' : 'text-success') + '">' + stats[tour].montant.toLocaleString('fr-FR') + ' FCFA</span></td>';
@@ -15631,12 +15818,19 @@ function chargerCheckOffToutes() {
           });
 
           // --- Ligne TOTAL GÉNÉRAL ---
-          const totalMatchsGlobal = totGenMatchsNormal + totGenMatchsDemi + totGenMatchsFinale;
-          const totalMontantGlobal = totGenMontantNormal + totGenMontantDemi + totGenMontantFinale;
+          let totalMatchsGlobal = 0;
+          let totalMontantGlobal = 0;
+          TOURS_AFFICHES.forEach(function(tour) {
+            totalMatchsGlobal += totauxGeneraux[tour].matchs;
+            totalMontantGlobal += totauxGeneraux[tour].montant;
+          });
+
           const hasAnomalies = anomaliesZones.length > 0;
 
           html += '<tr class="table-secondary fw-bold">';
-          html += '<td colspan="5" class="text-end">';
+          // colspan = 1 (zone) + 2×(7 tours) - 2 (pour ne compter que les colonnes avant la dernière paire) 
+          // On utilise 13 pour couvrir toutes les colonnes sauf les 2 dernières
+          html += '<td colspan="13" class="text-end">';
           html += '<strong><i class="fa-solid fa-calculator me-2"></i>TOTAL GÉNÉRAL</strong>';
           if (hasAnomalies) {
             html += ' <span class="analyse-badge danger ms-2">';
@@ -15651,7 +15845,7 @@ function chargerCheckOffToutes() {
           // Message global d'alerte
           if (hasAnomalies) {
             html += '<tr>';
-            html += '<td colspan="7" class="text-center text-danger small py-3" ';
+            html += '<td colspan="15" class="text-center text-danger small py-3" ';
             html += 'style="background: #f8d7da; border-radius: 8px;">';
             html += '<i class="fa-solid fa-circle-info me-1"></i>';
             html += '<strong>' + anomaliesZones.length + ' zone(s) présentent une anomalie :</strong> ';
@@ -15666,19 +15860,24 @@ function chargerCheckOffToutes() {
         })
         .withFailureHandler(function(err) {
           console.error('Erreur getDesignationsBrutes :', err);
-          body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+          body.innerHTML = '<tr><td colspan="15" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
         })
         .getDesignationsBrutes();
     })
     .withFailureHandler(function(err) {
       console.error('Erreur getCheckOffs :', err);
-      body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+      body.innerHTML = '<tr><td colspan="15" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
     })
     .getCheckOffs();
 }
 
 /**
  * Charge l'affichage pour la vue ZONES avec les sélecteurs Zone et Situation
+ */
+/**
+ * Charge l'affichage pour la vue ZONES avec les sélecteurs Zone et Situation
+ * 🆕 Gère désormais les 7 tours : Normal, Demi-Finale, Finale, Poules Phases,
+ *    Demi Phases, Finale Phases, Régional
  */
 function chargerCheckOffParZone() {
   const selectZone = document.getElementById('syn_zone_select');
@@ -15691,14 +15890,25 @@ function chargerCheckOffParZone() {
   const zoneChoisie = selectZone ? selectZone.value : '';
   const situationChoisie = selectSituation ? selectSituation.value : 'Tout';
 
+  // ✅ Liste des tours à afficher
+  const TOURS_AFFICHES = [
+    'Normal',
+    'Demi-Finale',
+    'Finale',
+    'Poules Phases',
+    'Demi Phases',
+    'Finale Phases',
+    'Régional'
+  ];
+
   if (!zoneChoisie) {
-    body.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">' +
+    body.innerHTML = '<tr><td colspan="15" class="text-center text-muted py-4">' +
       '<i class="fa-solid fa-hand-pointer me-2"></i>Veuillez sélectionner une zone.</td></tr>';
     if (foot) foot.innerHTML = '';
     return;
   }
 
-  body.innerHTML = '<tr><td colspan="7"><div class="analyse-loading"><div class="spinner-border text-success"></div></div></td></tr>';
+  body.innerHTML = '<tr><td colspan="15"><div class="analyse-loading"><div class="spinner-border text-success"></div></div></td></tr>';
 
   google.script.run
     .withSuccessHandler(function(checkOffsData) {
@@ -15706,17 +15916,23 @@ function chargerCheckOffParZone() {
         .withSuccessHandler(function(desigsData) {
           const stats = calculerSituationCheckOff(checkOffsData, desigsData, zoneChoisie, situationChoisie);
 
-          // Vérifier s'il y a une anomalie sur l'un des tours
-          const hasAnomalie = stats['Normal'].anomalie || stats['Demi-Finale'].anomalie || stats['Finale'].anomalie;
+          // ✅ Détection anomalie (sur TOUS les tours)
+          let hasAnomalie = false;
+          TOURS_AFFICHES.forEach(function(tour) {
+            if (stats[tour].anomalie) hasAnomalie = true;
+          });
 
-          // Calcul du total global (toutes étapes confondues)
-          const totalMatchsGlobal = stats['Normal'].matchs + stats['Demi-Finale'].matchs + stats['Finale'].matchs;
-          const totalMontantGlobal = stats['Normal'].montant + stats['Demi-Finale'].montant + stats['Finale'].montant;
+          // ✅ Calcul du total global (tous tours confondus)
+          let totalMatchsGlobal = 0;
+          let totalMontantGlobal = 0;
+          TOURS_AFFICHES.forEach(function(tour) {
+            totalMatchsGlobal += stats[tour].matchs;
+            totalMontantGlobal += stats[tour].montant;
+          });
 
           // --- Ligne zone ---
           let html = '<tr>';
 
-          // Colonne zone avec badge d'alerte si anomalie
           html += '<td>';
           html += '<div class="analyse-cell-name">';
           html += '<span class="analyse-avatar ' + (hasAnomalie ? 'orange' : 'blue') + '">';
@@ -15733,8 +15949,8 @@ function chargerCheckOffParZone() {
           html += '</div>';
           html += '</td>';
 
-          // Colonnes par tour avec alerte visuelle si anomalie sur ce tour
-          ['Normal', 'Demi-Finale', 'Finale'].forEach(function(tour) {
+          // ✅ Colonnes par tour (7 tours)
+          TOURS_AFFICHES.forEach(function(tour) {
             const m = stats[tour].matchs;
             const mt = stats[tour].montant;
             const isAnomalie = stats[tour].anomalie;
@@ -15765,7 +15981,7 @@ function chargerCheckOffParZone() {
           // --- Ligne TOTAL GÉNÉRAL ---
           if (foot) {
             let footHtml = '<tr>';
-            footHtml += '<td colspan="5" class="text-end">';
+            footHtml += '<td colspan="13" class="text-end">';
             footHtml += '<strong><i class="fa-solid fa-calculator me-2"></i>TOTAL GÉNÉRAL</strong>';
             if (hasAnomalie) {
               footHtml += ' <span class="analyse-badge danger ms-2">';
@@ -15786,7 +16002,7 @@ function chargerCheckOffParZone() {
             // Si anomalie, ajouter un message d'explication sous le tableau
             if (hasAnomalie) {
               footHtml += '<tr>';
-              footHtml += '<td colspan="7" class="text-center text-danger small py-2" ';
+              footHtml += '<td colspan="15" class="text-center text-danger small py-2" ';
               footHtml += 'style="background: #f8d7da; border-radius: 8px; margin-top: 8px;">';
               footHtml += '<i class="fa-solid fa-circle-info me-1"></i>';
               footHtml += '<strong>Anomalie détectée :</strong> Le nombre de matchs payés (check-offs validés) dépasse ';
@@ -15800,13 +16016,13 @@ function chargerCheckOffParZone() {
         })
         .withFailureHandler(function(err) {
           console.error('Erreur getDesignationsBrutes :', err);
-          body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+          body.innerHTML = '<tr><td colspan="15" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
         })
         .getDesignationsBrutes();
     })
     .withFailureHandler(function(err) {
       console.error('Erreur getCheckOffs :', err);
-      body.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
+      body.innerHTML = '<tr><td colspan="15" class="text-center text-danger p-3">❌ Erreur de chargement.</td></tr>';
     })
     .getCheckOffs();
 }
@@ -15814,27 +16030,42 @@ function chargerCheckOffParZone() {
 /**
  * Charge l'affichage pour la vue PAIEMENTS (situation individuelle des matchs par tour et honoraire net)
  */
+/**
+ * Charge l'affichage pour la vue PAIEMENTS (situation individuelle des matchs par tour et honoraire net)
+ * 🆕 Gère les 7 tours avec regroupement "Spéciaux" pour Poules/Demi Phases/Finale Phases/Régional
+ */
 function chargerCheckOffPaiements() {
   const body = document.getElementById('bodyCheckOffPaiements');
   if (!body) return;
 
-  body.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
+  body.innerHTML = '<tr><td colspan="6" class="text-center py-3"><div class="spinner-border text-primary"></div></td></tr>';
 
   google.script.run
     .withSuccessHandler(function(liste) {
       if (!liste || liste.length === 0) {
-        body.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Aucun paiement trouvé.</td></tr>';
+        body.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Aucun paiement trouvé.</td></tr>';
         return;
       }
 
       const fragment = document.createDocumentFragment();
       liste.forEach(item => {
+        // 🆕 Regroupement Poules/DemiPhases/FinalePhases/Regional dans une colonne "Spécial"
+        const totalSpecial = (item.matchsPoules || 0) 
+                           + (item.matchsDemiPhases || 0) 
+                           + (item.matchsFinalePhases || 0) 
+                           + (item.matchsRegional || 0);
+        
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${item.nomComplet || '-'}</strong></td>
-          <td class="text-center">${item.matchsNormal || item.totalMatchs || 0}</td>
+          <td class="text-center">${item.matchsNormal || 0}</td>
           <td class="text-center">${item.matchsDemi || 0}</td>
           <td class="text-center">${item.matchsFinale || 0}</td>
+          <td class="text-center">
+            <span class="badge bg-info text-dark" title="Poules: ${item.matchsPoules || 0} | Demi Phases: ${item.matchsDemiPhases || 0} | Finale Phases: ${item.matchsFinalePhases || 0} | Régional: ${item.matchsRegional || 0}">
+              ${totalSpecial}
+            </span>
+          </td>
           <td class="text-end fw-bold text-success">${Number(item.montantRecu || 0).toLocaleString('fr-FR')} FCFA</td>`;
         fragment.appendChild(tr);
       });
@@ -15844,7 +16075,7 @@ function chargerCheckOffPaiements() {
     })
     .withFailureHandler(function(err) {
       console.error("Erreur chargerCheckOffPaiements :", err);
-      body.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erreur de chargement des paiements.</td></tr>';
+      body.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Erreur de chargement des paiements.</td></tr>';
     })
     .getSynthesePaiementsMembres();
 }
@@ -23949,7 +24180,7 @@ function mettreAJourBadgeQuestions() {
 }
 window.mettreAJourBadgeQuestions = mettreAJourBadgeQuestions;
 
-  // ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
 // 🔒 GESTION DE LA SESSION ET DÉCONNEXION AUTOMATIQUE
 // Durée d'inactivité : 6 heures (personnalisable)
 // ═══════════════════════════════════════════════════════════════════════
