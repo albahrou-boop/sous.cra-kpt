@@ -11329,16 +11329,17 @@ h3.h5.fw-bold.text-primary i {
           <div class="lois-card-body">
             <!-- Grille de cartes -->
             <div class="topics-grid" id="topicsGrid">
-  <div class="topic-card color-1" data-topic-key="topic-hors-jeu" onclick="chargerTopicDepuisCarte(this, 'topic-hors-jeu')">
+
+  <div class="topic-card color-1" data-topic-key="topic-arbitre-moderne" onclick="chargerTopicDepuisCarte(this, 'topic-arbitre-moderne')">
+    <div class="topic-icon"><i class="fa-solid fa-user-shield"></i></div>
+    <p class="topic-title">Arbitre Moderne</p>
+    <p class="topic-subtitle">Profil & posture</p>
+  </div>
+
+  <div class="topic-card color-2" data-topic-key="topic-hors-jeu" onclick="chargerTopicDepuisCarte(this, 'topic-hors-jeu')">
     <div class="topic-icon"><i class="fa-solid fa-flag"></i></div>
     <p class="topic-title">Hors-Jeu</p>
     <p class="topic-subtitle">Interprétation & positions</p>
-  </div>
-
-  <div class="topic-card color-2" data-topic-key="topic-incidents" onclick="chargerTopicDepuisCarte(this, 'topic-incidents')">
-    <div class="topic-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-    <p class="topic-title">Incidents</p>
-    <p class="topic-subtitle">Gestion des conflits</p>
   </div>
 
   <div class="topic-card color-3" data-topic-key="topic-main" onclick="chargerTopicDepuisCarte(this, 'topic-main')">
@@ -11349,7 +11350,7 @@ h3.h5.fw-bold.text-primary i {
 
   <div class="topic-card color-4" data-topic-key="topic-duels" onclick="chargerTopicDepuisCarte(this, 'topic-duels')">
     <div class="topic-icon"><i class="fa-solid fa-people-arrows"></i></div>
-    <p class="topic-title">Duels</p>
+    <p class="topic-title">Duels & Contacts</p>
     <p class="topic-subtitle">Challenge & contacts</p>
   </div>
 
@@ -11359,11 +11360,24 @@ h3.h5.fw-bold.text-primary i {
     <p class="topic-subtitle">Anticipation & gestion</p>
   </div>
 
-  <div class="topic-card color-6" data-topic-key="topic-positionnement" onclick="chargerTopicDepuisCarte(this, 'topic-positionnement')">
+  <div class="topic-card color-6" data-topic-key="topic-game-management" onclick="chargerTopicDepuisCarte(this, 'topic-game-management')">
+    <div class="topic-icon"><i class="fa-solid fa-chess"></i></div>
+    <p class="topic-title">Game Management</p>
+    <p class="topic-subtitle">Gestion du match</p>
+  </div>
+
+  <div class="topic-card color-1" data-topic-key="topic-incidents" onclick="chargerTopicDepuisCarte(this, 'topic-incidents')">
+    <div class="topic-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <p class="topic-title">Incidents dans la SR</p>
+    <p class="topic-subtitle">Gestion des conflits</p>
+  </div>
+
+  <div class="topic-card color-3" data-topic-key="topic-positionnement" onclick="chargerTopicDepuisCarte(this, 'topic-positionnement')">
     <div class="topic-icon"><i class="fa-solid fa-crosshairs"></i></div>
     <p class="topic-title">Positionnement</p>
     <p class="topic-subtitle">Lecture du jeu</p>
   </div>
+
 </div>
 
             <!-- Visionneuse -->
@@ -11978,6 +11992,54 @@ QUESTION 2 : ...</pre>
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<?!= HtmlService.createHtmlOutputFromFile('app').getContent(); ?>
+
+  <!-- Modale universelle pour la lecture des circulaires -->
+<div class="modal fade" id="modalCirculaire" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fs-6 fw-bold" id="modalCirculaireTitre">Titre de la circulaire</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body p-0 bg-light" style="height: 75vh;">
+        <iframe id="iframeCirculaire" src="" style="width:100%; height:100%; border:none;"></iframe>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- MODALE : CONFIRMATION DE VALIDATION -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="modalConfirmationDemande" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+      <div class="modal-body text-center p-4">
+        <div class="mb-3">
+          <i class="fa-solid fa-check-circle text-success" style="font-size:3rem;"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Demande envoyée !</h5>
+        <p class="text-muted small mb-0" id="modalConfirmationTexte">
+          Votre demande a bien été enregistrée.<br>
+          En attente de validation par le Président ou le Vice-Président.
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center border-0 pt-0 pb-4">
+        <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" style="border-radius:10px;">
+          <i class="fa-solid fa-check me-1"></i>Compris
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -12165,15 +12227,16 @@ const donneesLoisEtMods = {
 };
 
 // Documents des Topics
+// Documents des Topics (Google Slides)
 const topicsDocs = {
-  "topic-main": "1pUWQKgy-fHblSQnTcxx1tDK8wJVFyiR-",
-  "topic-duels": "1snLU0luB2GDAIwb0nlX7fgwInY0Nbndn",
-  "topic-fautes-tactiques": "1KQlReljVc0Y2-81QwICQYiCSxPvM3h0V",
-  "topic-hors-jeu": "1ophWYEPmLBTeTW3Qp7KnEOc82DWE_rvM",
-  "topic-incidents": "1bcCbwl5h5maP_z7uP0MEniTX9093KNC3",
-  "topic-positionnement": "1Vr5WI9POkvxFDAEgh0XGFoSJhY9KVPy9",
-  "Arbitre-Moderne": "1EVHs9H5fE0mPbBQNtn-P60mDj01C3eqX",
-  "Game-Management": "15XVnK4xCqHK9-36sVysmAND9dzfuZZft"
+  "topic-arbitre-moderne":   "1EVHs9H5fE0mPbBQNtn-P60mDj01C3eqX",
+  "topic-hors-jeu":          "1ophWYEPmLBTeTW3Qp7KnEOc82DWE_rvM",
+  "topic-main":              "1pUWQKgy-fHblSQnTcxx1tDK8wJVFyiR-",
+  "topic-duels":             "1meFgXmF8VdCh2pLBI6hripGkMIu-vF2h",
+  "topic-fautes-tactiques":  "1KQlReljVc0Y2-81QwICQYiCSxPvM3h0V",
+  "topic-game-management":   "15XVnK4xCqHK9-36sVysmAND9dzfuZZft",
+  "topic-incidents":         "1bcCbwl5h5maP_z7uP0MEniTX9093KNC3",
+  "topic-positionnement":    "1Vr5WI9POkvxFDAEgh0XGFoSJhY9KVPy9"
 };
 
 // URL Web App (constante globale)
@@ -18962,6 +19025,10 @@ window.chargerPdfSurPage = chargerPdfSurPage;
 /**
  * Charge le topic cliqué, masque les autres cartes, et affiche un bouton retour
  */
+/**
+ * Charge le topic cliqué, masque les autres cartes, et affiche un bouton retour.
+ * ✅ Version corrigée : utilise /presentation/d/.../embed pour Google Slides
+ */
 function chargerTopicDepuisCarte(cardElement, topicKey) {
   const container = document.getElementById('viewer-topic-container');
   const grid = document.getElementById('topicsGrid');
@@ -18980,31 +19047,31 @@ function chargerTopicDepuisCarte(cardElement, topicKey) {
   // Activer la carte cliquée
   if (cardElement) {
     cardElement.classList.add('active');
-    // Transformer la carte en "en-tête de lecture"
     cardElement.style.cursor = 'default';
     cardElement.onclick = null;
   }
 
-  // Ajouter / remplacer le bouton "Retour à la liste" au-dessus de la carte active
+  // Ajouter / remplacer le bouton "Retour à la liste"
   let btnRetour = document.getElementById('btnRetourTopics');
   if (!btnRetour) {
     btnRetour = document.createElement('button');
     btnRetour.id = 'btnRetourTopics';
     btnRetour.className = 'btn btn-outline-secondary mb-3';
     btnRetour.innerHTML = '<i class="fa-solid fa-arrow-left me-1"></i>Retour à la liste des topics';
-    btnRetour.onclick = function() {
-      afficherTousLesTopics();
-    };
+    btnRetour.onclick = function() { afficherTousLesTopics(); };
     grid.parentNode.insertBefore(btnRetour, grid);
   }
 
-  // Charger le PDF dans la visionneuse
+  // Charger le document
   const fileId = topicsDocs[topicKey];
 
+  // ⚠️ Cas : aucun document associé
   if (!fileId) {
-    container.innerHTML = '<div class="lois-placeholder">' +
-      '<i class="fa-solid fa-triangle-exclamation"></i>' +
-      '<p>Ce topic n\'a pas encore de document associé.</p></div>';
+    container.innerHTML =
+      '<div class="lois-placeholder">' +
+        '<i class="fa-solid fa-triangle-exclamation"></i>' +
+        '<p>Ce topic n\'a pas encore de document associé.</p>' +
+      '</div>';
     return;
   }
 
@@ -19014,29 +19081,39 @@ function chargerTopicDepuisCarte(cardElement, topicKey) {
   const sousTitre = cardElement
     ? (cardElement.querySelector('.topic-subtitle')?.textContent || '')
     : '';
-  const embedUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
 
-  container.innerHTML = `
-    <div class="lois-viewer">
-      <div class="lois-viewer-header info">
-        <div class="lois-viewer-title">
-          <h5><i class="fa-solid fa-person-chalkboard"></i>${titre}</h5>
-          <small><i class="fa-solid fa-circle-info me-1"></i>${sousTitre}</small>
-        </div>
-        <div class="lois-viewer-actions">
-          <a href="${embedUrl}" target="_blank" class="btn btn-light" title="Ouvrir dans un nouvel onglet">
-            <i class="fa-solid fa-up-right-from-square"></i>
-            <span class="d-none d-md-inline">Ouvrir</span>
-          </a>
-        </div>
-      </div>
-      <div class="lois-viewer-body">
-        <iframe src="${embedUrl}" loading="lazy" allowfullscreen="true"></iframe>
-      </div>
-    </div>
-  `;
+  // ═══════════════════════════════════════════════════════
+  // ✅ URL D'EMBED POUR GOOGLE SLIDES
+  // L'URL /presentation/d/{ID}/embed fonctionne correctement
+  // pour intégrer un Slides dans une iframe.
+  // ═══════════════════════════════════════════════════════
+  const embedUrl = 'https://docs.google.com/presentation/d/' + fileId + '/embed?start=false&loop=false&delayms=3000';
+  const openUrl  = 'https://docs.google.com/presentation/d/' + fileId + '/edit?usp=sharing';
 
-  // Scroll doux vers la visionneuse
+  container.innerHTML =
+    '<div class="lois-viewer">' +
+      '<div class="lois-viewer-header info">' +
+        '<div class="lois-viewer-title">' +
+          '<h5><i class="fa-solid fa-person-chalkboard"></i>' + titre + '</h5>' +
+          '<small><i class="fa-solid fa-circle-info me-1"></i>' + sousTitre + '</small>' +
+        '</div>' +
+        '<div class="lois-viewer-actions">' +
+          '<a href="' + openUrl + '" target="_blank" class="btn btn-light" title="Ouvrir dans un nouvel onglet">' +
+            '<i class="fa-solid fa-up-right-from-square"></i>' +
+            '<span class="d-none d-md-inline ms-1">Ouvrir</span>' +
+          '</a>' +
+        '</div>' +
+      '</div>' +
+      '<div class="lois-viewer-body">' +
+        '<iframe src="' + embedUrl + '" ' +
+          'loading="lazy" ' +
+          'allowfullscreen="true" ' +
+          'mozallowfullscreen="true" ' +
+          'webkitallowfullscreen="true">' +
+        '</iframe>' +
+      '</div>' +
+    '</div>';
+
   setTimeout(function() {
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 150);
