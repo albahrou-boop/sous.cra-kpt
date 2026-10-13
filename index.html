@@ -15563,51 +15563,50 @@ function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, s
   // 🎯 TARIFS CHECK-OFF PAR ARBITRE (montant versé à la Sous-CRA)
   // ═══════════════════════════════════════════════════════
   function getTarifUnitaireCheckOff(zoneNom, tourNom) {
-    const z = (zoneNom || '').toLowerCase();
-    const t = (tourNom || '').toLowerCase().trim();
+  const z = (zoneNom || '').toLowerCase();
+  const t = (tourNom || '').toLowerCase().trim();
 
-    // ─── Tours spéciaux ───
-    if (t.includes('poule'))  return 875;      // Poules Phases
-    if (t.includes('demi') && t.includes('phase')) return 875;  // Demi Phases
-    if (t.includes('final') && t.includes('phase')) return 1125; // Finale Phases
-    if (t.includes('regional') || t.includes('régional')) return 500; // Régional
+  // ─── 🆕 Tours spéciaux : montant TOTAL du check-off par match ───
+  if (t.includes('poule'))  return 4000;                            // (875×4) + 500
+  if (t.includes('demi') && t.includes('phase')) return 4000;       // (875×4) + 500
+  if (t.includes('final') && t.includes('phase')) return 5000;      // (1125×4) + 500
+  if (t.includes('regional') || t.includes('régional')) return 500; // Forfait régional
 
-    // ─── Tours classiques ───
-    if (t.includes('demi')) return 3000;    // Demi-Finale
-    if (t.includes('final')) return 4000;   // Finale
-    
-    // ─── Tour Normal ───
-    const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
-    return estZoneSpeciale ? 1600 : 1900;
-  }
+  // ─── Tours classiques ───
+  if (t.includes('demi'))  return 3000;    // Demi-Finale
+  if (t.includes('final')) return 4000;    // Finale
+
+  // ─── Tour Normal ───
+  const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
+  return estZoneSpeciale ? 1600 : 1900;
+}
 
   // ═══════════════════════════════════════════════════════
   // 🎯 TARIFS HONORAIRES ARBITRES (montant reçu par l'arbitre)
   // ═══════════════════════════════════════════════════════
   function getHonorairesArbitres(tourNom) {
-    const t = (tourNom || '').toLowerCase().trim();
+  const t = (tourNom || '').toLowerCase().trim();
 
-    // ─── Tours spéciaux ───
-    if (t.includes('poule') || (t.includes('demi') && t.includes('phase')) || (t.includes('final') && t.includes('phase'))) {
-      return { standard: 3500, quatrieme: 2000 };
-    }
-
-    // ─── Régional : pas de calcul d'honoraires ───
-    if (t.includes('regional') || t.includes('régional')) {
-      return null;
-    }
-
-    // ─── Tours classiques ───
-    if (t.includes('demi')) {
-      return { standard: 2700, quatrieme: 900 };
-    }
-    if (t.includes('final')) {
-      return { standard: 3600, quatrieme: 1200 };
-    }
-
-    // ─── Tour Normal ───
-    return { standard: null, quatrieme: null };
+  // ─── Tours spéciaux ───
+  if (t.includes('poule') || (t.includes('demi') && t.includes('phase'))) {
+    return { standard: 3500, quatrieme: 2000, superviseur: 3500 };
   }
+  if (t.includes('final') && t.includes('phase')) {
+    return { standard: 4375, quatrieme: 2500, superviseur: 4375 };
+  }
+
+  // ─── 🆕 Régional : 6000 / 4ème : 2000 ───
+  if (t.includes('regional') || t.includes('régional')) {
+    return { standard: 6000, quatrieme: 2000, superviseur: 6000 };
+  }
+
+  // ─── Tours classiques ───
+  if (t.includes('demi'))  return { standard: 2750, quatrieme: 1000, superviseur: 2750 };
+  if (t.includes('final')) return { standard: 3700, quatrieme: 1300, superviseur: 3700 };
+
+  // ─── Tour Normal ───
+  return { standard: 2000, quatrieme: 800, superviseur: 800 };
+}
 
   function estMatchPasseOuAtteint(dateMatchVal, heureMatchVal) {
     if (!dateMatchVal) return true;
