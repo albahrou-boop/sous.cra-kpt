@@ -12120,9 +12120,6 @@ QUESTION 2 : ...</pre>
 // ========================================================
 // VARIABLES GLOBALES
 // ========================================================
-// ========================================================
-// VARIABLES GLOBALES
-// ========================================================
 let currentUser = "";
 let userPermissions = {};
 let devoirEnEditionId = null;
@@ -12139,6 +12136,11 @@ let userEmailEnCours = ""; // Stockage temporaire pour le processus de changemen
 const TOUTES_LES_QUALITES = ['AC', 'AA1', 'AA2', '4EME'];
 window.globalDesignations = window.globalDesignations || [];
 window.evaluationsDuMatch = window.evaluationsDuMatch || [];
+let globalDemandes = [];
+let demandeEnCoursDetail = null;
+// ⚠️ REMPLACER par les vrais emails du Président et du Vice-Président
+const EMAILS_PRESIDENT = ["president@exemple.com"];
+const EMAILS_VICE_PRESIDENT = ["vicepresident@exemple.com"];
 // ============================================================================
 // 📚 CONSTANTES LOIS DU JEU & TOPICS (déclarées EN PREMIER)
 // ============================================================================
@@ -12791,6 +12793,16 @@ function applyPermissions(perms) {
   // =====================================================
   // CALCUL DES DROITS
   // =====================================================
+  const emailCourant = String(
+    window.currentUser ||
+    sessionStorage.getItem('user_email_souscra') ||
+    localStorage.getItem('user_email_souscra') ||
+    ''
+  ).toLowerCase().trim();
+
+  const isPresident = EMAILS_PRESIDENT.map(e => e.toLowerCase()).includes(emailCourant);
+  const isVicePresident = EMAILS_VICE_PRESIDENT.map(e => e.toLowerCase()).includes(emailCourant);
+  const canValiderDemandes = Boolean(isPresident || isVicePresident || isAdmin);
   const isAdmin = Boolean(safePerms.isAdmin);
   const canSaisirMembres = Boolean(safePerms.canSaisirMembres || isAdmin);
   const canDesig = Boolean(safePerms.canSaisirDesignations || isAdmin);
@@ -12885,6 +12897,17 @@ document.querySelectorAll('.col-desig-action, #th-actions-des').forEach(el => {
       el.classList.add('d-none');
     }
   });
+
+  // =====================================================
+  // F. MODULE DEMANDES — boutons Valider visibles uniquement pour Président/VP
+  // =====================================================
+  document.querySelectorAll('.btn-valider-demande').forEach(el => {
+    el.classList.toggle('d-none', !canValiderDemandes);
+  });
+  document.querySelectorAll('.president-only, .vice-president-only').forEach(el => {
+    el.classList.toggle('d-none', !canValiderDemandes);
+  });
+
 }
 
 function appliquerPermissionsUI(perms) { 
@@ -15563,22 +15586,23 @@ function calculerSituationCheckOff(dataCheckOffs, dataDesignations, zoneCible, s
   // 🎯 TARIFS CHECK-OFF PAR ARBITRE (montant versé à la Sous-CRA)
   // ═══════════════════════════════════════════════════════
   function getTarifUnitaireCheckOff(zoneNom, tourNom) {
-  const z = (zoneNom || '').toLowerCase();
-  const t = (tourNom || '').toLowerCase().trim();
+    const z = (zoneNom || '').toLowerCase();
+    const t = (tourNom || '').toLowerCase().trim();
 
-  // ─── 🆕 Tours spéciaux : montant TOTAL du check-off par match ───
-  if (t.includes('poule'))  return 4000;                            // (875×4) + 500
-  if (t.includes('demi') && t.includes('phase')) return 4000;       // (875×4) + 500
-  if (t.includes('final') && t.includes('phase')) return 5000;      // (1125×4) + 500
-  if (t.includes('regional') || t.includes('régional')) return 500; // Forfait régional
+    // ─── 🆕 Tours spéciaux : montant TOTAL du check-off par match ───
+    // (4 arbitres × tarif unitaire) + 500 FCFA du 4ème arbitre
+    if (t.includes('poule'))  return 4000;      // Poules Phases  : (875×4) + 500
+    if (t.includes('demi') && t.includes('phase')) return 4000;  // Demi Phases    : (875×4) + 500
+    if (t.includes('final') && t.includes('phase')) return 5000; // Finale Phases  : (1125×4) + 500
+    if (t.includes('regional') || t.includes('régional')) return 500; // Régional (inchangé)
 
-  // ─── Tours classiques ───
-  if (t.includes('demi'))  return 3000;    // Demi-Finale
-  if (t.includes('final')) return 4000;    // Finale
-
-  // ─── Tour Normal ───
-  const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
-  return estZoneSpeciale ? 1600 : 1900;
+    // ─── Tours classiques ───
+    if (t.includes('demi')) return 3000;    // Demi-Finale
+    if (t.includes('final')) return 4000;   // Finale
+    
+    // ─── Tour Normal ───
+    const estZoneSpeciale = (z === 'patoulane' || z === 'kouthiagaydi');
+    return estZoneSpeciale ? 1600 : 1900;
 }
 
   // ═══════════════════════════════════════════════════════
@@ -24486,6 +24510,72 @@ window.changerUtilisateur = function() {
     _ancienChangerUtilisateur();
   }
 };
+
+// ============================================================================
+// MODULE DEMANDES — DÉTAIL + BOUTON VALIDER
+// ============================================================================
+function ouvrirDetailDemande(idDemande) {
+  // On récupère la demande dans la variable globale (qui doit être chargée)
+  const demande = globalDemandes.find(d => String(d.id) === String(idDemande));
+  if (!demande) {
+    afficherToastTemporaire("⚠️ Demande introuvable.", "warning");
+    return;
+  }
+
+  const container = document.getElementById('detailDemandeContainer');
+  if (!container) return;
+
+  // Vérification du statut
+  const statutActuel = String(demande.statut || 'EN_ATTENTE').trim().toUpperCase();
+  const dejaValidee = (statutActuel === 'VALIDEE' || statutActuel === 'VALIDÉE');
+
+  // Vérification des droits de l'utilisateur connecté
+  const email = (window.currentUser || sessionStorage.getItem('user_email_souscra') || '').toLowerCase().trim();
+  const isPresident = ["albahrou@gmail.com"].includes(email); // Remplacez par l'email du président
+  const isVicePresident = ["mamadousalamcisko10@gmail.com"].includes(email); // Remplacez par l'email du VP
+  const canValidate = isPresident || isVicePresident;
+
+  // Construction de l'affichage
+  container.innerHTML = `
+    <div class="card shadow-sm mb-3 border-primary">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-file-signature me-2"></i>Détail de la Demande</span>
+        <span class="badge ${dejaValidee ? 'bg-success' : 'bg-warning text-dark'}">
+          ${dejaValidee ? 'VALIDÉE' : 'EN ATTENTE'}
+        </span>
+      </div>
+      <div class="card-body">
+        <p><strong>Type :</strong> ${demande.type || '-'}</p>
+        <p><strong>Demandeur :</strong> ${demande.nomDemandeur || '-'}</p>
+        <p><strong>Date :</strong> ${demande.dateDemande || '-'}</p>
+        <p><strong>Motif :</strong> ${demande.motif || '-'}</p>
+
+        ${dejaValidee 
+          ? `<div class="alert alert-success mt-3">
+               <i class="fa-solid fa-stamp me-2"></i> Demande validée le ${demande.dateValidation || '-'} par ${demande.validePar || '-'}.
+               ${demande.documentUrl ? `<br><a href="${demande.documentUrl}" target="_blank" class="btn btn-sm btn-success mt-2"><i class="fa-solid fa-download"></i> Télécharger le document</a>` : ''}
+             </div>`
+          : canValidate 
+            ? `<div class="d-flex gap-2 mt-4 pt-3 border-top">
+                 <button class="btn btn-success fw-bold" onclick="validerDemande('${demande.id}')">
+                   <i class="fa-solid fa-check-circle me-1"></i> Valider la demande
+                 </button>
+                 <button class="btn btn-danger fw-bold" onclick="rejeterDemande('${demande.id}')">
+                   <i class="fa-solid fa-times-circle me-1"></i> Rejeter
+                 </button>
+               </div>`
+            : `<div class="alert alert-info mt-3">
+                 <i class="fa-solid fa-info-circle me-2"></i> Seuls le Président et le Vice-Président peuvent valider cette demande.
+               </div>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+window.ouvrirDetailDemande = ouvrirDetailDemande;
+window.validerDemande = validerDemande;
+window.rejeterDemande = rejeterDemande;
 
 
   
