@@ -9,10 +9,10 @@
   <!-- 1. LIENS EXTERNES (Bootstrap 5 & FontAwesome) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  
+
   <link rel="manifest" href="./manifest.json">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"> 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <!-- Configuration Mobile (iOS, Android & PWA) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -61,7 +61,9 @@
   })();
 </script>
 
-<style>
+  <!-- 3. STYLES CSS UNIFIÉS ET OPTIMISÉS -->
+<?!= HtmlService.createHtmlOutputFromFile('styles').getContent(); ?>
+  <style>
   /* ============================================================
    PALETTE DE COULEURS UNIFIÉE
    ============================================================ */
@@ -9640,7 +9642,6 @@ h3.h5.fw-bold.text-primary i {
 
 </style>
 
-
 </head>
 <body>
 <!-- Écran de chargement -->
@@ -11995,127 +11996,12 @@ QUESTION 2 : ...</pre>
 </div>
 
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<?!= HtmlService.createHtmlOutputFromFile('app').getContent(); ?>
+
+
 <script>
-
-   // ============================================================================
-  // CONFIGURATION
-  // ============================================================================
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbyfT6H-M-9tRH6707rAgoInIO3U9qce6LFkHDUlm1TJkgrqCBPdY3SaK1rLbcm01_wi/exec";
-
-  // ============================================================================
-  // SHIM google.script.run POUR GITHUB PAGES
-  // Simule google.script.run en utilisant fetch()
-  // ============================================================================
-  window.google = {
-    script: {
-      run: new Proxy({}, {
-        get(target, prop) {
-          const createHandlerProxy = (sHandler = null, fHandler = null) => {
-            const chainObj = {
-              withSuccessHandler(cb) { return createHandlerProxy(cb, fHandler); },
-              withFailureHandler(cb) { return createHandlerProxy(sHandler, cb); }
-            };
-            return new Proxy(chainObj, {
-              get(t, functionName) {
-                if (t[functionName]) return t[functionName];
-
-                // Fonction exécutée à la fin de la chaîne
-                return function(...args) {
-                  executeGasFetch(functionName, args, sHandler, fHandler);
-                };
-              }
-            });
-          };
-
-          if (prop === 'withSuccessHandler') {
-            return function(cb) { return createHandlerProxy(cb, null); };
-          }
-          if (prop === 'withFailureHandler') {
-            return function(cb) { return createHandlerProxy(null, cb); };
-          }
-
-          // Appel direct sans handler
-          return function(...args) {
-            executeGasFetch(prop, args, null, null);
-          };
-        }
-      })
-    }
-  };
-
-  // ============================================================================
-  // EXÉCUTION DE L'APPEL API
-  // ============================================================================
-  function executeGasFetch(functionName, args, successHandler, failureHandler) {
-    // 🆕 Récupération de l'email utilisateur (session ou localStorage)
-    const userEmail = (
-      sessionStorage.getItem('user_email_souscra') ||
-      localStorage.getItem('user_email_souscra') ||
-      window.currentUser ||
-      ''
-    ).toLowerCase().trim();
-
-    setTimeout(async () => {
-      try {
-        const response = await fetch(GAS_URL, {
-          method: 'POST',
-          // ⚠️ IMPORTANT : pas de Content-Type personnalisé pour éviter le preflight CORS
-          // Apps Script accepte le JSON brut dans e.postData.contents
-          body: JSON.stringify({
-            function: functionName,
-            args: args || [],
-            userEmail: userEmail   // ✅ ENVOI DE L'EMAIL POUR LES PERMISSIONS
-          })
-        });
-
-        // Lecture de la réponse
-        const text = await response.text();
-        let res;
-        try {
-          res = JSON.parse(text);
-        } catch (parseErr) {
-          throw new Error('Réponse serveur invalide : ' + text.substring(0, 200));
-        }
-
-        // Gestion du résultat
-        if (res.status === 'success') {
-          if (typeof successHandler === 'function') {
-            successHandler(res.data);
-          }
-        } else {
-          const err = new Error(res.error || 'Erreur inconnue');
-          if (typeof failureHandler === 'function') {
-            failureHandler(err);
-          } else {
-            console.error('[API ERROR]', functionName, err);
-          }
-        }
-      } catch (fetchErr) {
-        console.error('[FETCH ERROR]', functionName, fetchErr);
-        if (typeof failureHandler === 'function') {
-          failureHandler(fetchErr);
-        }
-      }
-    }, 0);
-  }
-
-  // ============================================================================
-  // INITIALISATION DEPUIS LES STORAGES
-  // ============================================================================
-  // Restaure l'email utilisateur au chargement
-  (function() {
-    const savedEmail = sessionStorage.getItem('user_email_souscra') 
-                    || localStorage.getItem('user_email_souscra') 
-                    || '';
-    if (savedEmail) {
-      window.currentUser = savedEmail;
-    }
-  })();
-
-
 
 // ========================================================
 // VARIABLES GLOBALES
@@ -24580,9 +24466,8 @@ window.ouvrirDetailDemande = ouvrirDetailDemande;
 window.validerDemande = validerDemande;
 window.rejeterDemande = rejeterDemande;
 
-  
-
 </script>
+
 
 <script>
   if ('serviceWorker' in navigator) {
